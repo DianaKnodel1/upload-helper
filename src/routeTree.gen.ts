@@ -9,131 +9,100 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
-import { Route as TtsTestRouteImport } from './routes/tts-test'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as PortalDesignsRouteImport } from './routes/portal-designs'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as InterviewTestRouteImport } from './routes/interview-test'
-import { Route as BewerbungenRouteImport } from './routes/bewerbungen'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as EmployeeRouteImport } from './routes/_employee'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BewerbungIndexRouteImport } from './routes/bewerbung.index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as TerminTokenRouteImport } from './routes/termin.$token'
-import { Route as InterviewAppIdRouteImport } from './routes/interview.$appId'
-import { Route as BewerbungVerbindenRouteImport } from './routes/bewerbung.verbinden'
-import { Route as AuthConfirmedRouteImport } from './routes/auth.confirmed'
-import { Route as AdminWebidSimRouteImport } from './routes/admin.webid-sim'
-import { Route as AdminVermittlungRouteImport } from './routes/admin.vermittlung'
-import { Route as AdminUploadsRouteImport } from './routes/admin.uploads'
-import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
-import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
-import { Route as AdminTeamLeaderSettingsRouteImport } from './routes/admin.team-leader-settings'
-import { Route as AdminStatistikenRouteImport } from './routes/admin.statistiken'
-import { Route as AdminSmsRouteImport } from './routes/admin.sms'
-import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminRevisionsRouteImport } from './routes/admin.revisions'
-import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
-import { Route as AdminPostRouteImport } from './routes/admin.post'
-import { Route as AdminPersonenRouteImport } from './routes/admin.personen'
-import { Route as AdminPartnerCompaniesRouteImport } from './routes/admin.partner-companies'
-import { Route as AdminMitarbeiterRouteImport } from './routes/admin.mitarbeiter'
-import { Route as AdminLandingGeneratorRouteImport } from './routes/admin.landing-generator'
-import { Route as AdminLandingBaukastenRouteImport } from './routes/admin.landing-baukasten'
-import { Route as AdminKycRouteImport } from './routes/admin.kyc'
-import { Route as AdminInfrastructureRouteImport } from './routes/admin.infrastructure'
-import { Route as AdminDomainsRouteImport } from './routes/admin.domains'
-import { Route as AdminContractsRouteImport } from './routes/admin.contracts'
-import { Route as AdminChatFaqRouteImport } from './routes/admin.chat-faq'
-import { Route as AdminChatRouteImport } from './routes/admin.chat'
-import { Route as AdminCalendlyRouteImport } from './routes/admin.calendly'
-import { Route as AdminBotsRouteImport } from './routes/admin.bots'
-import { Route as AdminBewerbungenRouteImport } from './routes/admin.bewerbungen'
-import { Route as AdminAppointmentsRouteImport } from './routes/admin.appointments'
-import { Route as AdminAiSettingsRouteImport } from './routes/admin.ai-settings'
-import { Route as AdminActivityRouteImport } from './routes/admin.activity'
-import { Route as EmployeeVerificationRouteImport } from './routes/_employee/verification'
-import { Route as EmployeeTasksRouteImport } from './routes/_employee/tasks'
-import { Route as EmployeeSmsRouteImport } from './routes/_employee/sms'
-import { Route as EmployeeSettingsRouteImport } from './routes/_employee/settings'
-import { Route as EmployeePersonalDataRouteImport } from './routes/_employee/personal-data'
-import { Route as EmployeeOnboardingRouteImport } from './routes/_employee/onboarding'
-import { Route as EmployeeNotificationsRouteImport } from './routes/_employee/notifications'
-import { Route as EmployeeEarningsRouteImport } from './routes/_employee/earnings'
-import { Route as EmployeeDocumentsRouteImport } from './routes/_employee/documents'
-import { Route as EmployeeDashboardRouteImport } from './routes/_employee/dashboard'
-import { Route as EmployeeContractRouteImport } from './routes/_employee/contract'
-import { Route as EmployeeChatRouteImport } from './routes/_employee/chat'
+import { Route as EmployeeRouteImport } from './routes/_employee'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BewerbungenRouteImport } from './routes/bewerbungen'
+import { Route as InterviewTestRouteImport } from './routes/interview-test'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PortalDesignsRouteImport } from './routes/portal-designs'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TtsTestRouteImport } from './routes/tts-test'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as EmployeeAppointmentsRouteImport } from './routes/_employee/appointments'
-import { Route as AdminTasksIndexRouteImport } from './routes/admin.tasks.index'
-import { Route as TerminBuchenTokenRouteImport } from './routes/termin.buchen.$token'
-import { Route as InterviewVoiceAppIdRouteImport } from './routes/interview.voice.$appId'
-import { Route as ApiPublicTtsTestRouteImport } from './routes/api/public/tts-test'
-import { Route as ApiPublicSmsPollCronRouteImport } from './routes/api/public/sms-poll-cron'
-import { Route as ApiPublicLandingServerHeartbeatRouteImport } from './routes/api/public/landing-server-heartbeat'
-import { Route as ApiPublicLandingServerBootstrapRouteImport } from './routes/api/public/landing-server-bootstrap'
-import { Route as ApiPublicInvitePrefillRouteImport } from './routes/api/public/invite-prefill'
-import { Route as ApiPublicInterviewVoiceRouteImport } from './routes/api/public/interview-voice'
-import { Route as ApiPublicInterviewTestCreateRouteImport } from './routes/api/public/interview-test-create'
-import { Route as ApiPublicInterviewChatRouteImport } from './routes/api/public/interview-chat'
-import { Route as ApiPublicDomainHealthCronRouteImport } from './routes/api/public/domain-health-cron'
-import { Route as ApiPublicCalendlyWebhookRouteImport } from './routes/api/public/calendly-webhook'
-import { Route as ApiPublicBotRecordingsRouteImport } from './routes/api/public/bot-recordings'
-import { Route as ApiPublicBotRecorderScriptRouteImport } from './routes/api/public/bot-recorder-script'
-import { Route as ApiPublicBookingRouteImport } from './routes/api/public/booking'
-import { Route as ApiPublicAutoAssignCronRouteImport } from './routes/api/public/auto-assign-cron'
-import { Route as ApiPublicApplicationsRouteImport } from './routes/api/public/applications'
-import { Route as ApiPublicApplicationLookupRouteImport } from './routes/api/public/application-lookup'
-import { Route as ApiPublicApplicationByTokenRouteImport } from './routes/api/public/application-by-token'
-import { Route as ApiPublicAiChatRouteImport } from './routes/api/public/ai-chat'
-import { Route as AdminPersonenIdRouteImport } from './routes/admin.personen.$id'
-import { Route as AdminAssignmentsAssignmentIdRouteImport } from './routes/admin.assignments.$assignmentId'
+import { Route as EmployeeChatRouteImport } from './routes/_employee/chat'
+import { Route as EmployeeContractRouteImport } from './routes/_employee/contract'
+import { Route as EmployeeDashboardRouteImport } from './routes/_employee/dashboard'
+import { Route as EmployeeDocumentsRouteImport } from './routes/_employee/documents'
+import { Route as EmployeeEarningsRouteImport } from './routes/_employee/earnings'
+import { Route as EmployeeNotificationsRouteImport } from './routes/_employee/notifications'
+import { Route as EmployeeOnboardingRouteImport } from './routes/_employee/onboarding'
+import { Route as EmployeePersonalDataRouteImport } from './routes/_employee/personal-data'
+import { Route as EmployeeSettingsRouteImport } from './routes/_employee/settings'
+import { Route as EmployeeSmsRouteImport } from './routes/_employee/sms'
+import { Route as EmployeeTasksRouteImport } from './routes/_employee/tasks'
+import { Route as EmployeeVerificationRouteImport } from './routes/_employee/verification'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminActivityRouteImport } from './routes/admin.activity'
+import { Route as AdminAiSettingsRouteImport } from './routes/admin.ai-settings'
+import { Route as AdminAppointmentsRouteImport } from './routes/admin.appointments'
+import { Route as AdminBewerbungenRouteImport } from './routes/admin.bewerbungen'
+import { Route as AdminBotsRouteImport } from './routes/admin.bots'
+import { Route as AdminCalendlyRouteImport } from './routes/admin.calendly'
+import { Route as AdminChatRouteImport } from './routes/admin.chat'
+import { Route as AdminChatFaqRouteImport } from './routes/admin.chat-faq'
+import { Route as AdminContractsRouteImport } from './routes/admin.contracts'
+import { Route as AdminDomainsRouteImport } from './routes/admin.domains'
+import { Route as AdminInfrastructureRouteImport } from './routes/admin.infrastructure'
+import { Route as AdminKycRouteImport } from './routes/admin.kyc'
+import { Route as AdminLandingBaukastenRouteImport } from './routes/admin.landing-baukasten'
+import { Route as AdminLandingGeneratorRouteImport } from './routes/admin.landing-generator'
+import { Route as AdminMitarbeiterRouteImport } from './routes/admin.mitarbeiter'
+import { Route as AdminPartnerCompaniesRouteImport } from './routes/admin.partner-companies'
+import { Route as AdminPersonenRouteImport } from './routes/admin.personen'
+import { Route as AdminPostRouteImport } from './routes/admin.post'
+import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminRevisionsRouteImport } from './routes/admin.revisions'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminSmsRouteImport } from './routes/admin.sms'
+import { Route as AdminStatistikenRouteImport } from './routes/admin.statistiken'
+import { Route as AdminTeamLeaderSettingsRouteImport } from './routes/admin.team-leader-settings'
+import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
+import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
+import { Route as AdminUploadsRouteImport } from './routes/admin.uploads'
+import { Route as AdminVermittlungRouteImport } from './routes/admin.vermittlung'
+import { Route as AdminWebidSimRouteImport } from './routes/admin.webid-sim'
+import { Route as AuthConfirmedRouteImport } from './routes/auth.confirmed'
+import { Route as BewerbungIndexRouteImport } from './routes/bewerbung.index'
+import { Route as BewerbungVerbindenRouteImport } from './routes/bewerbung.verbinden'
+import { Route as InterviewAppIdRouteImport } from './routes/interview.$appId'
+import { Route as TerminTokenRouteImport } from './routes/termin.$token'
 import { Route as EmployeeTasksAssignmentIdRouteImport } from './routes/_employee/tasks.$assignmentId'
-import { Route as ApiPublicLandingServerFilesSplatRouteImport } from './routes/api/public/landing-server-files.$'
-import { Route as AdminTasksBuilderTemplateIdRouteImport } from './routes/admin.tasks.builder.$templateId'
+import { Route as AdminAssignmentsAssignmentIdRouteImport } from './routes/admin.assignments.$assignmentId'
+import { Route as AdminPersonenIdRouteImport } from './routes/admin.personen.$id'
+import { Route as AdminTasksIndexRouteImport } from './routes/admin.tasks.index'
+import { Route as ApiPublicAiChatRouteImport } from './routes/api/public/ai-chat'
+import { Route as ApiPublicApplicationByTokenRouteImport } from './routes/api/public/application-by-token'
+import { Route as ApiPublicApplicationLookupRouteImport } from './routes/api/public/application-lookup'
+import { Route as ApiPublicApplicationsRouteImport } from './routes/api/public/applications'
+import { Route as ApiPublicAutoAssignCronRouteImport } from './routes/api/public/auto-assign-cron'
+import { Route as ApiPublicBookingRouteImport } from './routes/api/public/booking'
+import { Route as ApiPublicBotRecorderScriptRouteImport } from './routes/api/public/bot-recorder-script'
+import { Route as ApiPublicBotRecordingsRouteImport } from './routes/api/public/bot-recordings'
+import { Route as ApiPublicCalendlyWebhookRouteImport } from './routes/api/public/calendly-webhook'
+import { Route as ApiPublicDomainHealthCronRouteImport } from './routes/api/public/domain-health-cron'
+import { Route as ApiPublicInterviewChatRouteImport } from './routes/api/public/interview-chat'
+import { Route as ApiPublicInterviewTestCreateRouteImport } from './routes/api/public/interview-test-create'
+import { Route as ApiPublicInterviewVoiceRouteImport } from './routes/api/public/interview-voice'
+import { Route as ApiPublicInvitePrefillRouteImport } from './routes/api/public/invite-prefill'
+import { Route as ApiPublicLandingServerBootstrapRouteImport } from './routes/api/public/landing-server-bootstrap'
+import { Route as ApiPublicLandingServerHeartbeatRouteImport } from './routes/api/public/landing-server-heartbeat'
+import { Route as ApiPublicSmsPollCronRouteImport } from './routes/api/public/sms-poll-cron'
+import { Route as ApiPublicTtsTestRouteImport } from './routes/api/public/tts-test'
+import { Route as InterviewVoiceAppIdRouteImport } from './routes/interview.voice.$appId'
+import { Route as TerminBuchenTokenRouteImport } from './routes/termin.buchen.$token'
 import { Route as EmployeeTasksAssignmentIdWebidRouteImport } from './routes/_employee/tasks_.$assignmentId.webid'
+import { Route as AdminTasksBuilderTemplateIdRouteImport } from './routes/admin.tasks.builder.$templateId'
+import { Route as ApiPublicLandingServerFilesSplatRouteImport } from './routes/api/public/landing-server-files.$'
 
-const UnsubscribeRoute = UnsubscribeRouteImport.update({
-  id: '/unsubscribe',
-  path: '/unsubscribe',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TtsTestRoute = TtsTestRouteImport.update({
-  id: '/tts-test',
-  path: '/tts-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortalDesignsRoute = PortalDesignsRouteImport.update({
-  id: '/portal-designs',
-  path: '/portal-designs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InterviewTestRoute = InterviewTestRouteImport.update({
-  id: '/interview-test',
-  path: '/interview-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BewerbungenRoute = BewerbungenRouteImport.update({
-  id: '/bewerbungen',
-  path: '/bewerbungen',
+const EmployeeRoute = EmployeeRouteImport.update({
+  id: '/_employee',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -141,243 +110,49 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EmployeeRoute = EmployeeRouteImport.update({
-  id: '/_employee',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BewerbungIndexRoute = BewerbungIndexRouteImport.update({
-  id: '/bewerbung/',
-  path: '/bewerbung/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const TerminTokenRoute = TerminTokenRouteImport.update({
-  id: '/termin/$token',
-  path: '/termin/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InterviewAppIdRoute = InterviewAppIdRouteImport.update({
-  id: '/interview/$appId',
-  path: '/interview/$appId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BewerbungVerbindenRoute = BewerbungVerbindenRouteImport.update({
-  id: '/bewerbung/verbinden',
-  path: '/bewerbung/verbinden',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthConfirmedRoute = AuthConfirmedRouteImport.update({
-  id: '/auth/confirmed',
-  path: '/auth/confirmed',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminWebidSimRoute = AdminWebidSimRouteImport.update({
-  id: '/webid-sim',
-  path: '/webid-sim',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminVermittlungRoute = AdminVermittlungRouteImport.update({
-  id: '/vermittlung',
-  path: '/vermittlung',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminUploadsRoute = AdminUploadsRouteImport.update({
-  id: '/uploads',
-  path: '/uploads',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTransactionsRoute = AdminTransactionsRouteImport.update({
-  id: '/transactions',
-  path: '/transactions',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTenantsRoute = AdminTenantsRouteImport.update({
-  id: '/tenants',
-  path: '/tenants',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTeamLeaderSettingsRoute = AdminTeamLeaderSettingsRouteImport.update({
-  id: '/team-leader-settings',
-  path: '/team-leader-settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminStatistikenRoute = AdminStatistikenRouteImport.update({
-  id: '/statistiken',
-  path: '/statistiken',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSmsRoute = AdminSmsRouteImport.update({
-  id: '/sms',
-  path: '/sms',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRevisionsRoute = AdminRevisionsRouteImport.update({
-  id: '/revisions',
-  path: '/revisions',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminReviewsRoute = AdminReviewsRouteImport.update({
-  id: '/reviews',
-  path: '/reviews',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPostRoute = AdminPostRouteImport.update({
-  id: '/post',
-  path: '/post',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPersonenRoute = AdminPersonenRouteImport.update({
-  id: '/personen',
-  path: '/personen',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPartnerCompaniesRoute = AdminPartnerCompaniesRouteImport.update({
-  id: '/partner-companies',
-  path: '/partner-companies',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminMitarbeiterRoute = AdminMitarbeiterRouteImport.update({
-  id: '/mitarbeiter',
-  path: '/mitarbeiter',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLandingGeneratorRoute = AdminLandingGeneratorRouteImport.update({
-  id: '/landing-generator',
-  path: '/landing-generator',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLandingBaukastenRoute = AdminLandingBaukastenRouteImport.update({
-  id: '/landing-baukasten',
-  path: '/landing-baukasten',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminKycRoute = AdminKycRouteImport.update({
-  id: '/kyc',
-  path: '/kyc',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInfrastructureRoute = AdminInfrastructureRouteImport.update({
-  id: '/infrastructure',
-  path: '/infrastructure',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDomainsRoute = AdminDomainsRouteImport.update({
-  id: '/domains',
-  path: '/domains',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminContractsRoute = AdminContractsRouteImport.update({
-  id: '/contracts',
-  path: '/contracts',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminChatFaqRoute = AdminChatFaqRouteImport.update({
-  id: '/chat-faq',
-  path: '/chat-faq',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminChatRoute = AdminChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCalendlyRoute = AdminCalendlyRouteImport.update({
-  id: '/calendly',
-  path: '/calendly',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBotsRoute = AdminBotsRouteImport.update({
-  id: '/bots',
-  path: '/bots',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBewerbungenRoute = AdminBewerbungenRouteImport.update({
+const BewerbungenRoute = BewerbungenRouteImport.update({
   id: '/bewerbungen',
   path: '/bewerbungen',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AdminAppointmentsRoute = AdminAppointmentsRouteImport.update({
+const InterviewTestRoute = InterviewTestRouteImport.update({
+  id: '/interview-test',
+  path: '/interview-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalDesignsRoute = PortalDesignsRouteImport.update({
+  id: '/portal-designs',
+  path: '/portal-designs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TtsTestRoute = TtsTestRouteImport.update({
+  id: '/tts-test',
+  path: '/tts-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeeAppointmentsRoute = EmployeeAppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAiSettingsRoute = AdminAiSettingsRouteImport.update({
-  id: '/ai-settings',
-  path: '/ai-settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminActivityRoute = AdminActivityRouteImport.update({
-  id: '/activity',
-  path: '/activity',
-  getParentRoute: () => AdminRoute,
-} as any)
-const EmployeeVerificationRoute = EmployeeVerificationRouteImport.update({
-  id: '/verification',
-  path: '/verification',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeTasksRoute = EmployeeTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeSmsRoute = EmployeeSmsRouteImport.update({
-  id: '/sms',
-  path: '/sms',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeSettingsRoute = EmployeeSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeePersonalDataRoute = EmployeePersonalDataRouteImport.update({
-  id: '/personal-data',
-  path: '/personal-data',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeOnboardingRoute = EmployeeOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeNotificationsRoute = EmployeeNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeEarningsRoute = EmployeeEarningsRouteImport.update({
-  id: '/earnings',
-  path: '/earnings',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeDocumentsRoute = EmployeeDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeDashboardRoute = EmployeeDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => EmployeeRoute,
-} as any)
-const EmployeeContractRoute = EmployeeContractRouteImport.update({
-  id: '/contract',
-  path: '/contract',
   getParentRoute: () => EmployeeRoute,
 } as any)
 const EmployeeChatRoute = EmployeeChatRouteImport.update({
@@ -385,84 +160,288 @@ const EmployeeChatRoute = EmployeeChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => EmployeeRoute,
 } as any)
-const EmployeeAppointmentsRoute = EmployeeAppointmentsRouteImport.update({
+const EmployeeContractRoute = EmployeeContractRouteImport.update({
+  id: '/contract',
+  path: '/contract',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeDashboardRoute = EmployeeDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeDocumentsRoute = EmployeeDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeEarningsRoute = EmployeeEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeNotificationsRoute = EmployeeNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeOnboardingRoute = EmployeeOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeePersonalDataRoute = EmployeePersonalDataRouteImport.update({
+  id: '/personal-data',
+  path: '/personal-data',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeSettingsRoute = EmployeeSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeSmsRoute = EmployeeSmsRouteImport.update({
+  id: '/sms',
+  path: '/sms',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeTasksRoute = EmployeeTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeVerificationRoute = EmployeeVerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminActivityRoute = AdminActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAiSettingsRoute = AdminAiSettingsRouteImport.update({
+  id: '/ai-settings',
+  path: '/ai-settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAppointmentsRoute = AdminAppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
-  getParentRoute: () => EmployeeRoute,
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBewerbungenRoute = AdminBewerbungenRouteImport.update({
+  id: '/bewerbungen',
+  path: '/bewerbungen',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBotsRoute = AdminBotsRouteImport.update({
+  id: '/bots',
+  path: '/bots',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCalendlyRoute = AdminCalendlyRouteImport.update({
+  id: '/calendly',
+  path: '/calendly',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminChatRoute = AdminChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminChatFaqRoute = AdminChatFaqRouteImport.update({
+  id: '/chat-faq',
+  path: '/chat-faq',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractsRoute = AdminContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDomainsRoute = AdminDomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInfrastructureRoute = AdminInfrastructureRouteImport.update({
+  id: '/infrastructure',
+  path: '/infrastructure',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminKycRoute = AdminKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLandingBaukastenRoute = AdminLandingBaukastenRouteImport.update({
+  id: '/landing-baukasten',
+  path: '/landing-baukasten',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLandingGeneratorRoute = AdminLandingGeneratorRouteImport.update({
+  id: '/landing-generator',
+  path: '/landing-generator',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMitarbeiterRoute = AdminMitarbeiterRouteImport.update({
+  id: '/mitarbeiter',
+  path: '/mitarbeiter',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPartnerCompaniesRoute = AdminPartnerCompaniesRouteImport.update({
+  id: '/partner-companies',
+  path: '/partner-companies',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPersonenRoute = AdminPersonenRouteImport.update({
+  id: '/personen',
+  path: '/personen',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPostRoute = AdminPostRouteImport.update({
+  id: '/post',
+  path: '/post',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRevisionsRoute = AdminRevisionsRouteImport.update({
+  id: '/revisions',
+  path: '/revisions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSmsRoute = AdminSmsRouteImport.update({
+  id: '/sms',
+  path: '/sms',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStatistikenRoute = AdminStatistikenRouteImport.update({
+  id: '/statistiken',
+  path: '/statistiken',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTeamLeaderSettingsRoute = AdminTeamLeaderSettingsRouteImport.update({
+  id: '/team-leader-settings',
+  path: '/team-leader-settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTenantsRoute = AdminTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTransactionsRoute = AdminTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUploadsRoute = AdminUploadsRouteImport.update({
+  id: '/uploads',
+  path: '/uploads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVermittlungRoute = AdminVermittlungRouteImport.update({
+  id: '/vermittlung',
+  path: '/vermittlung',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminWebidSimRoute = AdminWebidSimRouteImport.update({
+  id: '/webid-sim',
+  path: '/webid-sim',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AuthConfirmedRoute = AuthConfirmedRouteImport.update({
+  id: '/auth/confirmed',
+  path: '/auth/confirmed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BewerbungIndexRoute = BewerbungIndexRouteImport.update({
+  id: '/bewerbung/',
+  path: '/bewerbung/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BewerbungVerbindenRoute = BewerbungVerbindenRouteImport.update({
+  id: '/bewerbung/verbinden',
+  path: '/bewerbung/verbinden',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InterviewAppIdRoute = InterviewAppIdRouteImport.update({
+  id: '/interview/$appId',
+  path: '/interview/$appId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TerminTokenRoute = TerminTokenRouteImport.update({
+  id: '/termin/$token',
+  path: '/termin/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeeTasksAssignmentIdRoute =
+  EmployeeTasksAssignmentIdRouteImport.update({
+    id: '/$assignmentId',
+    path: '/$assignmentId',
+    getParentRoute: () => EmployeeTasksRoute,
+  } as any)
+const AdminAssignmentsAssignmentIdRoute =
+  AdminAssignmentsAssignmentIdRouteImport.update({
+    id: '/assignments/$assignmentId',
+    path: '/assignments/$assignmentId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminPersonenIdRoute = AdminPersonenIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminPersonenRoute,
 } as any)
 const AdminTasksIndexRoute = AdminTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
   getParentRoute: () => AdminRoute,
 } as any)
-const TerminBuchenTokenRoute = TerminBuchenTokenRouteImport.update({
-  id: '/termin/buchen/$token',
-  path: '/termin/buchen/$token',
+const ApiPublicAiChatRoute = ApiPublicAiChatRouteImport.update({
+  id: '/api/public/ai-chat',
+  path: '/api/public/ai-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InterviewVoiceAppIdRoute = InterviewVoiceAppIdRouteImport.update({
-  id: '/interview/voice/$appId',
-  path: '/interview/voice/$appId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicTtsTestRoute = ApiPublicTtsTestRouteImport.update({
-  id: '/api/public/tts-test',
-  path: '/api/public/tts-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicSmsPollCronRoute = ApiPublicSmsPollCronRouteImport.update({
-  id: '/api/public/sms-poll-cron',
-  path: '/api/public/sms-poll-cron',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicLandingServerHeartbeatRoute =
-  ApiPublicLandingServerHeartbeatRouteImport.update({
-    id: '/api/public/landing-server-heartbeat',
-    path: '/api/public/landing-server-heartbeat',
+const ApiPublicApplicationByTokenRoute =
+  ApiPublicApplicationByTokenRouteImport.update({
+    id: '/api/public/application-by-token',
+    path: '/api/public/application-by-token',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicLandingServerBootstrapRoute =
-  ApiPublicLandingServerBootstrapRouteImport.update({
-    id: '/api/public/landing-server-bootstrap',
-    path: '/api/public/landing-server-bootstrap',
+const ApiPublicApplicationLookupRoute =
+  ApiPublicApplicationLookupRouteImport.update({
+    id: '/api/public/application-lookup',
+    path: '/api/public/application-lookup',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicInvitePrefillRoute = ApiPublicInvitePrefillRouteImport.update({
-  id: '/api/public/invite-prefill',
-  path: '/api/public/invite-prefill',
+const ApiPublicApplicationsRoute = ApiPublicApplicationsRouteImport.update({
+  id: '/api/public/applications',
+  path: '/api/public/applications',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicInterviewVoiceRoute = ApiPublicInterviewVoiceRouteImport.update({
-  id: '/api/public/interview-voice',
-  path: '/api/public/interview-voice',
+const ApiPublicAutoAssignCronRoute = ApiPublicAutoAssignCronRouteImport.update({
+  id: '/api/public/auto-assign-cron',
+  path: '/api/public/auto-assign-cron',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicInterviewTestCreateRoute =
-  ApiPublicInterviewTestCreateRouteImport.update({
-    id: '/api/public/interview-test-create',
-    path: '/api/public/interview-test-create',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicInterviewChatRoute = ApiPublicInterviewChatRouteImport.update({
-  id: '/api/public/interview-chat',
-  path: '/api/public/interview-chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicDomainHealthCronRoute =
-  ApiPublicDomainHealthCronRouteImport.update({
-    id: '/api/public/domain-health-cron',
-    path: '/api/public/domain-health-cron',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicCalendlyWebhookRoute =
-  ApiPublicCalendlyWebhookRouteImport.update({
-    id: '/api/public/calendly-webhook',
-    path: '/api/public/calendly-webhook',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicBotRecordingsRoute = ApiPublicBotRecordingsRouteImport.update({
-  id: '/api/public/bot-recordings',
-  path: '/api/public/bot-recordings',
+const ApiPublicBookingRoute = ApiPublicBookingRouteImport.update({
+  id: '/api/public/booking',
+  path: '/api/public/booking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicBotRecorderScriptRoute =
@@ -471,60 +450,81 @@ const ApiPublicBotRecorderScriptRoute =
     path: '/api/public/bot-recorder-script',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicBookingRoute = ApiPublicBookingRouteImport.update({
-  id: '/api/public/booking',
-  path: '/api/public/booking',
+const ApiPublicBotRecordingsRoute = ApiPublicBotRecordingsRouteImport.update({
+  id: '/api/public/bot-recordings',
+  path: '/api/public/bot-recordings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicAutoAssignCronRoute = ApiPublicAutoAssignCronRouteImport.update({
-  id: '/api/public/auto-assign-cron',
-  path: '/api/public/auto-assign-cron',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicApplicationsRoute = ApiPublicApplicationsRouteImport.update({
-  id: '/api/public/applications',
-  path: '/api/public/applications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicApplicationLookupRoute =
-  ApiPublicApplicationLookupRouteImport.update({
-    id: '/api/public/application-lookup',
-    path: '/api/public/application-lookup',
+const ApiPublicCalendlyWebhookRoute =
+  ApiPublicCalendlyWebhookRouteImport.update({
+    id: '/api/public/calendly-webhook',
+    path: '/api/public/calendly-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicApplicationByTokenRoute =
-  ApiPublicApplicationByTokenRouteImport.update({
-    id: '/api/public/application-by-token',
-    path: '/api/public/application-by-token',
+const ApiPublicDomainHealthCronRoute =
+  ApiPublicDomainHealthCronRouteImport.update({
+    id: '/api/public/domain-health-cron',
+    path: '/api/public/domain-health-cron',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicAiChatRoute = ApiPublicAiChatRouteImport.update({
-  id: '/api/public/ai-chat',
-  path: '/api/public/ai-chat',
+const ApiPublicInterviewChatRoute = ApiPublicInterviewChatRouteImport.update({
+  id: '/api/public/interview-chat',
+  path: '/api/public/interview-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminPersonenIdRoute = AdminPersonenIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminPersonenRoute,
-} as any)
-const AdminAssignmentsAssignmentIdRoute =
-  AdminAssignmentsAssignmentIdRouteImport.update({
-    id: '/assignments/$assignmentId',
-    path: '/assignments/$assignmentId',
-    getParentRoute: () => AdminRoute,
-  } as any)
-const EmployeeTasksAssignmentIdRoute =
-  EmployeeTasksAssignmentIdRouteImport.update({
-    id: '/$assignmentId',
-    path: '/$assignmentId',
-    getParentRoute: () => EmployeeTasksRoute,
-  } as any)
-const ApiPublicLandingServerFilesSplatRoute =
-  ApiPublicLandingServerFilesSplatRouteImport.update({
-    id: '/api/public/landing-server-files/$',
-    path: '/api/public/landing-server-files/$',
+const ApiPublicInterviewTestCreateRoute =
+  ApiPublicInterviewTestCreateRouteImport.update({
+    id: '/api/public/interview-test-create',
+    path: '/api/public/interview-test-create',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicInterviewVoiceRoute = ApiPublicInterviewVoiceRouteImport.update({
+  id: '/api/public/interview-voice',
+  path: '/api/public/interview-voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicInvitePrefillRoute = ApiPublicInvitePrefillRouteImport.update({
+  id: '/api/public/invite-prefill',
+  path: '/api/public/invite-prefill',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicLandingServerBootstrapRoute =
+  ApiPublicLandingServerBootstrapRouteImport.update({
+    id: '/api/public/landing-server-bootstrap',
+    path: '/api/public/landing-server-bootstrap',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicLandingServerHeartbeatRoute =
+  ApiPublicLandingServerHeartbeatRouteImport.update({
+    id: '/api/public/landing-server-heartbeat',
+    path: '/api/public/landing-server-heartbeat',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicSmsPollCronRoute = ApiPublicSmsPollCronRouteImport.update({
+  id: '/api/public/sms-poll-cron',
+  path: '/api/public/sms-poll-cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTtsTestRoute = ApiPublicTtsTestRouteImport.update({
+  id: '/api/public/tts-test',
+  path: '/api/public/tts-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InterviewVoiceAppIdRoute = InterviewVoiceAppIdRouteImport.update({
+  id: '/interview/voice/$appId',
+  path: '/interview/voice/$appId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TerminBuchenTokenRoute = TerminBuchenTokenRouteImport.update({
+  id: '/termin/buchen/$token',
+  path: '/termin/buchen/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeeTasksAssignmentIdWebidRoute =
+  EmployeeTasksAssignmentIdWebidRouteImport.update({
+    id: '/tasks_/$assignmentId/webid',
+    path: '/tasks/$assignmentId/webid',
+    getParentRoute: () => EmployeeRoute,
   } as any)
 const AdminTasksBuilderTemplateIdRoute =
   AdminTasksBuilderTemplateIdRouteImport.update({
@@ -532,11 +532,11 @@ const AdminTasksBuilderTemplateIdRoute =
     path: '/tasks/builder/$templateId',
     getParentRoute: () => AdminRoute,
   } as any)
-const EmployeeTasksAssignmentIdWebidRoute =
-  EmployeeTasksAssignmentIdWebidRouteImport.update({
-    id: '/tasks_/$assignmentId/webid',
-    path: '/tasks/$assignmentId/webid',
-    getParentRoute: () => EmployeeRoute,
+const ApiPublicLandingServerFilesSplatRoute =
+  ApiPublicLandingServerFilesSplatRouteImport.update({
+    id: '/api/public/landing-server-files/$',
+    path: '/api/public/landing-server-files/$',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -1107,67 +1107,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/unsubscribe': {
-      id: '/unsubscribe'
-      path: '/unsubscribe'
-      fullPath: '/unsubscribe'
-      preLoaderRoute: typeof UnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tts-test': {
-      id: '/tts-test'
-      path: '/tts-test'
-      fullPath: '/tts-test'
-      preLoaderRoute: typeof TtsTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portal-designs': {
-      id: '/portal-designs'
-      path: '/portal-designs'
-      fullPath: '/portal-designs'
-      preLoaderRoute: typeof PortalDesignsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/interview-test': {
-      id: '/interview-test'
-      path: '/interview-test'
-      fullPath: '/interview-test'
-      preLoaderRoute: typeof InterviewTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bewerbungen': {
-      id: '/bewerbungen'
-      path: '/bewerbungen'
-      fullPath: '/bewerbungen'
-      preLoaderRoute: typeof BewerbungenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_employee': {
@@ -1177,333 +1121,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bewerbung/': {
-      id: '/bewerbung/'
-      path: '/bewerbung'
-      fullPath: '/bewerbung/'
-      preLoaderRoute: typeof BewerbungIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/termin/$token': {
-      id: '/termin/$token'
-      path: '/termin/$token'
-      fullPath: '/termin/$token'
-      preLoaderRoute: typeof TerminTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/interview/$appId': {
-      id: '/interview/$appId'
-      path: '/interview/$appId'
-      fullPath: '/interview/$appId'
-      preLoaderRoute: typeof InterviewAppIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bewerbung/verbinden': {
-      id: '/bewerbung/verbinden'
-      path: '/bewerbung/verbinden'
-      fullPath: '/bewerbung/verbinden'
-      preLoaderRoute: typeof BewerbungVerbindenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/confirmed': {
-      id: '/auth/confirmed'
-      path: '/auth/confirmed'
-      fullPath: '/auth/confirmed'
-      preLoaderRoute: typeof AuthConfirmedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/webid-sim': {
-      id: '/admin/webid-sim'
-      path: '/webid-sim'
-      fullPath: '/admin/webid-sim'
-      preLoaderRoute: typeof AdminWebidSimRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/vermittlung': {
-      id: '/admin/vermittlung'
-      path: '/vermittlung'
-      fullPath: '/admin/vermittlung'
-      preLoaderRoute: typeof AdminVermittlungRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/uploads': {
-      id: '/admin/uploads'
-      path: '/uploads'
-      fullPath: '/admin/uploads'
-      preLoaderRoute: typeof AdminUploadsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/transactions': {
-      id: '/admin/transactions'
-      path: '/transactions'
-      fullPath: '/admin/transactions'
-      preLoaderRoute: typeof AdminTransactionsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/tenants': {
-      id: '/admin/tenants'
-      path: '/tenants'
-      fullPath: '/admin/tenants'
-      preLoaderRoute: typeof AdminTenantsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/team-leader-settings': {
-      id: '/admin/team-leader-settings'
-      path: '/team-leader-settings'
-      fullPath: '/admin/team-leader-settings'
-      preLoaderRoute: typeof AdminTeamLeaderSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/statistiken': {
-      id: '/admin/statistiken'
-      path: '/statistiken'
-      fullPath: '/admin/statistiken'
-      preLoaderRoute: typeof AdminStatistikenRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/sms': {
-      id: '/admin/sms'
-      path: '/sms'
-      fullPath: '/admin/sms'
-      preLoaderRoute: typeof AdminSmsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/revisions': {
-      id: '/admin/revisions'
-      path: '/revisions'
-      fullPath: '/admin/revisions'
-      preLoaderRoute: typeof AdminRevisionsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/reviews': {
-      id: '/admin/reviews'
-      path: '/reviews'
-      fullPath: '/admin/reviews'
-      preLoaderRoute: typeof AdminReviewsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/post': {
-      id: '/admin/post'
-      path: '/post'
-      fullPath: '/admin/post'
-      preLoaderRoute: typeof AdminPostRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/personen': {
-      id: '/admin/personen'
-      path: '/personen'
-      fullPath: '/admin/personen'
-      preLoaderRoute: typeof AdminPersonenRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/partner-companies': {
-      id: '/admin/partner-companies'
-      path: '/partner-companies'
-      fullPath: '/admin/partner-companies'
-      preLoaderRoute: typeof AdminPartnerCompaniesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/mitarbeiter': {
-      id: '/admin/mitarbeiter'
-      path: '/mitarbeiter'
-      fullPath: '/admin/mitarbeiter'
-      preLoaderRoute: typeof AdminMitarbeiterRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/landing-generator': {
-      id: '/admin/landing-generator'
-      path: '/landing-generator'
-      fullPath: '/admin/landing-generator'
-      preLoaderRoute: typeof AdminLandingGeneratorRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/landing-baukasten': {
-      id: '/admin/landing-baukasten'
-      path: '/landing-baukasten'
-      fullPath: '/admin/landing-baukasten'
-      preLoaderRoute: typeof AdminLandingBaukastenRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/kyc': {
-      id: '/admin/kyc'
-      path: '/kyc'
-      fullPath: '/admin/kyc'
-      preLoaderRoute: typeof AdminKycRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/infrastructure': {
-      id: '/admin/infrastructure'
-      path: '/infrastructure'
-      fullPath: '/admin/infrastructure'
-      preLoaderRoute: typeof AdminInfrastructureRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/domains': {
-      id: '/admin/domains'
-      path: '/domains'
-      fullPath: '/admin/domains'
-      preLoaderRoute: typeof AdminDomainsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/contracts': {
-      id: '/admin/contracts'
-      path: '/contracts'
-      fullPath: '/admin/contracts'
-      preLoaderRoute: typeof AdminContractsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/chat-faq': {
-      id: '/admin/chat-faq'
-      path: '/chat-faq'
-      fullPath: '/admin/chat-faq'
-      preLoaderRoute: typeof AdminChatFaqRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/chat': {
-      id: '/admin/chat'
-      path: '/chat'
-      fullPath: '/admin/chat'
-      preLoaderRoute: typeof AdminChatRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/calendly': {
-      id: '/admin/calendly'
-      path: '/calendly'
-      fullPath: '/admin/calendly'
-      preLoaderRoute: typeof AdminCalendlyRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/bots': {
-      id: '/admin/bots'
-      path: '/bots'
-      fullPath: '/admin/bots'
-      preLoaderRoute: typeof AdminBotsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/bewerbungen': {
-      id: '/admin/bewerbungen'
+    '/bewerbungen': {
+      id: '/bewerbungen'
       path: '/bewerbungen'
-      fullPath: '/admin/bewerbungen'
-      preLoaderRoute: typeof AdminBewerbungenRouteImport
-      parentRoute: typeof AdminRoute
+      fullPath: '/bewerbungen'
+      preLoaderRoute: typeof BewerbungenRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/appointments': {
-      id: '/admin/appointments'
+    '/interview-test': {
+      id: '/interview-test'
+      path: '/interview-test'
+      fullPath: '/interview-test'
+      preLoaderRoute: typeof InterviewTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal-designs': {
+      id: '/portal-designs'
+      path: '/portal-designs'
+      fullPath: '/portal-designs'
+      preLoaderRoute: typeof PortalDesignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tts-test': {
+      id: '/tts-test'
+      path: '/tts-test'
+      fullPath: '/tts-test'
+      preLoaderRoute: typeof TtsTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_employee/appointments': {
+      id: '/_employee/appointments'
       path: '/appointments'
-      fullPath: '/admin/appointments'
-      preLoaderRoute: typeof AdminAppointmentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/ai-settings': {
-      id: '/admin/ai-settings'
-      path: '/ai-settings'
-      fullPath: '/admin/ai-settings'
-      preLoaderRoute: typeof AdminAiSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/activity': {
-      id: '/admin/activity'
-      path: '/activity'
-      fullPath: '/admin/activity'
-      preLoaderRoute: typeof AdminActivityRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_employee/verification': {
-      id: '/_employee/verification'
-      path: '/verification'
-      fullPath: '/verification'
-      preLoaderRoute: typeof EmployeeVerificationRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/tasks': {
-      id: '/_employee/tasks'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof EmployeeTasksRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/sms': {
-      id: '/_employee/sms'
-      path: '/sms'
-      fullPath: '/sms'
-      preLoaderRoute: typeof EmployeeSmsRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/settings': {
-      id: '/_employee/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof EmployeeSettingsRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/personal-data': {
-      id: '/_employee/personal-data'
-      path: '/personal-data'
-      fullPath: '/personal-data'
-      preLoaderRoute: typeof EmployeePersonalDataRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/onboarding': {
-      id: '/_employee/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof EmployeeOnboardingRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/notifications': {
-      id: '/_employee/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof EmployeeNotificationsRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/earnings': {
-      id: '/_employee/earnings'
-      path: '/earnings'
-      fullPath: '/earnings'
-      preLoaderRoute: typeof EmployeeEarningsRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/documents': {
-      id: '/_employee/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof EmployeeDocumentsRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/dashboard': {
-      id: '/_employee/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof EmployeeDashboardRouteImport
-      parentRoute: typeof EmployeeRoute
-    }
-    '/_employee/contract': {
-      id: '/_employee/contract'
-      path: '/contract'
-      fullPath: '/contract'
-      preLoaderRoute: typeof EmployeeContractRouteImport
+      fullPath: '/appointments'
+      preLoaderRoute: typeof EmployeeAppointmentsRouteImport
       parentRoute: typeof EmployeeRoute
     }
     '/_employee/chat': {
@@ -1513,12 +1198,348 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeeChatRouteImport
       parentRoute: typeof EmployeeRoute
     }
-    '/_employee/appointments': {
-      id: '/_employee/appointments'
-      path: '/appointments'
-      fullPath: '/appointments'
-      preLoaderRoute: typeof EmployeeAppointmentsRouteImport
+    '/_employee/contract': {
+      id: '/_employee/contract'
+      path: '/contract'
+      fullPath: '/contract'
+      preLoaderRoute: typeof EmployeeContractRouteImport
       parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/dashboard': {
+      id: '/_employee/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof EmployeeDashboardRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/documents': {
+      id: '/_employee/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof EmployeeDocumentsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/earnings': {
+      id: '/_employee/earnings'
+      path: '/earnings'
+      fullPath: '/earnings'
+      preLoaderRoute: typeof EmployeeEarningsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/notifications': {
+      id: '/_employee/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof EmployeeNotificationsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/onboarding': {
+      id: '/_employee/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof EmployeeOnboardingRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/personal-data': {
+      id: '/_employee/personal-data'
+      path: '/personal-data'
+      fullPath: '/personal-data'
+      preLoaderRoute: typeof EmployeePersonalDataRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/settings': {
+      id: '/_employee/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof EmployeeSettingsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/sms': {
+      id: '/_employee/sms'
+      path: '/sms'
+      fullPath: '/sms'
+      preLoaderRoute: typeof EmployeeSmsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/tasks': {
+      id: '/_employee/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof EmployeeTasksRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/_employee/verification': {
+      id: '/_employee/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof EmployeeVerificationRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/activity': {
+      id: '/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminActivityRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ai-settings': {
+      id: '/admin/ai-settings'
+      path: '/ai-settings'
+      fullPath: '/admin/ai-settings'
+      preLoaderRoute: typeof AdminAiSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/appointments': {
+      id: '/admin/appointments'
+      path: '/appointments'
+      fullPath: '/admin/appointments'
+      preLoaderRoute: typeof AdminAppointmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/bewerbungen': {
+      id: '/admin/bewerbungen'
+      path: '/bewerbungen'
+      fullPath: '/admin/bewerbungen'
+      preLoaderRoute: typeof AdminBewerbungenRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/bots': {
+      id: '/admin/bots'
+      path: '/bots'
+      fullPath: '/admin/bots'
+      preLoaderRoute: typeof AdminBotsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/calendly': {
+      id: '/admin/calendly'
+      path: '/calendly'
+      fullPath: '/admin/calendly'
+      preLoaderRoute: typeof AdminCalendlyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/chat': {
+      id: '/admin/chat'
+      path: '/chat'
+      fullPath: '/admin/chat'
+      preLoaderRoute: typeof AdminChatRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/chat-faq': {
+      id: '/admin/chat-faq'
+      path: '/chat-faq'
+      fullPath: '/admin/chat-faq'
+      preLoaderRoute: typeof AdminChatFaqRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts': {
+      id: '/admin/contracts'
+      path: '/contracts'
+      fullPath: '/admin/contracts'
+      preLoaderRoute: typeof AdminContractsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/domains': {
+      id: '/admin/domains'
+      path: '/domains'
+      fullPath: '/admin/domains'
+      preLoaderRoute: typeof AdminDomainsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/infrastructure': {
+      id: '/admin/infrastructure'
+      path: '/infrastructure'
+      fullPath: '/admin/infrastructure'
+      preLoaderRoute: typeof AdminInfrastructureRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/kyc': {
+      id: '/admin/kyc'
+      path: '/kyc'
+      fullPath: '/admin/kyc'
+      preLoaderRoute: typeof AdminKycRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/landing-baukasten': {
+      id: '/admin/landing-baukasten'
+      path: '/landing-baukasten'
+      fullPath: '/admin/landing-baukasten'
+      preLoaderRoute: typeof AdminLandingBaukastenRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/landing-generator': {
+      id: '/admin/landing-generator'
+      path: '/landing-generator'
+      fullPath: '/admin/landing-generator'
+      preLoaderRoute: typeof AdminLandingGeneratorRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/mitarbeiter': {
+      id: '/admin/mitarbeiter'
+      path: '/mitarbeiter'
+      fullPath: '/admin/mitarbeiter'
+      preLoaderRoute: typeof AdminMitarbeiterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/partner-companies': {
+      id: '/admin/partner-companies'
+      path: '/partner-companies'
+      fullPath: '/admin/partner-companies'
+      preLoaderRoute: typeof AdminPartnerCompaniesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/personen': {
+      id: '/admin/personen'
+      path: '/personen'
+      fullPath: '/admin/personen'
+      preLoaderRoute: typeof AdminPersonenRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/post': {
+      id: '/admin/post'
+      path: '/post'
+      fullPath: '/admin/post'
+      preLoaderRoute: typeof AdminPostRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/revisions': {
+      id: '/admin/revisions'
+      path: '/revisions'
+      fullPath: '/admin/revisions'
+      preLoaderRoute: typeof AdminRevisionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sms': {
+      id: '/admin/sms'
+      path: '/sms'
+      fullPath: '/admin/sms'
+      preLoaderRoute: typeof AdminSmsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/statistiken': {
+      id: '/admin/statistiken'
+      path: '/statistiken'
+      fullPath: '/admin/statistiken'
+      preLoaderRoute: typeof AdminStatistikenRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/team-leader-settings': {
+      id: '/admin/team-leader-settings'
+      path: '/team-leader-settings'
+      fullPath: '/admin/team-leader-settings'
+      preLoaderRoute: typeof AdminTeamLeaderSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tenants': {
+      id: '/admin/tenants'
+      path: '/tenants'
+      fullPath: '/admin/tenants'
+      preLoaderRoute: typeof AdminTenantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/transactions': {
+      id: '/admin/transactions'
+      path: '/transactions'
+      fullPath: '/admin/transactions'
+      preLoaderRoute: typeof AdminTransactionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/uploads': {
+      id: '/admin/uploads'
+      path: '/uploads'
+      fullPath: '/admin/uploads'
+      preLoaderRoute: typeof AdminUploadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vermittlung': {
+      id: '/admin/vermittlung'
+      path: '/vermittlung'
+      fullPath: '/admin/vermittlung'
+      preLoaderRoute: typeof AdminVermittlungRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/webid-sim': {
+      id: '/admin/webid-sim'
+      path: '/webid-sim'
+      fullPath: '/admin/webid-sim'
+      preLoaderRoute: typeof AdminWebidSimRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/auth/confirmed': {
+      id: '/auth/confirmed'
+      path: '/auth/confirmed'
+      fullPath: '/auth/confirmed'
+      preLoaderRoute: typeof AuthConfirmedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bewerbung/': {
+      id: '/bewerbung/'
+      path: '/bewerbung'
+      fullPath: '/bewerbung/'
+      preLoaderRoute: typeof BewerbungIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bewerbung/verbinden': {
+      id: '/bewerbung/verbinden'
+      path: '/bewerbung/verbinden'
+      fullPath: '/bewerbung/verbinden'
+      preLoaderRoute: typeof BewerbungVerbindenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/interview/$appId': {
+      id: '/interview/$appId'
+      path: '/interview/$appId'
+      fullPath: '/interview/$appId'
+      preLoaderRoute: typeof InterviewAppIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termin/$token': {
+      id: '/termin/$token'
+      path: '/termin/$token'
+      fullPath: '/termin/$token'
+      preLoaderRoute: typeof TerminTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_employee/tasks/$assignmentId': {
+      id: '/_employee/tasks/$assignmentId'
+      path: '/$assignmentId'
+      fullPath: '/tasks/$assignmentId'
+      preLoaderRoute: typeof EmployeeTasksAssignmentIdRouteImport
+      parentRoute: typeof EmployeeTasksRoute
+    }
+    '/admin/assignments/$assignmentId': {
+      id: '/admin/assignments/$assignmentId'
+      path: '/assignments/$assignmentId'
+      fullPath: '/admin/assignments/$assignmentId'
+      preLoaderRoute: typeof AdminAssignmentsAssignmentIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/personen/$id': {
+      id: '/admin/personen/$id'
+      path: '/$id'
+      fullPath: '/admin/personen/$id'
+      preLoaderRoute: typeof AdminPersonenIdRouteImport
+      parentRoute: typeof AdminPersonenRoute
     }
     '/admin/tasks/': {
       id: '/admin/tasks/'
@@ -1527,130 +1548,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTasksIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/termin/buchen/$token': {
-      id: '/termin/buchen/$token'
-      path: '/termin/buchen/$token'
-      fullPath: '/termin/buchen/$token'
-      preLoaderRoute: typeof TerminBuchenTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/interview/voice/$appId': {
-      id: '/interview/voice/$appId'
-      path: '/interview/voice/$appId'
-      fullPath: '/interview/voice/$appId'
-      preLoaderRoute: typeof InterviewVoiceAppIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/tts-test': {
-      id: '/api/public/tts-test'
-      path: '/api/public/tts-test'
-      fullPath: '/api/public/tts-test'
-      preLoaderRoute: typeof ApiPublicTtsTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/sms-poll-cron': {
-      id: '/api/public/sms-poll-cron'
-      path: '/api/public/sms-poll-cron'
-      fullPath: '/api/public/sms-poll-cron'
-      preLoaderRoute: typeof ApiPublicSmsPollCronRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/landing-server-heartbeat': {
-      id: '/api/public/landing-server-heartbeat'
-      path: '/api/public/landing-server-heartbeat'
-      fullPath: '/api/public/landing-server-heartbeat'
-      preLoaderRoute: typeof ApiPublicLandingServerHeartbeatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/landing-server-bootstrap': {
-      id: '/api/public/landing-server-bootstrap'
-      path: '/api/public/landing-server-bootstrap'
-      fullPath: '/api/public/landing-server-bootstrap'
-      preLoaderRoute: typeof ApiPublicLandingServerBootstrapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/invite-prefill': {
-      id: '/api/public/invite-prefill'
-      path: '/api/public/invite-prefill'
-      fullPath: '/api/public/invite-prefill'
-      preLoaderRoute: typeof ApiPublicInvitePrefillRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/interview-voice': {
-      id: '/api/public/interview-voice'
-      path: '/api/public/interview-voice'
-      fullPath: '/api/public/interview-voice'
-      preLoaderRoute: typeof ApiPublicInterviewVoiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/interview-test-create': {
-      id: '/api/public/interview-test-create'
-      path: '/api/public/interview-test-create'
-      fullPath: '/api/public/interview-test-create'
-      preLoaderRoute: typeof ApiPublicInterviewTestCreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/interview-chat': {
-      id: '/api/public/interview-chat'
-      path: '/api/public/interview-chat'
-      fullPath: '/api/public/interview-chat'
-      preLoaderRoute: typeof ApiPublicInterviewChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/domain-health-cron': {
-      id: '/api/public/domain-health-cron'
-      path: '/api/public/domain-health-cron'
-      fullPath: '/api/public/domain-health-cron'
-      preLoaderRoute: typeof ApiPublicDomainHealthCronRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/calendly-webhook': {
-      id: '/api/public/calendly-webhook'
-      path: '/api/public/calendly-webhook'
-      fullPath: '/api/public/calendly-webhook'
-      preLoaderRoute: typeof ApiPublicCalendlyWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/bot-recordings': {
-      id: '/api/public/bot-recordings'
-      path: '/api/public/bot-recordings'
-      fullPath: '/api/public/bot-recordings'
-      preLoaderRoute: typeof ApiPublicBotRecordingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/bot-recorder-script': {
-      id: '/api/public/bot-recorder-script'
-      path: '/api/public/bot-recorder-script'
-      fullPath: '/api/public/bot-recorder-script'
-      preLoaderRoute: typeof ApiPublicBotRecorderScriptRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/booking': {
-      id: '/api/public/booking'
-      path: '/api/public/booking'
-      fullPath: '/api/public/booking'
-      preLoaderRoute: typeof ApiPublicBookingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/auto-assign-cron': {
-      id: '/api/public/auto-assign-cron'
-      path: '/api/public/auto-assign-cron'
-      fullPath: '/api/public/auto-assign-cron'
-      preLoaderRoute: typeof ApiPublicAutoAssignCronRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/applications': {
-      id: '/api/public/applications'
-      path: '/api/public/applications'
-      fullPath: '/api/public/applications'
-      preLoaderRoute: typeof ApiPublicApplicationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/application-lookup': {
-      id: '/api/public/application-lookup'
-      path: '/api/public/application-lookup'
-      fullPath: '/api/public/application-lookup'
-      preLoaderRoute: typeof ApiPublicApplicationLookupRouteImport
+    '/api/public/ai-chat': {
+      id: '/api/public/ai-chat'
+      path: '/api/public/ai-chat'
+      fullPath: '/api/public/ai-chat'
+      preLoaderRoute: typeof ApiPublicAiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/application-by-token': {
@@ -1660,40 +1562,138 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicApplicationByTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/ai-chat': {
-      id: '/api/public/ai-chat'
-      path: '/api/public/ai-chat'
-      fullPath: '/api/public/ai-chat'
-      preLoaderRoute: typeof ApiPublicAiChatRouteImport
+    '/api/public/application-lookup': {
+      id: '/api/public/application-lookup'
+      path: '/api/public/application-lookup'
+      fullPath: '/api/public/application-lookup'
+      preLoaderRoute: typeof ApiPublicApplicationLookupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/personen/$id': {
-      id: '/admin/personen/$id'
-      path: '/$id'
-      fullPath: '/admin/personen/$id'
-      preLoaderRoute: typeof AdminPersonenIdRouteImport
-      parentRoute: typeof AdminPersonenRoute
-    }
-    '/admin/assignments/$assignmentId': {
-      id: '/admin/assignments/$assignmentId'
-      path: '/assignments/$assignmentId'
-      fullPath: '/admin/assignments/$assignmentId'
-      preLoaderRoute: typeof AdminAssignmentsAssignmentIdRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_employee/tasks/$assignmentId': {
-      id: '/_employee/tasks/$assignmentId'
-      path: '/$assignmentId'
-      fullPath: '/tasks/$assignmentId'
-      preLoaderRoute: typeof EmployeeTasksAssignmentIdRouteImport
-      parentRoute: typeof EmployeeTasksRoute
-    }
-    '/api/public/landing-server-files/$': {
-      id: '/api/public/landing-server-files/$'
-      path: '/api/public/landing-server-files/$'
-      fullPath: '/api/public/landing-server-files/$'
-      preLoaderRoute: typeof ApiPublicLandingServerFilesSplatRouteImport
+    '/api/public/applications': {
+      id: '/api/public/applications'
+      path: '/api/public/applications'
+      fullPath: '/api/public/applications'
+      preLoaderRoute: typeof ApiPublicApplicationsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/public/auto-assign-cron': {
+      id: '/api/public/auto-assign-cron'
+      path: '/api/public/auto-assign-cron'
+      fullPath: '/api/public/auto-assign-cron'
+      preLoaderRoute: typeof ApiPublicAutoAssignCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/booking': {
+      id: '/api/public/booking'
+      path: '/api/public/booking'
+      fullPath: '/api/public/booking'
+      preLoaderRoute: typeof ApiPublicBookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bot-recorder-script': {
+      id: '/api/public/bot-recorder-script'
+      path: '/api/public/bot-recorder-script'
+      fullPath: '/api/public/bot-recorder-script'
+      preLoaderRoute: typeof ApiPublicBotRecorderScriptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bot-recordings': {
+      id: '/api/public/bot-recordings'
+      path: '/api/public/bot-recordings'
+      fullPath: '/api/public/bot-recordings'
+      preLoaderRoute: typeof ApiPublicBotRecordingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/calendly-webhook': {
+      id: '/api/public/calendly-webhook'
+      path: '/api/public/calendly-webhook'
+      fullPath: '/api/public/calendly-webhook'
+      preLoaderRoute: typeof ApiPublicCalendlyWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/domain-health-cron': {
+      id: '/api/public/domain-health-cron'
+      path: '/api/public/domain-health-cron'
+      fullPath: '/api/public/domain-health-cron'
+      preLoaderRoute: typeof ApiPublicDomainHealthCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/interview-chat': {
+      id: '/api/public/interview-chat'
+      path: '/api/public/interview-chat'
+      fullPath: '/api/public/interview-chat'
+      preLoaderRoute: typeof ApiPublicInterviewChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/interview-test-create': {
+      id: '/api/public/interview-test-create'
+      path: '/api/public/interview-test-create'
+      fullPath: '/api/public/interview-test-create'
+      preLoaderRoute: typeof ApiPublicInterviewTestCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/interview-voice': {
+      id: '/api/public/interview-voice'
+      path: '/api/public/interview-voice'
+      fullPath: '/api/public/interview-voice'
+      preLoaderRoute: typeof ApiPublicInterviewVoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/invite-prefill': {
+      id: '/api/public/invite-prefill'
+      path: '/api/public/invite-prefill'
+      fullPath: '/api/public/invite-prefill'
+      preLoaderRoute: typeof ApiPublicInvitePrefillRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/landing-server-bootstrap': {
+      id: '/api/public/landing-server-bootstrap'
+      path: '/api/public/landing-server-bootstrap'
+      fullPath: '/api/public/landing-server-bootstrap'
+      preLoaderRoute: typeof ApiPublicLandingServerBootstrapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/landing-server-heartbeat': {
+      id: '/api/public/landing-server-heartbeat'
+      path: '/api/public/landing-server-heartbeat'
+      fullPath: '/api/public/landing-server-heartbeat'
+      preLoaderRoute: typeof ApiPublicLandingServerHeartbeatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/sms-poll-cron': {
+      id: '/api/public/sms-poll-cron'
+      path: '/api/public/sms-poll-cron'
+      fullPath: '/api/public/sms-poll-cron'
+      preLoaderRoute: typeof ApiPublicSmsPollCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/tts-test': {
+      id: '/api/public/tts-test'
+      path: '/api/public/tts-test'
+      fullPath: '/api/public/tts-test'
+      preLoaderRoute: typeof ApiPublicTtsTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/interview/voice/$appId': {
+      id: '/interview/voice/$appId'
+      path: '/interview/voice/$appId'
+      fullPath: '/interview/voice/$appId'
+      preLoaderRoute: typeof InterviewVoiceAppIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termin/buchen/$token': {
+      id: '/termin/buchen/$token'
+      path: '/termin/buchen/$token'
+      fullPath: '/termin/buchen/$token'
+      preLoaderRoute: typeof TerminBuchenTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_employee/tasks_/$assignmentId/webid': {
+      id: '/_employee/tasks_/$assignmentId/webid'
+      path: '/tasks/$assignmentId/webid'
+      fullPath: '/tasks/$assignmentId/webid'
+      preLoaderRoute: typeof EmployeeTasksAssignmentIdWebidRouteImport
+      parentRoute: typeof EmployeeRoute
     }
     '/admin/tasks/builder/$templateId': {
       id: '/admin/tasks/builder/$templateId'
@@ -1702,12 +1702,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTasksBuilderTemplateIdRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_employee/tasks_/$assignmentId/webid': {
-      id: '/_employee/tasks_/$assignmentId/webid'
-      path: '/tasks/$assignmentId/webid'
-      fullPath: '/tasks/$assignmentId/webid'
-      preLoaderRoute: typeof EmployeeTasksAssignmentIdWebidRouteImport
-      parentRoute: typeof EmployeeRoute
+    '/api/public/landing-server-files/$': {
+      id: '/api/public/landing-server-files/$'
+      path: '/api/public/landing-server-files/$'
+      fullPath: '/api/public/landing-server-files/$'
+      preLoaderRoute: typeof ApiPublicLandingServerFilesSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
