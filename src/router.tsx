@@ -1,8 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
-import { createRouter, useRouter } from "@tanstack/react-router";
+import { createRouter, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
   const router = useRouter();
 
   // Einmaliges automatisches Neuladen: fängt veraltete Seitenteile nach einem
