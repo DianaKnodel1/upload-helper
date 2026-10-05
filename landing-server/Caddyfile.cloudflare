@@ -1,0 +1,80 @@
+# Caddyfile für Server 1 (Landings) im Cloudflare-Proxy-Betrieb.
+#
+# Verwenden, sobald die Landing-Domains in Cloudflare über die orange Wolke
+# (Proxied) laufen. Dann kann Caddy keine Let's-Encrypt-Zertifikate mehr per
+# "on demand" holen.
+#
+# Weil die Domains in VIELEN verschiedenen Cloudflare-Konten liegen, wird hier
+# KEIN Origin-Zertifikat je Konto gepflegt, sondern Caddys eigene lokale CA
+# ("tls internal"). Caddy stellt damit für jede beliebige Domain automatisch
+# ein Zertifikat aus — kein Aufwand pro Kunde, auch nicht bei neuen Domains.
+#
+# Voraussetzung in JEDEM Cloudflare-Konto:
+#   Orange Wolke (Proxied) aktiv, SSL/TLS-Modus = "Full" (NICHT "Full (strict)")
+#
+# Direktzugriffe auf die Server-IP blockiert die Firewall
+# (scripts/harden-landing-server.sh): 80/443 nur für Cloudflare-IPs.
+#
+# Voraussetzung auf dem Server:
+#   /etc/caddy/cloudflare-trusted.caddy  (von scripts/update-cloudflare-ips.sh)
+#
+# Installation:
+#   cp /opt/landing-server/Caddyfile.cloudflare /etc/caddy/Caddyfile
+#   caddy validate --config /etc/caddy/Caddyfile && systemctl reload caddy
+
+{
+	# Kein ACME/E-Mail nötig: Zertifikate kommen aus Caddys lokaler CA
+	# ("tls internal" weiter unten), Cloudflare-Modus "Full".
+
+	on_demand_tls {
+		ask http://127.0.0.1:3001/_internal/ask
+	}
+
+
+	servers {
+		# Anfragen langsam abweisen statt Ressourcen zu verbrauchen
+		timeouts {
+			read_body   10s
+			read_header 10s
+			write       60s
+			idle        120s
+		}
+	}
+}
+
+# HTTP → HTTPS (erreicht uns ohnehin nur über Cloudflare)
+http:// {
+	redir https://{host}{uri} 308
+}
+
+https:// {
+	# Lokale CA: gilt für beliebig viele Domains, Cloudflare-Modus "Full".
+	tls internal {
+		on_demand
+	}
+
+	encode zstd gzip
+
+	request_body {
+		max_size 2MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options    "nosniff"
+		X-Frame-Options           "DENY"
+		Referrer-Policy           "strict-origin-when-cross-origin"
+		Permissions-Policy        "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:3001 {
+		# Cloudflare-IP-Bereiche als vertrauenswürdig einstufen, damit die
+		# echte Besucher-IP aus X-Forwarded-For übernommen wird.
+		# Wird täglich von update-cloudflare-ips.sh frisch geschrieben.
+		import /etc/caddy/cloudflare-trusted.caddy
+
+		header_up Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

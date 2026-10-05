@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-cc">
+<header class="cc-nav" data-animate>
+  <div class="cc-container cc-nav-inner">
+    <a href="#top" class="cc-brand">{{brand_name}}</a>
+    <nav class="cc-menu" id="nav-links">
+      <a href="#position">Position</a>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#arbeitsweise">Arbeitsweise</a>
+      <a href="#voraussetzungen">Voraussetzungen</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="cc-nav-right">
+      <a href="#bewerbung-form" class="cc-btn cc-btn-solid cc-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="cc-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="cc-hero">
+    <div class="cc-container cc-hero-grid">
+      <div class="cc-hero-content">
+        <p class="cc-kicker">{{hero_kicker}}</p>
+        <h1>{{hero_title}}</h1>
+        <p class="cc-hero-sub">{{hero_sub}}</p>
+        <div class="cc-hero-actions">
+          <a href="#bewerbung-form" class="cc-btn cc-btn-solid">{{hero_cta}}</a>
+          <a href="#position" class="cc-btn-link">{{hero_cta_sec}} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="cc-facts">
+          <div><strong>{{fact1_v}}</strong><span>{{fact1_l}}</span></div>
+          <div><strong>{{fact2_v}}</strong><span>{{fact2_l}}</span></div>
+          <div><strong>{{fact3_v}}</strong><span>{{fact3_l}}</span></div>
+        </div>
+      </div>
+      <div class="cc-hero-media">
+        <img src="{{hero_image}}" alt="Beratung im Gespräch" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="cc-trust">
+    <div class="cc-container cc-trust-grid">
+      <div class="cc-trust-item">{{t1_t}}</div>
+      <div class="cc-trust-item">{{t2_t}}</div>
+      <div class="cc-trust-item">{{t3_t}}</div>
+      <div class="cc-trust-item">{{t4_t}}</div>
+    </div>
+  </section>
+
+  <section id="position" class="cc-section">
+    <div class="cc-container cc-split">
+      <div class="cc-split-text">
+        <p class="cc-kicker">Die Position</p>
+        <h2 class="cc-h2">{{position_title}}</h2>
+        <p class="cc-lead">{{position_text}}</p>
+        <ul class="cc-points">
+          <li>{{position_point1}}</li>
+          <li>{{position_point2}}</li>
+          <li>{{position_point3}}</li>
+        </ul>
+      </div>
+      <div class="cc-split-media">
+        <img src="{{position_image}}" alt="Professionelle Zusammenarbeit" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section id="leistungen" class="cc-section cc-section-band">
+    <div class="cc-container">
+      <div class="cc-section-head">
+        <p class="cc-kicker">Leistungen</p>
+        <h2 class="cc-h2">{{services_title}}</h2>
+        <p class="cc-lead cc-lead-narrow">{{services_sub}}</p>
+      </div>
+      <div class="cc-cols3">
+        <article class="cc-service"><span class="cc-nr">01</span><h3>{{sv1_t}}</h3><p>{{sv1_d}}</p></article>
+        <article class="cc-service"><span class="cc-nr">02</span><h3>{{sv2_t}}</h3><p>{{sv2_d}}</p></article>
+        <article class="cc-service"><span class="cc-nr">03</span><h3>{{sv3_t}}</h3><p>{{sv3_d}}</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="arbeitsweise" class="cc-section">
+    <div class="cc-container">
+      <div class="cc-section-head">
+        <p class="cc-kicker">Arbeitsweise</p>
+        <h2 class="cc-h2">{{work_title}}</h2>
+      </div>
+      <div class="cc-cols4">
+        <article class="cc-work"><span class="cc-work-nr">I</span><h3>{{w1_t}}</h3><p>{{w1_d}}</p></article>
+        <article class="cc-work"><span class="cc-work-nr">II</span><h3>{{w2_t}}</h3><p>{{w2_d}}</p></article>
+        <article class="cc-work"><span class="cc-work-nr">III</span><h3>{{w3_t}}</h3><p>{{w3_d}}</p></article>
+        <article class="cc-work"><span class="cc-work-nr">IV</span><h3>{{w4_t}}</h3><p>{{w4_d}}</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="voraussetzungen" class="cc-section cc-section-band">
+    <div class="cc-container cc-two-col">
+      <div class="cc-panel">
+        <h3 class="cc-panel-title">{{benefits_title}}</h3>
+        <p class="cc-panel-sub">{{benefits_text}}</p>
+        <ul class="cc-checklist">
+          <li>{{ben1}}</li>
+          <li>{{ben2}}</li>
+          <li>{{ben3}}</li>
+          <li>{{ben4}}</li>
+        </ul>
+      </div>
+      <div class="cc-panel cc-panel-line">
+        <h3 class="cc-panel-title">{{req_title}}</h3>
+        <p class="cc-panel-sub">{{req_text}}</p>
+        <ul class="cc-checklist">
+          <li>{{req1}}</li>
+          <li>{{req2}}</li>
+          <li>{{req3}}</li>
+          <li>{{req4}}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cc-quote">
+    <div class="cc-container">
+      <blockquote>
+        <p>{{quote_t}}</p>
+        <cite>{{quote_a}}</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="ablauf" class="cc-section">
+    <div class="cc-container">
+      <div class="cc-section-head">
+        <p class="cc-kicker">Bewerbungsprozess</p>
+        <h2 class="cc-h2">{{process_title}}</h2>
+        <p class="cc-lead cc-lead-narrow">{{process_sub}}</p>
+      </div>
+      <div class="cc-steps">
+        <div class="cc-step"><span class="cc-step-nr">01</span><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div>
+        <div class="cc-step"><span class="cc-step-nr">02</span><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div>
+        <div class="cc-step"><span class="cc-step-nr">03</span><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div>
+        <div class="cc-step"><span class="cc-step-nr">04</span><h3>{{p4_t}}</h3><p>{{p4_d}}</p></div>
+      </div>
+      <div class="cc-center">
+        <a href="#bewerbung-form" class="cc-btn cc-btn-solid">{{final_cta}}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cc-cta-band">
+    <div class="cc-container cc-cta-inner">
+      <div>
+        <h2 class="cc-cta-title">{{final_title}}</h2>
+        <p class="cc-cta-sub">{{final_sub}}</p>
+      </div>
+      <a href="#bewerbung-form" class="cc-btn cc-btn-light">{{hero_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="cc-footer">
+  <div class="cc-container">
+    <div class="cc-footer-grid">
+      <div>
+        <span class="cc-brand cc-brand-light">{{brand_name}}</span>
+        <div class="cc-legal">{{legal_block}}</div>
+      </div>
+      <div class="cc-footer-contact">{{contact_block}}</div>
+      <div class="cc-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="cc-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

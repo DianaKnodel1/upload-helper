@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-hb">
+<header class="hb-nav" data-animate>
+  <div class="hb-container hb-nav-inner">
+    <a href="#top" class="hb-brand">{{brand_name}}</a>
+    <nav class="hb-menu" id="nav-links">
+      <a href="#zusammenarbeit">Zusammenarbeit</a>
+      <a href="#taetigkeit">Tätigkeit</a>
+      <a href="#ueber-uns">Über uns</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="hb-nav-right">
+      <a href="#bewerbung-form" class="hb-btn hb-btn-solid hb-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="hb-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hb-hero">
+    <div class="hb-container hb-hero-grid">
+      <div class="hb-hero-content">
+        <p class="hb-kicker">{{hero_kicker}}</p>
+        <h1>{{hero_title}}</h1>
+        <p class="hb-hero-sub">{{hero_sub}}</p>
+        <div class="hb-hero-actions">
+          <a href="#bewerbung-form" class="hb-btn hb-btn-solid">{{hero_cta}}</a>
+          <a href="#zusammenarbeit" class="hb-link">{{hero_cta_sec}} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="hb-chips">
+          <span class="hb-chip">{{chip1}}</span>
+          <span class="hb-chip">{{chip2}}</span>
+          <span class="hb-chip">{{chip3}}</span>
+        </div>
+      </div>
+      <div class="hb-hero-media">
+        <span class="hb-blob" aria-hidden="true"></span>
+        <img src="{{hero_image}}" alt="Team im Gespräch" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section id="zusammenarbeit" class="hb-section">
+    <div class="hb-container">
+      <div class="hb-section-head">
+        <p class="hb-kicker">So arbeiten wir</p>
+        <h2>{{work_title}}</h2>
+        <p class="hb-lead">{{work_text}}</p>
+      </div>
+      <div class="hb-cards3">
+        <article class="hb-card"><span class="hb-card-icon" aria-hidden="true">◦◦◦</span><h3>{{v1_t}}</h3><p>{{v1_d}}</p></article>
+        <article class="hb-card"><span class="hb-card-icon" aria-hidden="true">◦◦◦</span><h3>{{v2_t}}</h3><p>{{v2_d}}</p></article>
+        <article class="hb-card"><span class="hb-card-icon" aria-hidden="true">◦◦◦</span><h3>{{v3_t}}</h3><p>{{v3_d}}</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="taetigkeit" class="hb-section hb-section-band">
+    <div class="hb-container hb-split">
+      <div class="hb-split-media">
+        <img src="{{position_image}}" alt="Tätigkeit im Alltag" loading="lazy" />
+      </div>
+      <div>
+        <p class="hb-kicker">Die Tätigkeit</p>
+        <h2>{{position_title}}</h2>
+        <p class="hb-lead">{{position_text}}</p>
+        <ul class="hb-points">
+          <li>{{position_point1}}</li>
+          <li>{{position_point2}}</li>
+          <li>{{position_point3}}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ueber-uns" class="hb-section">
+    <div class="hb-container hb-split hb-split-rev">
+      <div>
+        <p class="hb-kicker">Über uns</p>
+        <h2>{{about_title}}</h2>
+        <p class="hb-lead">{{about_text}}</p>
+        <a href="#bewerbung-form" class="hb-btn hb-btn-outline">{{hero_cta}}</a>
+      </div>
+      <div class="hb-split-media">
+        <img src="{{about_image}}" alt="Persönliche Betreuung" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section id="ablauf" class="hb-section hb-section-band">
+    <div class="hb-container">
+      <div class="hb-section-head">
+        <p class="hb-kicker">Bewerbungsprozess</p>
+        <h2>{{process_title}}</h2>
+        <p class="hb-lead">{{process_sub}}</p>
+      </div>
+      <div class="hb-steps">
+        <div class="hb-step" data-animate><span class="hb-dot" aria-hidden="true"></span><div><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
+        <div class="hb-step" data-animate><span class="hb-dot" aria-hidden="true"></span><div><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
+        <div class="hb-step" data-animate><span class="hb-dot" aria-hidden="true"></span><div><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+        <div class="hb-step" data-animate><span class="hb-dot" aria-hidden="true"></span><div><h3>{{p4_t}}</h3><p>{{p4_d}}</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hb-section">
+    <div class="hb-container">
+      <div class="hb-quotes">
+        <figure class="hb-quote-card" data-animate>
+          <blockquote>„{{quote_t}}"</blockquote>
+          <figcaption>{{quote_a}}</figcaption>
+        </figure>
+        <figure class="hb-quote-card" data-animate>
+          <blockquote>„{{quote2_t}}"</blockquote>
+          <figcaption>{{quote2_a}}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="hb-cta">
+    <div class="hb-container hb-cta-inner">
+      <div>
+        <h2>{{final_title}}</h2>
+        <p>{{final_sub}}</p>
+      </div>
+      <a href="#bewerbung-form" class="hb-btn hb-btn-solid">{{hero_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="hb-footer">
+  <div class="hb-container">
+    <div class="hb-footer-grid">
+      <div>
+        <span class="hb-brand hb-brand-dark">{{brand_name}}</span>
+        <div class="hb-legal">{{legal_block}}</div>
+      </div>
+      <div class="hb-footer-contact">{{contact_block}}</div>
+      <div class="hb-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="hb-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

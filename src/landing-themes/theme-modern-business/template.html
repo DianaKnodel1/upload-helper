@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-mb">
+<header class="mb-nav" data-animate>
+  <div class="mb-container mb-nav-inner">
+    <a href="#top" class="mb-brand"><span class="mb-brand-dot" aria-hidden="true"></span>{{brand_name}}</a>
+    <nav class="mb-menu" id="nav-links">
+      <a href="#taetigkeit">Tätigkeit</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#vorteile">Vorteile</a>
+      <a href="#voraussetzungen">Voraussetzungen</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="mb-nav-right">
+      <a href="#bewerbung-form" class="mb-btn mb-btn-solid mb-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="mb-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="mb-hero">
+    <div class="mb-hero-bg" aria-hidden="true"></div>
+    <div class="mb-container mb-hero-inner">
+      <p class="mb-kicker">{{hero_kicker}}</p>
+      <h1>{{hero_title}}</h1>
+      <p class="mb-hero-sub">{{hero_sub}}</p>
+      <div class="mb-hero-actions">
+        <a href="#bewerbung-form" class="mb-btn mb-btn-solid mb-btn-lg">{{hero_cta}}</a>
+        <a href="#ablauf" class="mb-btn-ghost">{{hero_cta_sec}}</a>
+      </div>
+    </div>
+    <div class="mb-container">
+      <div class="mb-stats" data-animate>
+        <div class="mb-stat"><strong>{{fact1_v}}</strong><span>{{fact1_l}}</span></div>
+        <div class="mb-stat"><strong>{{fact2_v}}</strong><span>{{fact2_l}}</span></div>
+        <div class="mb-stat"><strong>{{fact3_v}}</strong><span>{{fact3_l}}</span></div>
+        <div class="mb-stat mb-stat-cta"><a href="#bewerbung-form">{{hero_cta}} <span aria-hidden="true">&rarr;</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="taetigkeit" class="mb-section">
+    <div class="mb-container mb-asym">
+      <div class="mb-asym-head">
+        <p class="mb-kicker">Tätigkeit</p>
+        <h2>{{position_title}}</h2>
+        <p class="mb-lead">{{position_text}}</p>
+        <div class="mb-asym-media">
+          <img src="{{position_image}}" alt="Moderne Arbeitsumgebung" loading="lazy" />
+        </div>
+      </div>
+      <div class="mb-cards">
+        <article class="mb-card"><h3>{{sv1_t}}</h3><p>{{sv1_d}}</p></article>
+        <article class="mb-card mb-card-offset"><h3>{{sv2_t}}</h3><p>{{sv2_d}}</p></article>
+        <article class="mb-card"><h3>{{sv3_t}}</h3><p>{{sv3_d}}</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ablauf" class="mb-section mb-section-dark">
+    <div class="mb-container">
+      <p class="mb-kicker">So funktioniert der Einstieg</p>
+      <h2>{{process_title}}</h2>
+      <p class="mb-lead mb-lead-dark">{{process_sub}}</p>
+      <div class="mb-flow">
+        <div class="mb-flow-step" data-animate><span class="mb-flow-nr">01</span><div><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
+        <div class="mb-flow-step" data-animate><span class="mb-flow-nr">02</span><div><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
+        <div class="mb-flow-step" data-animate><span class="mb-flow-nr">03</span><div><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vorteile" class="mb-section mb-section-band">
+    <div class="mb-container mb-two-col">
+      <div class="mb-benefits">
+        <p class="mb-kicker">Was Sie erwartet</p>
+        <h2>{{benefits_title}}</h2>
+        <p class="mb-lead">{{benefits_text}}</p>
+        <ul class="mb-list">
+          <li>{{ben1}}</li>
+          <li>{{ben2}}</li>
+          <li>{{ben3}}</li>
+          <li>{{ben4}}</li>
+        </ul>
+      </div>
+      <div class="mb-split-media">
+        <img src="{{about_image}}" alt="Zusammenarbeit im Team" loading="lazy" />
+        <div class="mb-split-quote">
+          <p>„{{quote_t}}"</p>
+          <span>{{quote_a}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voraussetzungen" class="mb-section">
+    <div class="mb-container">
+      <div class="mb-section-head">
+        <p class="mb-kicker">Voraussetzungen</p>
+        <h2>{{req_title}}</h2>
+        <p class="mb-lead">{{req_text}}</p>
+      </div>
+      <div class="mb-req-grid">
+        <div class="mb-req"><span>01</span><p>{{req1}}</p></div>
+        <div class="mb-req"><span>02</span><p>{{req2}}</p></div>
+        <div class="mb-req"><span>03</span><p>{{req3}}</p></div>
+        <div class="mb-req"><span>04</span><p>{{req4}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-cta">
+    <div class="mb-container mb-cta-inner">
+      <h2>{{final_title}}</h2>
+      <p>{{final_sub}}</p>
+      <a href="#bewerbung-form" class="mb-btn mb-btn-solid mb-btn-lg">{{final_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="mb-footer">
+  <div class="mb-container">
+    <div class="mb-footer-grid">
+      <div>
+        <span class="mb-brand mb-brand-light"><span class="mb-brand-dot mb-brand-dot-light" aria-hidden="true"></span>{{brand_name}}</span>
+        <div class="mb-legal">{{legal_block}}</div>
+      </div>
+      <div class="mb-footer-contact">{{contact_block}}</div>
+      <div class="mb-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="mb-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

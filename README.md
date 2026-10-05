@@ -1,12 +1,12 @@
-# Upload Helper
+# Integrate Project
 
-Wie kann ich ein Projekt hochladen von früher? Ist per github oder auch datei (zip / winrar)
+kannst du das projekt bitte einbinden
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/9d4289b9-34d3-45dd-b827-b898ea736807).
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4bdc1b69-a1e5-4845-bb18-b7f786700144).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.

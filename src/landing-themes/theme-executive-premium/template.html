@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-ep">
+<header class="ep-nav" data-animate>
+  <div class="ep-container ep-nav-inner">
+    <a href="#top" class="ep-brand">{{brand_name}}</a>
+    <nav class="ep-menu" id="nav-links">
+      <a href="#position">Position</a>
+      <a href="#ansatz">Ansatz</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#voraussetzungen">Voraussetzungen</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="ep-nav-right">
+      <a href="#bewerbung-form" class="ep-btn-outline ep-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="ep-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="ep-hero">
+    <div class="ep-container ep-hero-grid">
+      <div class="ep-hero-content">
+        <p class="ep-roman">I</p>
+        <p class="ep-kicker">{{hero_kicker}}</p>
+        <h1>{{hero_title}}</h1>
+        <div class="ep-rule" aria-hidden="true"></div>
+        <p class="ep-hero-sub">{{hero_sub}}</p>
+        <div class="ep-hero-actions">
+          <a href="#bewerbung-form" class="ep-btn-outline">{{hero_cta}}</a>
+          <a href="#position" class="ep-link">{{hero_cta_sec}} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+      <div class="ep-hero-media">
+        <img src="{{hero_image}}" alt="Exklusiver Arbeitsbereich" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="ep-statement">
+    <div class="ep-container">
+      <p data-animate>{{statement_text}}</p>
+      <span class="ep-statement-src">{{statement_src}}</span>
+    </div>
+  </section>
+
+  <section id="position" class="ep-section">
+    <div class="ep-container ep-split">
+      <div class="ep-split-media">
+        <img src="{{position_image}}" alt="Position im Unternehmen" loading="lazy" />
+      </div>
+      <div class="ep-split-text">
+        <p class="ep-roman">II</p>
+        <h2>{{position_title}}</h2>
+        <p class="ep-lead">{{position_text}}</p>
+        <ul class="ep-points">
+          <li>{{position_point1}}</li>
+          <li>{{position_point2}}</li>
+          <li>{{position_point3}}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ansatz" class="ep-section ep-section-band">
+    <div class="ep-container">
+      <p class="ep-roman">III</p>
+      <div class="ep-section-head">
+        <h2>{{work_title}}</h2>
+        <p class="ep-lead">{{work_text}}</p>
+      </div>
+      <div class="ep-vals">
+        <div class="ep-val"><h3>{{w1_t}}</h3><p>{{w1_d}}</p></div>
+        <div class="ep-val"><h3>{{w2_t}}</h3><p>{{w2_d}}</p></div>
+        <div class="ep-val"><h3>{{w3_t}}</h3><p>{{w3_d}}</p></div>
+        <div class="ep-val"><h3>{{w4_t}}</h3><p>{{w4_d}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ablauf" class="ep-section">
+    <div class="ep-container ep-timewrap">
+      <div class="ep-time-head">
+        <p class="ep-roman">IV</p>
+        <h2>{{process_title}}</h2>
+        <p class="ep-lead">{{process_sub}}</p>
+      </div>
+      <div class="ep-timeline">
+        <div class="ep-time-item" data-animate><span class="ep-time-dot" aria-hidden="true"></span><div><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
+        <div class="ep-time-item" data-animate><span class="ep-time-dot" aria-hidden="true"></span><div><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
+        <div class="ep-time-item" data-animate><span class="ep-time-dot" aria-hidden="true"></span><div><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+        <div class="ep-time-item" data-animate><span class="ep-time-dot" aria-hidden="true"></span><div><h3>{{p4_t}}</h3><p>{{p4_d}}</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voraussetzungen" class="ep-section ep-section-band">
+    <div class="ep-container ep-req-cols">
+      <div>
+        <p class="ep-roman">V</p>
+        <h2>{{req_title}}</h2>
+        <p class="ep-lead">{{req_text}}</p>
+      </div>
+      <ul class="ep-req-list">
+        <li>{{req1}}</li>
+        <li>{{req2}}</li>
+        <li>{{req3}}</li>
+        <li>{{req4}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ep-quote">
+    <div class="ep-container">
+      <blockquote data-animate>
+        <p>„{{quote_t}}"</p>
+        <cite>{{quote_a}}</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="ep-cta">
+    <div class="ep-container ep-cta-inner">
+      <div>
+        <h2>{{final_title}}</h2>
+        <p>{{final_sub}}</p>
+      </div>
+      <a href="#bewerbung-form" class="ep-btn-outline">{{final_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="ep-footer">
+  <div class="ep-container">
+    <div class="ep-footer-grid">
+      <div>
+        <span class="ep-brand">{{brand_name}}</span>
+        <div class="ep-legal">{{legal_block}}</div>
+      </div>
+      <div class="ep-footer-contact">{{contact_block}}</div>
+      <div class="ep-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="ep-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
