@@ -1,8 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
-import { createRouter, useRouter } from "@tanstack/react-router";
+import { createRouter, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
   const router = useRouter();
 
   // Einmaliges automatisches Neuladen: fängt veraltete Seitenteile nach einem
@@ -26,8 +27,8 @@ function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => vo
         <p className="mt-2 text-sm text-muted-foreground">
           Bitte lade die Seite neu. Hilft das nicht, melde dich einmal ab und wieder an.
         </p>
-        {error?.message && (
-          <p className="mt-4 break-words text-xs text-muted-foreground">Fehler: {error.message}</p>
+        {errorMessage && (
+          <p className="mt-4 break-words text-xs text-muted-foreground">Fehler: {errorMessage}</p>
         )}
         <div className="mt-6 flex items-center justify-center gap-3">
           <button
