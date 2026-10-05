@@ -1,0 +1,26 @@
+.dp-form-section{background:#0b1524;padding:88px 24px;font-family:'Inter',system-ui,sans-serif;color:#d6dee8;border-top:1px solid #1f2a36}
+.dp-form-wrap{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.dp-form-mono{font-family:ui-monospace,'SF Mono','Cascadia Mono','Roboto Mono',Menlo,monospace;font-size:.78rem;letter-spacing:.1em;color:#58a6c9;margin-bottom:12px}
+.dp-form-title{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(1.6rem,2.6vw,2.1rem);line-height:1.2;font-weight:600;color:#f2f6fa;margin-bottom:12px}
+.dp-form-sub{font-size:.95rem;color:#8fa0b2;max-width:44ch}
+.dp-form-meta{margin-top:22px;font-size:.85rem;color:#8fa0b2}
+.dp-form{background:#131a23;border:1px solid #1f2a36;border-radius:12px;padding:34px 32px;display:flex;flex-direction:column;gap:16px}
+.dp-form-h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#f2f6fa;margin-bottom:6px}
+.dp-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dp-form label{display:flex;flex-direction:column;gap:6px;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:#8fa0b2}
+.dp-form input{background:#0b1524;border:1px solid #1f2a36;padding:12px 14px;font-size:.95rem;color:#d6dee8;font-family:inherit;border-radius:8px;transition:border-color .2s,box-shadow .2s}
+.dp-form input::placeholder{color:rgba(143,160,178,.5)}
+.dp-form input:focus{outline:none;border-color:#58a6c9;box-shadow:0 0 0 3px rgba(88,166,201,.16)}
+.dp-form-submit{margin-top:8px;background:#58a6c9;color:#0b1524;border:0;padding:14px 24px;font-size:.92rem;font-weight:600;cursor:pointer;border-radius:8px;transition:background .2s}
+.dp-form-submit:hover{background:#6db4d4}
+.dp-form-status{font-size:.88rem;text-align:center;min-height:1.2em}
+.dp-form-status.success{color:#6fd08f}
+.dp-form-status.error{color:#e08a80}
+@media (max-width:900px){
+  .dp-form-wrap{grid-template-columns:1fr;gap:36px}
+  .dp-form-section{padding:64px 20px}
+}
+@media (max-width:560px){
+  .dp-form{padding:26px 20px}
+  .dp-form-row{grid-template-columns:1fr}
+}

@@ -1,0 +1,13 @@
+{
+  "name": "ident-mirror-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ident-Mirror: Spiegel fuer WebID/POSTIDENT mit Hinweis-Einblendung und eigenem Admin-Panel",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

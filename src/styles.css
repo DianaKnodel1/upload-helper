@@ -19,7 +19,10 @@
  */
 
 @theme inline {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Plus Jakarta Sans", "Manrope", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
+
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
@@ -140,5 +143,67 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+  }
+}
+
+
+@layer components {
+  /*
+   * Sidebar-Navigation – „Helle Business"
+   * Ruhige, seriöse Navigation für Admin-Panel und Mitarbeiter-Portal.
+   * Nutzt ausschließlich semantische Tokens (hell + dunkel abgestimmt).
+   */
+  .sidebar-nav-link {
+    position: relative;
+    color: color-mix(in oklab, var(--sidebar-foreground) 68%, transparent);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .sidebar-nav-link:hover {
+    background: color-mix(in oklab, var(--sidebar-foreground) 5%, transparent);
+    color: var(--sidebar-foreground);
+  }
+  .sidebar-nav-link.active {
+    background: color-mix(in oklab, var(--primary) 9%, transparent);
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .sidebar-nav-link.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--primary);
+  }
+
+  /* Dezente Zähler-Badges: konturiert statt knallrot */
+  .sidebar-badge {
+    color: var(--muted-foreground);
+    background: var(--secondary);
+    border: 1px solid var(--border);
+  }
+}
+
+
+
+/* Human-like typing indicator for interview chat */
+@keyframes lv-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.typing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: hsl(215 16% 55%);
+  animation: lv-typing 1.4s ease-in-out infinite;
 }

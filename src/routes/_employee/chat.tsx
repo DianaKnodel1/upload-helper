@@ -1,0 +1,611 @@
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/_employee/chat")({
+  component: ChatPage,
+});
+
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "@/lib/router-compat";
+import { supabase } from "@/integrations/supabase/client";
+import { replaceMessages, type ChatConnectionState } from "@/lib/chat-sync";
+import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Send, MessageCircle, ShieldCheck, BadgeCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTeamLeader } from "@/hooks/use-team-leader";
+import { extractChatActions } from "@/hooks/use-next-step";
+import { ChatActionButtons } from "@/components/ChatActionButtons";
+import { EmojiPicker } from "@/components/EmojiPicker";
+import { ChatAttachmentButton, AttachmentPreview, type ChatAttachment } from "@/components/ChatAttachmentButton";
+import { isSystemMessage } from "@/lib/chat-system-message";
+
+interface ChatMessage {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  message: string;
+  read: boolean;
+  created_at: string;
+  attachment_url?: string | null;
+  attachment_name?: string | null;
+  attachment_type?: string | null;
+  is_system?: boolean | null;
+  delivery_status?: "sending" | "failed";
+}
+
+function mergeChatMessages(current: ChatMessage[], incoming: ChatMessage[]) {
+  const byId = new Map(current.map((message) => [message.id, message]));
+  for (const message of incoming) {
+    if (!isInternalAdminNote(message)) byId.set(message.id, message);
+  }
+  return Array.from(byId.values()).sort(
+    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+  );
+}
+
+const PAGE_SIZE = 200;
+
+
+// Interne KI-/Eskalations-Nachrichten sind reine Admin-Infos und werden im Mitarbeiter-Chat ausgeblendet.
+function isInternalAdminNote(msg: ChatMessage) {
+  return (
+    msg.message.startsWith("🤖 KI-Eskalation") ||
+    msg.message.startsWith("🤖 KI Eskalation") ||
+    msg.message.startsWith("[ESCALATE]")
+  );
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+}
+
+function formatDateSeparator(dateStr: string) {
+  const d = new Date(dateStr);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "Heute";
+  if (d.toDateString() === yesterday.toDateString()) return "Gestern";
+  return d.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+}
+
+function ChatPage() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [teamLeaderId, setTeamLeaderId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { leader, initials: leaderInitials, lastActiveText } = useTeamLeader();
+  const [sending, setSending] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [connState, setConnState] = useState<ChatConnectionState>("live");
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const typingChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
+  const typingSentAtRef = useRef(0);
+
+  useEffect(() => {
+    if (authLoading || !user) return;
+    loadData();
+  }, [user, authLoading]);
+
+  const loadData = async () => {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles").select("team_leader_id").eq("user_id", user!.id).maybeSingle();
+      const leaderId = profile?.team_leader_id ?? null;
+
+      // NEUESTE Nachrichten laden (absteigend abfragen, danach chronologisch
+      // sortieren). Vorher wurden die 200 ältesten geladen – neue Nachrichten
+      // fehlten dadurch nach jedem Neuladen.
+      const { data: msgs, error } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .or(`sender_id.eq.${user!.id},receiver_id.eq.${user!.id}`)
+        .order("created_at", { ascending: false })
+        .limit(PAGE_SIZE);
+      if (error) throw error;
+
+      setHasMore((msgs ?? []).length === PAGE_SIZE);
+      const visible = ((msgs ?? []) as ChatMessage[])
+        .filter((m) => !isInternalAdminNote(m))
+        .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      // Verlauf ersetzen, lokal noch nicht gesendete Nachrichten behalten.
+      setMessages((prev) => replaceMessages(prev, visible));
+
+      // Empfänger: hinterlegter Teamleiter, sonst letzter Absender an mich.
+      const lastIncoming = [...visible].reverse().find((m) => m.receiver_id === user!.id);
+      setTeamLeaderId(leaderId ?? lastIncoming?.sender_id ?? null);
+
+      await supabase
+        .from("chat_messages")
+        .update({ read: true } as any)
+        .eq("receiver_id", user!.id)
+        .eq("read", false);
+    } catch (err: any) {
+      console.error("Chat load error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadOlder = async () => {
+    if (!user || messages.length === 0) return;
+    setLoadingOlder(true);
+    const { data, error } = await supabase
+      .from("chat_messages")
+      .select("*")
+      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      .lt("created_at", messages[0]!.created_at)
+      .order("created_at", { ascending: false })
+      .limit(PAGE_SIZE);
+    setLoadingOlder(false);
+    if (error) {
+      console.error("Ältere Nachrichten konnten nicht geladen werden:", error);
+      return;
+    }
+    setHasMore((data ?? []).length === PAGE_SIZE);
+    const older = ((data ?? []) as ChatMessage[]).filter((m) => !isInternalAdminNote(m));
+    setMessages((prev) => {
+      const map = new Map<string, ChatMessage>();
+      for (const m of [...older, ...prev]) map.set(m.id, m);
+      return Array.from(map.values()).sort(
+        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      );
+    });
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    const syncLatest = async () => {
+      const { data, error } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+        .order("created_at", { ascending: false })
+        .limit(PAGE_SIZE);
+      if (!error && data) {
+        setMessages((prev) => mergeChatMessages(prev, (data as ChatMessage[]).slice().reverse()));
+      }
+    };
+    const channel = supabase
+      .channel(`employee-chat-${user.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, (payload) => {
+        const msg = payload.new as ChatMessage;
+        if (msg.sender_id === user.id || msg.receiver_id === user.id) {
+          // Interne Admin-/KI-Eskalations-Nachrichten im Mitarbeiter-Chat ausblenden
+          if (isInternalAdminNote(msg)) return;
+          if (msg.receiver_id === user.id && !teamLeaderId) setTeamLeaderId(msg.sender_id);
+          setMessages((prev) => mergeChatMessages(prev, [msg]));
+          // Chat ist offen → eingehende Nachricht sofort als gelesen markieren,
+          // sonst bleibt der Ungelesen-Zähler in der Admin-Ansicht stehen.
+          if (msg.receiver_id === user.id && !msg.read) {
+            void supabase.from("chat_messages").update({ read: true } as any).eq("id", msg.id);
+          }
+        }
+      })
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          console.info("[Chat Realtime] Mitarbeiter verbunden");
+          setConnState("live");
+          void syncLatest();
+        }
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          console.warn(`[Chat Realtime] Mitarbeiter-Verbindung: ${status}`);
+          setConnState("reconnecting");
+          void syncLatest();
+        }
+      });
+    const syncWhenVisible = () => {
+      if (document.visibilityState === "visible") void syncLatest();
+    };
+    document.addEventListener("visibilitychange", syncWhenVisible);
+    window.addEventListener("online", syncWhenVisible);
+    window.addEventListener("focus", syncWhenVisible);
+    // Stiller Fallback-Poll gegen stumme Verbindungsabbrüche.
+    const pollTimer = window.setInterval(syncWhenVisible, 25_000);
+    return () => {
+      document.removeEventListener("visibilitychange", syncWhenVisible);
+      window.removeEventListener("online", syncWhenVisible);
+      window.removeEventListener("focus", syncWhenVisible);
+      window.clearInterval(pollTimer);
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  // Tipp-Indikator pro Gesprächspaar (gleicher Kanalname wie in der Admin-Ansicht).
+  useEffect(() => {
+    if (!user || !teamLeaderId) {
+      setIsTyping(false);
+      return;
+    }
+    const channelName = `typing-${[user.id, teamLeaderId].sort().join("-")}`;
+    const channel = supabase.channel(channelName, { config: { broadcast: { self: false } } });
+    channel
+      .on("broadcast", { event: "typing" }, (payload) => {
+        if (payload.payload?.userId !== teamLeaderId) return;
+        if (typingTimeoutRef.current) window.clearTimeout(typingTimeoutRef.current);
+        if (payload.payload?.typing === false) {
+          setIsTyping(false);
+          return;
+        }
+        setIsTyping(true);
+        typingTimeoutRef.current = window.setTimeout(() => setIsTyping(false), 3000);
+      })
+      .subscribe();
+    typingChannelRef.current = channel;
+    return () => {
+      if (typingTimeoutRef.current) window.clearTimeout(typingTimeoutRef.current);
+      supabase.removeChannel(channel);
+      typingChannelRef.current = null;
+      setIsTyping(false);
+    };
+  }, [user, teamLeaderId]);
+
+  // Leert der Nutzer das Feld oder sendet ab, geht sofort ein
+  // "tippt nicht mehr" raus – kein Flackern, kein Hängenbleiben.
+  const broadcastTyping = (text: string) => {
+    if (!user || !typingChannelRef.current) return;
+    const typing = text.trim().length > 0;
+    if (!typing) {
+      typingSentAtRef.current = 0;
+      void typingChannelRef.current.send({
+        type: "broadcast", event: "typing", payload: { userId: user.id, typing: false },
+      });
+      return;
+    }
+    const now = Date.now();
+    if (now - typingSentAtRef.current < 1200) return;
+    typingSentAtRef.current = now;
+    void typingChannelRef.current.send({
+      type: "broadcast",
+      event: "typing",
+      payload: { userId: user.id, typing: true },
+    });
+  };
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  const [pendingAttachment, setPendingAttachment] = useState<ChatAttachment | null>(null);
+
+  const persistMessage = async (
+    optimisticId: string,
+    recipientId: string,
+    text: string,
+    attachment: ChatAttachment | null,
+  ) => {
+    if (!user) return;
+    setSending(true);
+    const { data: inserted, error } = await supabase.from("chat_messages").insert({
+      sender_id: user.id,
+      receiver_id: recipientId,
+      message: text || (attachment ? `📎 ${attachment.name}` : ""),
+      attachment_url: attachment?.url ?? null,
+      attachment_name: attachment?.name ?? null,
+      attachment_type: attachment?.type ?? null,
+    } as any).select("*").single();
+    if (error || !inserted) {
+      setMessages((prev) => prev.map((message) =>
+        message.id === optimisticId ? { ...message, delivery_status: "failed" } : message
+      ));
+      toast({ title: "Nachricht nicht gesendet", description: error?.message ?? "Bitte versuche es erneut.", variant: "destructive" });
+      setSending(false);
+      return;
+    }
+    setMessages((prev) => mergeChatMessages(
+      prev.filter((message) => message.id !== optimisticId),
+      [inserted as ChatMessage],
+    ));
+    setSending(false);
+  };
+
+  const sendMessage = async () => {
+    if ((!newMessage.trim() && !pendingAttachment) || !teamLeaderId || !user) return;
+    const text = newMessage.trim();
+    const attachment = pendingAttachment;
+    const optimisticId = `pending-${crypto.randomUUID()}`;
+    setMessages((prev) => mergeChatMessages(prev, [{
+      id: optimisticId,
+      sender_id: user.id,
+      receiver_id: teamLeaderId,
+      message: text || (attachment ? `📎 ${attachment.name}` : ""),
+      read: false,
+      created_at: new Date().toISOString(),
+      attachment_url: attachment?.url ?? null,
+      attachment_name: attachment?.name ?? null,
+      attachment_type: attachment?.type ?? null,
+      delivery_status: "sending",
+    }]));
+    setNewMessage("");
+    broadcastTyping("");
+    setPendingAttachment(null);
+    await persistMessage(optimisticId, teamLeaderId, text, attachment);
+  };
+
+  const retryMessage = async (message: ChatMessage) => {
+    if (!user || message.delivery_status !== "failed") return;
+    setMessages((prev) => prev.map((item) =>
+      item.id === message.id ? { ...item, delivery_status: "sending" } : item
+    ));
+    const attachment = message.attachment_url ? {
+      url: message.attachment_url,
+      name: message.attachment_name ?? "Anhang",
+      type: message.attachment_type ?? "application/octet-stream",
+    } : null;
+    await persistMessage(message.id, message.receiver_id, message.message, attachment);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex flex-col h-[calc(100vh-3.5rem)]">
+        <div className="border-b border-border bg-card px-5 py-3 flex items-center gap-3 shrink-0">
+          <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+          <div className="space-y-1.5">
+            <div className="h-4 w-24 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="flex-1" />
+      </div>
+    );
+  }
+
+  if (!teamLeaderId) {
+    return (
+      <div className="p-6 lg:p-8 max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="text-xl font-heading font-bold">Chat</h1>
+        </div>
+        <Card>
+          <CardContent className="pt-6 text-center space-y-3">
+            <MessageCircle className="h-10 w-10 text-muted-foreground/30 mx-auto" />
+            <p className="text-sm font-medium text-foreground">Dein Ansprechpartner wird dir in Kürze zugewiesen.</p>
+            <p className="text-xs text-muted-foreground">Du wirst benachrichtigt, sobald dein Teamleiter bereit ist.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
+      {/* Header */}
+      <div className="border-b border-border bg-card px-5 py-3 flex items-center gap-3 shrink-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate("/dashboard")}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div className="relative">
+          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden">
+            {leader.avatar_url ? (
+              <img src={leader.avatar_url} alt={leader.name} className="h-full w-full object-cover" />
+            ) : (
+              <span className="text-xs font-bold text-primary">{leaderInitials}</span>
+            )}
+          </div>
+          {leader.is_online && (
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-accent border-2 border-card" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <p className="text-sm font-semibold text-foreground">{leader.name}</p>
+            <BadgeCheck className="h-3.5 w-3.5 text-primary" />
+          </div>
+          <p className="text-[10px] text-muted-foreground">{lastActiveText}{!leader.is_online && ` · ${leader.response_time}`}</p>
+        </div>
+        <Badge variant="secondary" className="text-[10px] bg-accent/10 text-accent gap-1">
+          <ShieldCheck className="h-3 w-3" />
+          Verifiziert
+        </Badge>
+      </div>
+
+      {/* Messages */}
+      <div
+        className="flex-1 overflow-y-auto px-5 py-4 space-y-1"
+        onScroll={(e) => {
+          if (hasMore && !loadingOlder && messages.length > 0 && e.currentTarget.scrollTop < 40) void loadOlder();
+        }}
+      >
+        {connState === "reconnecting" && (
+          <p className="text-center text-[11px] text-amber-600 dark:text-amber-400 pb-2">
+            Verbindung unterbrochen – wird neu verbunden.
+          </p>
+        )}
+        {hasMore && messages.length > 0 && (
+          <div className="flex justify-center pb-2">
+            <Button size="sm" variant="ghost" className="h-7 text-[11px]" disabled={loadingOlder} onClick={() => void loadOlder()}>
+              {loadingOlder ? "Lädt…" : "Ältere Nachrichten laden"}
+            </Button>
+          </div>
+        )}
+        {messages.length === 0 && !isTyping && (
+          <div className="text-center py-12 px-6">
+            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/10 ring-4 ring-primary/5 overflow-hidden">
+              {leader.avatar_url ? (
+                <img src={leader.avatar_url} alt={leader.name} className="h-full w-full object-cover" />
+              ) : (
+                <span className="text-2xl font-bold text-primary">{leaderInitials}</span>
+              )}
+            </div>
+            <p className="text-lg font-heading font-bold text-foreground">{leader.name}</p>
+            <p className="text-xs text-muted-foreground mt-1">{leader.title || "Dein persönlicher Ansprechpartner"}</p>
+            {leader.is_online && (
+              <Badge variant="secondary" className="mt-2 text-[10px] bg-accent/10 text-accent gap-1 px-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent inline-block animate-pulse" />
+                Online
+              </Badge>
+            )}
+            <div className="mt-6 mx-auto max-w-[260px] bg-muted/50 border border-border rounded-2xl px-4 py-3">
+              <p className="text-sm text-foreground/80">👋 Hallo! Ich bin für dich da – bei Fragen, Problemen oder wenn du Hilfe brauchst. Schreib mir einfach!</p>
+            </div>
+            <p className="text-[10px] text-muted-foreground/60 mt-4">
+              {leader.is_online ? "Antwort in wenigen Minuten" : leader.response_time}
+            </p>
+          </div>
+        )}
+
+        {messages.map((msg, idx) => {
+          const isMine = msg.sender_id === user!.id;
+          const isSys = isSystemMessage(msg, teamLeaderId);
+          const prevMsg = idx > 0 ? messages[idx - 1] : null;
+          const showDateSep = !prevMsg || new Date(prevMsg.created_at).toDateString() !== new Date(msg.created_at).toDateString();
+          const sameSenderAsPrev = prevMsg && prevMsg.sender_id === msg.sender_id &&
+            !showDateSep &&
+            (new Date(msg.created_at).getTime() - new Date(prevMsg.created_at).getTime()) < 120000;
+
+          // Extract action buttons for system/leader messages
+          const chatActions = !isMine ? extractChatActions(msg.message) : [];
+
+          return (
+            <div key={msg.id}>
+              {showDateSep && (
+                <div className="flex items-center gap-3 my-4">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                    {formatDateSeparator(msg.created_at)}
+                  </span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+              )}
+
+              {isSys ? (
+                <div className="flex justify-center my-3">
+                  <div className="bg-gradient-to-r from-muted/80 to-muted/50 border border-border rounded-2xl px-5 py-3 max-w-[85%]">
+                    <p className="text-xs text-foreground/80 whitespace-pre-wrap leading-relaxed">{msg.message}</p>
+                    {chatActions.length > 0 && (
+                      <ChatActionButtons actions={chatActions} />
+                    )}
+                    <p className="text-[9px] text-muted-foreground/60 mt-2 text-center">
+                      {formatTime(msg.created_at)}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className={cn("flex items-end gap-2", isMine ? "justify-end" : "justify-start", sameSenderAsPrev ? "mt-0.5" : "mt-3")}>
+                  {!isMine && (
+                    <div className={cn("h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 mb-1 overflow-hidden", sameSenderAsPrev && "invisible")}>
+                      {leader.avatar_url ? (
+                        <img src={leader.avatar_url} alt={leader.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-[10px] font-bold text-primary">{leaderInitials}</span>
+                      )}
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "max-w-[70%] px-4 py-2.5 text-sm transition-all",
+                      isMine
+                        ? "bg-primary text-primary-foreground rounded-2xl rounded-br-md shadow-sm shadow-primary/20"
+                        : "bg-card border border-border text-foreground rounded-2xl rounded-bl-md shadow-sm"
+                    )}
+                  >
+                    {msg.message && <p className="whitespace-pre-wrap leading-relaxed">{msg.message}</p>}
+                    {msg.attachment_url && msg.attachment_type && (
+                      <AttachmentPreview
+                        url={msg.attachment_url}
+                        name={msg.attachment_name ?? "Anhang"}
+                        type={msg.attachment_type}
+                      />
+                    )}
+                    {!isMine && chatActions.length > 0 && (
+                      <ChatActionButtons actions={chatActions} />
+                    )}
+                    <p className={cn("text-[10px] mt-1", isMine ? "text-primary-foreground/50" : "text-muted-foreground/60")}>
+                      {formatTime(msg.created_at)}
+                      {isMine && msg.delivery_status === "sending" && " · Wird gesendet…"}
+                      {isMine && msg.delivery_status === "failed" && " · Nicht gesendet"}
+                      {isMine && !msg.delivery_status && msg.read && " · Gelesen"}
+                    </p>
+                    {isMine && msg.delivery_status === "failed" && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => void retryMessage(msg)}
+                        className="mt-1 h-6 px-2 text-[10px] text-primary-foreground hover:text-primary"
+                      >
+                        Erneut senden
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Typing indicator */}
+        {isTyping && (
+          <div className="flex items-end gap-2 mt-3 animate-fade-in">
+            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 mb-1">
+              <span className="text-[10px] font-bold text-primary">{leaderInitials}</span>
+            </div>
+            <div className="bg-card border border-border rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-primary font-semibold mr-1">Tippt gerade live...</span>
+                <div className="h-2 w-2 rounded-full bg-primary animate-bounce [animation-delay:0ms]" />
+                <div className="h-2 w-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
+                <div className="h-2 w-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div className="border-t border-border bg-card px-5 py-3 shrink-0 space-y-2">
+        {pendingAttachment && (
+          <div className="flex items-center gap-2 text-xs bg-muted/50 px-3 py-2 rounded-lg">
+            <span className="flex-1 truncate">📎 {pendingAttachment.name}</span>
+            <button
+              type="button"
+              onClick={() => setPendingAttachment(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Entfernen
+            </button>
+          </div>
+        )}
+        <div className="flex items-end gap-2">
+          <ChatAttachmentButton userId={user!.id} onUploaded={setPendingAttachment} />
+          <EmojiPicker onSelect={(e) => setNewMessage((m) => m + e)} />
+          <Textarea
+            value={newMessage}
+            onChange={(e) => { setNewMessage(e.target.value); broadcastTyping(e.target.value); }}
+            onKeyDown={handleKeyDown}
+            placeholder="Nachricht schreiben… (Shift + Enter = neue Zeile)"
+            rows={3}
+            className="flex-1 rounded-xl border-border/60 focus-visible:ring-primary/30 min-h-[80px] max-h-60 resize-y py-2 text-sm"
+          />
+          <Button
+            size="icon"
+            onClick={sendMessage}
+            disabled={(!newMessage.trim() && !pendingAttachment) || sending}
+            className="h-10 w-10 rounded-xl transition-all hover:scale-105 active:scale-95 shrink-0"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

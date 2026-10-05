@@ -1,0 +1,26 @@
+<section id="bewerbung-form" class="mp-form-section">
+  <div class="mp-form-wrap">
+    <div class="mp-form-intro">
+      <p class="mp-form-kicker">Jetzt bewerben</p>
+      <h2 class="mp-form-title">Bereit für den nächsten Schritt?</h2>
+      <p class="mp-form-sub">In 2 Minuten ausfüllen — danach wählen Sie direkt Ihren Wunschtermin für Ihr Online-Interview.</p>
+      <p class="mp-form-meta">{{contact_phone}} &nbsp;·&nbsp; {{contact_email}}</p>
+    </div>
+    <form id="application-form" class="mp-form">
+      <h3 class="mp-form-h3">Bewerbungsformular</h3>
+      <div class="mp-form-row">
+        <label>Vorname<input name="first_name" required placeholder="Max" /></label>
+        <label>Nachname<input name="last_name" required placeholder="Mustermann" /></label>
+      </div>
+      <label>Straße &amp; Hausnummer<input name="street" placeholder="Musterstraße 12" /></label>
+      <div class="mp-form-row">
+        <label>PLZ<input name="postal_code" placeholder="10115" /></label>
+        <label>Stadt<input name="city" placeholder="Berlin" /></label>
+      </div>
+      <label>Telefonnummer<input name="phone" required placeholder="+49 …" /></label>
+      <label>E-Mail-Adresse<input type="email" name="email" required placeholder="name@beispiel.de" /></label>
+      <button type="submit" class="mp-form-submit">Bewerbung absenden</button>
+      <p id="form-status" class="mp-form-status"></p>
+    </form>
+  </div>
+</section>

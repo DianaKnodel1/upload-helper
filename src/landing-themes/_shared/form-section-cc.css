@@ -1,0 +1,26 @@
+.cc-form-section{background:#f4f6f9;padding:88px 24px;border-top:1px solid #d9dfe6;font-family:'Inter',system-ui,sans-serif;color:#22303f}
+.cc-form-wrap{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.cc-form-kicker{font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#33547a;margin-bottom:12px}
+.cc-form-title{font-family:'Source Serif 4',Georgia,serif;font-size:clamp(1.6rem,2.6vw,2.1rem);line-height:1.2;font-weight:600;color:#0f2440;margin-bottom:12px}
+.cc-form-sub{font-size:.95rem;color:#5b6b7d;max-width:44ch}
+.cc-form-meta{margin-top:22px;font-size:.85rem;color:#5b6b7d;border-top:1px solid #d9dfe6;padding-top:18px}
+.cc-form{background:#fff;border:1px solid #d9dfe6;padding:34px 32px}
+.cc-form-h3{font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#0f2440;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #d9dfe6}
+.cc-form{display:flex;flex-direction:column;gap:16px}
+.cc-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cc-form label{display:flex;flex-direction:column;gap:6px;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:#22303f;text-transform:uppercase}
+.cc-form input{background:#fbfcfd;border:1px solid #d9dfe6;padding:12px 14px;font-size:.95rem;color:#22303f;font-family:inherit;border-radius:2px;transition:border-color .2s,box-shadow .2s}
+.cc-form input:focus{outline:none;border-color:#33547a;box-shadow:0 0 0 3px rgba(51,84,122,.14)}
+.cc-form-submit{margin-top:8px;background:#0f2440;color:#fff;border:0;padding:15px 24px;font-size:.92rem;font-weight:600;letter-spacing:.02em;cursor:pointer;border-radius:2px;transition:background .2s}
+.cc-form-submit:hover{background:#16335a}
+.cc-form-status{font-size:.88rem;text-align:center;min-height:1.2em}
+.cc-form-status.success{color:#1c7a45}
+.cc-form-status.error{color:#b0453a}
+@media (max-width:900px){
+  .cc-form-wrap{grid-template-columns:1fr;gap:36px}
+  .cc-form-section{padding:64px 20px}
+}
+@media (max-width:560px){
+  .cc-form{padding:26px 20px}
+  .cc-form-row{grid-template-columns:1fr}
+}

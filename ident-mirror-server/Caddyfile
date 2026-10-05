@@ -1,0 +1,20 @@
+# Referenz-Vorlage: So sieht ein Site-Block in /etc/caddy/Caddyfile aus.
+# setup.sh hängt diesen Block automatisch pro MIRROR_DOMAIN an die Caddyfile an
+# (mit konkreter Domain und Port) — diese Datei muss NICHT manuell kopiert werden.
+
+mirror.example.de {
+    # Cloudflare Origin-Zertifikat (15 Jahre), siehe README
+    tls /etc/caddy/origin.crt /etc/caddy/origin.key
+
+    encode zstd gzip
+
+    header {
+        X-Robots-Tag "noindex, nofollow"
+        -Server
+    }
+
+    reverse_proxy 127.0.0.1:3003 {
+        # echte Client-IP fürs Rate-Limit durchreichen
+        header_up X-Real-IP {remote_host}
+    }
+}

@@ -1,0 +1,26 @@
+.ep-form-section{background:#0a1122;color:rgba(242,237,225,.78);padding:88px 24px;font-family:'Inter',system-ui,sans-serif}
+.ep-form-wrap{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+.ep-form-roman{font-family:'Marcellus',Georgia,serif;font-size:.95rem;color:#c9a875;letter-spacing:.2em;margin-bottom:14px}
+.ep-form-title{font-family:'Marcellus',Georgia,serif;font-size:clamp(1.7rem,2.8vw,2.2rem);line-height:1.2;font-weight:400;color:#f2ede1;margin-bottom:14px}
+.ep-form-sub{font-size:.95rem;color:rgba(242,237,225,.6);max-width:44ch}
+.ep-form-meta{margin-top:24px;font-size:.85rem;color:rgba(242,237,225,.55);border-top:1px solid rgba(242,237,225,.14);padding-top:18px}
+.ep-form{background:#101a30;border:1px solid rgba(242,237,225,.14);padding:34px 32px;display:flex;flex-direction:column;gap:16px}
+.ep-form-h3{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:#c9a875;margin-bottom:6px}
+.ep-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ep-form label{display:flex;flex-direction:column;gap:6px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(242,237,225,.55)}
+.ep-form input{background:rgba(10,17,34,.7);border:1px solid rgba(242,237,225,.16);padding:12px 14px;font-size:.95rem;color:#f2ede1;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.ep-form input::placeholder{color:rgba(242,237,225,.35)}
+.ep-form input:focus{outline:none;border-color:#c9a875;box-shadow:0 0 0 3px rgba(201,168,117,.15)}
+.ep-form-submit{margin-top:8px;background:transparent;color:#f2ede1;border:1px solid rgba(242,237,225,.4);padding:14px 26px;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s}
+.ep-form-submit:hover{background:#f2ede1;color:#0a1122}
+.ep-form-status{font-size:.88rem;text-align:center;min-height:1.2em}
+.ep-form-status.success{color:#7fc79a}
+.ep-form-status.error{color:#e08a80}
+@media (max-width:900px){
+  .ep-form-wrap{grid-template-columns:1fr;gap:36px}
+  .ep-form-section{padding:64px 20px}
+}
+@media (max-width:560px){
+  .ep-form{padding:26px 20px}
+  .ep-form-row{grid-template-columns:1fr}
+}

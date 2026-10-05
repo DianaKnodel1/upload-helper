@@ -1,0 +1,25 @@
+.mb-form-section{background:#f5f6f4;padding:88px 24px;font-family:'Inter',system-ui,sans-serif;color:#2a323c}
+.mb-form-wrap{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.mb-form-kicker{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#0e7c86;margin-bottom:12px}
+.mb-form-title{font-family:'Sora',system-ui,sans-serif;font-size:clamp(1.6rem,2.6vw,2.1rem);line-height:1.2;font-weight:600;color:#14181d;margin-bottom:12px}
+.mb-form-sub{font-size:.95rem;color:#5c6673;max-width:44ch}
+.mb-form-meta{margin-top:22px;font-size:.85rem;color:#5c6673}
+.mb-form{background:#fff;border:1px solid #e3e6e3;border-radius:14px;padding:34px 32px;display:flex;flex-direction:column;gap:16px;box-shadow:0 20px 44px -30px rgba(20,24,29,.25)}
+.mb-form-h3{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:600;color:#14181d;margin-bottom:6px}
+.mb-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mb-form label{display:flex;flex-direction:column;gap:6px;font-size:.8rem;font-weight:600;color:#2a323c}
+.mb-form input{background:#fbfcfb;border:1px solid #e3e6e3;padding:12px 14px;font-size:.95rem;color:#2a323c;font-family:inherit;border-radius:10px;transition:border-color .2s,box-shadow .2s}
+.mb-form input:focus{outline:none;border-color:#0e7c86;box-shadow:0 0 0 3px rgba(14,124,134,.14)}
+.mb-form-submit{margin-top:8px;background:#0e7c86;color:#fff;border:0;padding:15px 24px;font-size:.95rem;font-weight:600;cursor:pointer;border-radius:10px;transition:background .2s,transform .2s}
+.mb-form-submit:hover{background:#0b6a73;transform:translateY(-1px)}
+.mb-form-status{font-size:.88rem;text-align:center;min-height:1.2em}
+.mb-form-status.success{color:#1c7a45}
+.mb-form-status.error{color:#b0453a}
+@media (max-width:900px){
+  .mb-form-wrap{grid-template-columns:1fr;gap:36px}
+  .mb-form-section{padding:64px 20px}
+}
+@media (max-width:560px){
+  .mb-form{padding:26px 20px}
+  .mb-form-row{grid-template-columns:1fr}
+}

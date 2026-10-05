@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-mp">
+<header class="mp-nav" data-animate>
+  <div class="mp-container mp-nav-inner">
+    <a href="#top" class="mp-brand">{{brand_name}}</a>
+    <nav class="mp-menu" id="nav-links">
+      <a href="#taetigkeit">Tätigkeit</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#voraussetzungen">Voraussetzungen</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="mp-nav-right">
+      <a href="#bewerbung-form" class="mp-btn mp-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="mp-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="mp-hero">
+    <div class="mp-container">
+      <p class="mp-kicker">{{hero_kicker}}</p>
+      <h1>{{hero_title}}</h1>
+      <p class="mp-hero-sub">{{hero_sub}}</p>
+      <div class="mp-hero-actions">
+        <a href="#bewerbung-form" class="mp-btn">{{hero_cta}}</a>
+        <a href="#taetigkeit" class="mp-link">{{hero_cta_sec}} <span aria-hidden="true">&darr;</span></a>
+      </div>
+      <div class="mp-hero-media">
+        <img src="{{hero_image}}" alt="Klares Arbeitsumfeld" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-statement">
+    <div class="mp-container">
+      <p data-animate>{{statement_text}}</p>
+    </div>
+  </section>
+
+  <section id="taetigkeit" class="mp-section">
+    <div class="mp-container mp-row">
+      <div class="mp-row-head">
+        <p class="mp-kicker">01 — Tätigkeit</p>
+        <h2>{{position_title}}</h2>
+      </div>
+      <div class="mp-row-body">
+        <p class="mp-lead">{{position_text}}</p>
+        <div class="mp-rows">
+          <div class="mp-item"><h3>{{t1_t}}</h3><p>{{t1_d}}</p></div>
+          <div class="mp-item"><h3>{{t2_t}}</h3><p>{{t2_d}}</p></div>
+          <div class="mp-item"><h3>{{t3_t}}</h3><p>{{t3_d}}</p></div>
+          <div class="mp-item"><h3>{{t4_t}}</h3><p>{{t4_d}}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ablauf" class="mp-section mp-section-band">
+    <div class="mp-container mp-row">
+      <div class="mp-row-head">
+        <p class="mp-kicker">02 — Ablauf</p>
+        <h2>{{process_title}}</h2>
+      </div>
+      <div class="mp-row-body">
+        <p class="mp-lead">{{process_sub}}</p>
+        <div class="mp-rows">
+          <div class="mp-item mp-item-nr"><span>01</span><div><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
+          <div class="mp-item mp-item-nr"><span>02</span><div><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
+          <div class="mp-item mp-item-nr"><span>03</span><div><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+          <div class="mp-item mp-item-nr"><span>04</span><div><h3>{{p4_t}}</h3><p>{{p4_d}}</p></div></div>
+        </div>
+        <div class="mp-cta-inline">
+          <a href="#bewerbung-form" class="mp-btn">{{final_cta}}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voraussetzungen" class="mp-section">
+    <div class="mp-container mp-row">
+      <div class="mp-row-head">
+        <p class="mp-kicker">03 — Voraussetzungen</p>
+        <h2>{{req_title}}</h2>
+      </div>
+      <div class="mp-row-body">
+        <p class="mp-lead">{{req_text}}</p>
+        <div class="mp-req-grid">
+          <div class="mp-req"><span>01</span><p>{{req1}}</p></div>
+          <div class="mp-req"><span>02</span><p>{{req2}}</p></div>
+          <div class="mp-req"><span>03</span><p>{{req3}}</p></div>
+          <div class="mp-req"><span>04</span><p>{{req4}}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="mp-section mp-section-band">
+    <div class="mp-container mp-row">
+      <div class="mp-row-head">
+        <p class="mp-kicker">04 — FAQ</p>
+        <h2>{{faq_title}}</h2>
+      </div>
+      <div class="mp-row-body">
+        <details class="mp-faq" open><summary>{{faq1_q}}</summary><p>{{faq1_a}}</p></details>
+        <details class="mp-faq"><summary>{{faq2_q}}</summary><p>{{faq2_a}}</p></details>
+        <details class="mp-faq"><summary>{{faq3_q}}</summary><p>{{faq3_a}}</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-cta">
+    <div class="mp-container">
+      <h2>{{final_title}}</h2>
+      <p>{{final_sub}}</p>
+      <a href="#bewerbung-form" class="mp-btn mp-btn-light">{{hero_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="mp-footer">
+  <div class="mp-container">
+    <div class="mp-footer-top">
+      <div>
+        <span class="mp-brand">{{brand_name}}</span>
+        <div class="mp-legal">{{legal_block}}</div>
+      </div>
+      <div class="mp-footer-contact">{{contact_block}}</div>
+      <div class="mp-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="mp-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

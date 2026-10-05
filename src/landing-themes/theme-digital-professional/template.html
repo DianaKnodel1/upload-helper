@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{seo_title}}</title>
+<meta name="description" content="{{seo_description}}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-dp">
+<header class="dp-nav" data-animate>
+  <div class="dp-container dp-nav-inner">
+    <a href="#top" class="dp-brand"><span class="dp-brand-mark" aria-hidden="true"></span>{{brand_name}}</a>
+    <nav class="dp-menu" id="nav-links">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#voraussetzungen">Voraussetzungen</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <div class="dp-nav-right">
+      <a href="#bewerbung-form" class="dp-btn dp-btn-solid dp-nav-cta">{{hero_cta}}</a>
+      <button type="button" class="dp-burger" aria-label="Menü" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="dp-hero">
+    <div class="dp-container dp-hero-grid">
+      <div class="dp-hero-content">
+        <p class="dp-mono">{{hero_kicker}}</p>
+        <h1>{{hero_title}}</h1>
+        <p class="dp-hero-sub">{{hero_sub}}</p>
+        <div class="dp-hero-actions">
+          <a href="#bewerbung-form" class="dp-btn dp-btn-solid">{{hero_cta}}</a>
+          <a href="#leistungen" class="dp-link">{{hero_cta_sec}} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+      <div class="dp-hero-media">
+        <img src="{{hero_image}}" alt="Digitale Arbeitsumgebung" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="dp-trust">
+    <div class="dp-container dp-trust-grid">
+      <div class="dp-trust-item"><span>{{fact1_v}}</span>{{fact1_l}}</div>
+      <div class="dp-trust-item"><span>{{fact2_v}}</span>{{fact2_l}}</div>
+      <div class="dp-trust-item"><span>{{fact3_v}}</span>{{fact3_l}}</div>
+      <div class="dp-trust-item"><span>{{fact4_v}}</span>{{fact4_l}}</div>
+    </div>
+  </section>
+
+  <section id="leistungen" class="dp-section">
+    <div class="dp-container">
+      <div class="dp-section-head">
+        <p class="dp-mono">// Leistungen</p>
+        <h2>{{position_title}}</h2>
+        <p class="dp-lead">{{position_text}}</p>
+      </div>
+      <div class="dp-cards3">
+        <article class="dp-card" data-animate><span class="dp-card-nr">01</span><h3>{{sv1_t}}</h3><p>{{sv1_d}}</p></article>
+        <article class="dp-card" data-animate><span class="dp-card-nr">02</span><h3>{{sv2_t}}</h3><p>{{sv2_d}}</p></article>
+        <article class="dp-card" data-animate><span class="dp-card-nr">03</span><h3>{{sv3_t}}</h3><p>{{sv3_d}}</p></article>
+      </div>
+      <div class="dp-media-row">
+        <img src="{{position_image}}" alt="Arbeitsumfeld" loading="lazy" />
+        <img src="{{about_image}}" alt="Team" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section id="ablauf" class="dp-section dp-section-panel">
+    <div class="dp-container">
+      <div class="dp-section-head">
+        <p class="dp-mono">// Ablauf</p>
+        <h2>{{process_title}}</h2>
+        <p class="dp-lead">{{process_sub}}</p>
+      </div>
+      <div class="dp-steps">
+        <div class="dp-step" data-animate><span class="dp-step-nr">01</span><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div>
+        <div class="dp-step" data-animate><span class="dp-step-nr">02</span><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div>
+        <div class="dp-step" data-animate><span class="dp-step-nr">03</span><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div>
+        <div class="dp-step" data-animate><span class="dp-step-nr">04</span><h3>{{p4_t}}</h3><p>{{p4_d}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voraussetzungen" class="dp-section">
+    <div class="dp-container dp-two-col">
+      <div>
+        <div class="dp-section-head">
+          <p class="dp-mono">// Voraussetzungen</p>
+          <h2>{{req_title}}</h2>
+          <p class="dp-lead">{{req_text}}</p>
+        </div>
+        <a href="#bewerbung-form" class="dp-btn dp-btn-solid">{{hero_cta}}</a>
+      </div>
+      <ul class="dp-req-list">
+        <li><span class="dp-check" aria-hidden="true">✓</span>{{req1}}</li>
+        <li><span class="dp-check" aria-hidden="true">✓</span>{{req2}}</li>
+        <li><span class="dp-check" aria-hidden="true">✓</span>{{req3}}</li>
+        <li><span class="dp-check" aria-hidden="true">✓</span>{{req4}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="dp-cta">
+    <div class="dp-container dp-cta-panel" data-animate>
+      <div>
+        <h2>{{final_title}}</h2>
+        <p>{{final_sub}}</p>
+      </div>
+      <a href="#bewerbung-form" class="dp-btn dp-btn-solid">{{final_cta}}</a>
+    </div>
+  </section>
+</main>
+
+<footer id="kontakt" class="dp-footer">
+  <div class="dp-container">
+    <div class="dp-footer-grid">
+      <div>
+        <span class="dp-brand"><span class="dp-brand-mark" aria-hidden="true"></span>{{brand_name}}</span>
+        <div class="dp-legal">{{legal_block}}</div>
+      </div>
+      <div class="dp-footer-contact">{{contact_block}}</div>
+      <div class="dp-footer-links">
+        <a href="{{impressum_url}}">Impressum</a>
+        <a href="{{datenschutz_url}}">Datenschutz</a>
+        <a href="#bewerbung-form">Bewerben</a>
+      </div>
+    </div>
+    <p class="dp-copy">&copy; 2026 {{firmenname}}</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Caddyfile für WebID-Simulations-Proxy — Cloudflare-Modus (orange Wolke).
+#
+# Cloudflare terminiert den öffentlichen TLS-Traffic (Universal SSL deckt
+# *.webid-portal.de ab) und verbindet sich per "Full (Strict)" auf das hier
+# hinterlegte Origin-Zertifikat. Es gibt kein Let's Encrypt / on_demand_tls
+# mehr — Port 80 wird gar nicht geöffnet, Port 443 akzeptiert per Firewall
+# nur Cloudflare-IPs. Die Domain-Prüfung (welche Sim-Domain aktiv ist) macht
+# weiterhin der Bun-Proxy gegen Supabase.
+
+{$SIM_BASE_DOMAIN}, *.{$SIM_BASE_DOMAIN} {
+	tls /etc/caddy/origin.crt /etc/caddy/origin.key
+
+	encode zstd gzip
+
+	reverse_proxy 127.0.0.1:3002 {
+		header_up Host {host}
+		# Echte Besucher-IP kommt von Cloudflare (Port 443 ist per
+		# Firewall ohnehin nur für Cloudflare erreichbar).
+		header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+		header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		header_up X-Forwarded-Proto https
+	}
+}

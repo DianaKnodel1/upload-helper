@@ -1,0 +1,11 @@
+{
+  "name": "webid-sim-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build server.ts --target=node --outfile=server.js",
+    "start": "node server.js",
+    "dev": "bun --watch server.ts"
+  }
+}

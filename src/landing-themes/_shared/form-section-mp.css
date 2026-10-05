@@ -1,0 +1,25 @@
+.mp-form-section{background:#fff;padding:88px 24px;border-top:1px solid #e4e4e1;font-family:'Inter',system-ui,sans-serif;color:#333}
+.mp-form-wrap{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+.mp-form-kicker{font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#1f6f5c;margin-bottom:14px}
+.mp-form-title{font-family:'Archivo',system-ui,sans-serif;font-size:clamp(1.7rem,2.8vw,2.3rem);line-height:1.15;letter-spacing:-.02em;font-weight:700;color:#141414;margin-bottom:12px}
+.mp-form-sub{font-size:.95rem;color:#6f6f6f;max-width:44ch}
+.mp-form-meta{margin-top:22px;font-size:.85rem;color:#6f6f6f;border-top:1px solid #e4e4e1;padding-top:18px}
+.mp-form{background:#fff;border:1px solid #e4e4e1;border-radius:16px;padding:34px 32px;display:flex;flex-direction:column;gap:16px}
+.mp-form-h3{font-family:'Archivo',sans-serif;font-size:.95rem;font-weight:600;color:#141414;margin-bottom:6px}
+.mp-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mp-form label{display:flex;flex-direction:column;gap:6px;font-size:.8rem;font-weight:500;color:#333}
+.mp-form input{background:#fff;border:1px solid #e4e4e1;padding:12px 14px;font-size:.95rem;color:#141414;font-family:inherit;border-radius:10px;transition:border-color .2s,box-shadow .2s}
+.mp-form input:focus{outline:none;border-color:#1f6f5c;box-shadow:0 0 0 3px rgba(31,111,92,.12)}
+.mp-form-submit{margin-top:8px;background:#141414;color:#fff;border:0;padding:14px 26px;font-size:.9rem;font-weight:600;cursor:pointer;border-radius:999px;transition:background .2s}
+.mp-form-submit:hover{background:#000}
+.mp-form-status{font-size:.88rem;text-align:center;min-height:1.2em}
+.mp-form-status.success{color:#1c7a45}
+.mp-form-status.error{color:#b0453a}
+@media (max-width:900px){
+  .mp-form-wrap{grid-template-columns:1fr;gap:36px}
+  .mp-form-section{padding:64px 20px}
+}
+@media (max-width:560px){
+  .mp-form{padding:26px 20px}
+  .mp-form-row{grid-template-columns:1fr}
+}

