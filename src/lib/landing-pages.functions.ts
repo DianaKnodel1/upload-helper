@@ -52,6 +52,30 @@ const SaveInput = z.object({
   domain: z.string().min(3).max(255),
   tenant_id: z.string().uuid().nullable().optional(),
   theme_id: z.string().min(1).max(40),
+  // Website-Themes (mehrseitige Komplett-Websites): NULL/undefined = klassische Einseiten-Landing.
+  site_theme: z.string().max(40).nullable().optional(),
+  site_pages: z
+    .object({
+      pages: z
+        .array(
+          z
+            .object({
+              id: z.string().max(60),
+              slug: z.string().max(60),
+              title: z.string().max(160),
+              enabled: z.boolean().optional(),
+              seo_title: z.string().max(200).optional(),
+              seo_description: z.string().max(500).optional(),
+              fragment: z.string().max(100_000).optional(),
+            })
+            .passthrough()
+        )
+        .max(50),
+    })
+    .passthrough()
+    .nullable()
+    .optional(),
+  site_settings: z.record(z.string(), z.any()).nullable().optional(),
   branding: BrandingSchema,
   slots: z.record(z.string(), z.string().max(20_000)).default({}),
   // Baukasten-Abschnitte (Renderer: landing-server/sections-renderer.js).
@@ -195,6 +219,9 @@ export const saveLandingPage = createServerFn({ method: "POST" })
         recruiter_name: recruiterName,
       },
       slots: data.slots,
+      ...(data.site_theme !== undefined ? { site_theme: data.site_theme } : {}),
+      ...(data.site_pages !== undefined ? { site_pages: data.site_pages } : {}),
+      ...(data.site_settings !== undefined ? { site_settings: data.site_settings } : {}),
       ...(data.sections !== undefined ? { sections: data.sections } : {}),
       flow_type: data.flow_type,
       source_slug: data.source_slug || null,

@@ -222,6 +222,13 @@ import tnfCss from "../landing-themes/theme-nebula-flux/style.css?raw";
 import tnfJs from "../landing-themes/theme-nebula-flux/script.js?raw";
 import tnfMeta from "../landing-themes/theme-nebula-flux/meta.json";
 
+// ===== Website-Themes (mehrseitige Komplett-Websites) =====
+import site1Html from "../landing-themes/site-1/template.html?raw";
+import site1Css from "../landing-themes/site-1/style.css?raw";
+import site1Js from "../landing-themes/site-1/script.js?raw";
+import site1Meta from "../landing-themes/site-1/meta.json";
+
+
 
 
 
@@ -234,6 +241,15 @@ export type ThemeSlot = {
   default: string;
 };
 
+export type SitePageDef = {
+  id: string;
+  slug: string;
+  title: string;
+  enabled?: boolean;
+  seo_title?: string;
+  seo_description?: string;
+};
+
 export type ThemeFiles = {
   id: string;
   name: string;
@@ -242,6 +258,10 @@ export type ThemeFiles = {
   css: string;
   js: string;
   slots: ThemeSlot[];
+  /** "site" = mehrseitige Komplett-Website, "single" (Default) = Einseiten-Landing */
+  kind?: "single" | "site";
+  /** Nur bei kind "site": Standard-Unterseiten des Themes */
+  pages?: SitePageDef[];
 };
 
 function pickSlots(meta: any): ThemeSlot[] {
@@ -397,6 +417,8 @@ function withSharedForm(t: ThemeFiles): ThemeFiles {
 
 
 export const THEMES: ThemeFiles[] = [
+  // Website-Themes (mehrseitige Komplett-Websites) — die aktive Auswahl bei „Neue Landing".
+  { id: site1Meta.id, name: site1Meta.name, description: site1Meta.description, kind: "site" as const, pages: site1Meta.pages, html: site1Html, css: site1Css, js: site1Js, slots: pickSlots(site1Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -489,6 +511,9 @@ export function themeFlow(id: string): ThemeFlow {
  * weiterlaufen — es ändert sich ausschließlich die Anzeige im Generator.
  */
 const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
+  // ---- Website-Themes (aktive Auswahl) ----
+  "site-1": { name: "Website-Theme 1", description: "Seriös & klassisch: helle Flächen, Serifen-Typo, dezente Goldakzente. Mehrseitige Komplett-Website mit Start, Leistungen & Jobs, Über uns & Team, FAQ und Kontakt." },
+
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
   "theme-modern-business": { name: "Modern Business", description: "Modern, dynamisch und professionell. Dunkles Anthrazit mit Petrol-Akzenten und überlappenden Karten." },
@@ -554,13 +579,27 @@ export const THEME_LIST = THEMES.filter((t) => !HIDDEN_THEMES.has(t.id)).map((t)
 // älteren Themes bleiben technisch vollständig erhalten (bestehende Landings
 // laufen unverändert weiter) und werden im Archiv angezeigt — keine Migration.
 export const ACTIVE_THEME_IDS = new Set<string>([
-  "theme-consulting-corporate",
-  "theme-modern-business",
-  "theme-minimal-professional",
-  "theme-executive-premium",
-  "theme-human-business",
-  "theme-digital-professional",
+  "site-1", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
+
+/** Theme-IDs mit mehrseitigen Komplett-Websites. */
+export function isSiteTheme(id: string): boolean {
+  return getTheme(id)?.kind === "site";
+}
+
+/** Standard-Unterseiten eines Website-Themes (für neue Landings). */
+export function defaultSitePages(id: string): SitePageDef[] {
+  const theme = getTheme(id);
+  if (theme?.kind !== "site" || !theme.pages) return [];
+  return theme.pages.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    enabled: p.enabled !== false,
+    seo_title: "",
+    seo_description: "",
+  }));
+}
 
 function toThemeEntry(t: ThemeFiles) {
   return {
