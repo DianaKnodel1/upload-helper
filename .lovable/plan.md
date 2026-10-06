@@ -45,13 +45,12 @@ Editierbar (pro Website, unabhängig vom Original-Theme):
 ## Reihenfolge
 1. Migration + Datenmodell (additiv, Bestand unberührt)
 2. Landing-Server: Mehrseiten-Routing + Theme-Engine für ganze Websites
-3. Erstes Theme „Seriös & Klassisch" komplett (alle Unterseiten) — Qualitätsreferenz
-4. Admin-Editor: Seitenverwaltung + Vorschau
-5. Theme 2 und 3 nach gleichem Muster
-6. Theme-Auswahl für neue Seiten auf die neuen Website-Themes umstellen (alte Designs aus der Auswahl, im Code eingefroren)
+3. Theme 1 komplett (alle Unterseiten, inkl. Farbwahl/Schriftalternativen) — Qualitätsreferenz
+4. Admin-Editor: Seitenverwaltung, Duplizieren, Farbwahl, Vorschau
+5. Themes 2–5, danach 6–10, danach 11–15 nach demselben Muster
+6. Theme-Auswahl für neue Seiten auf die 15 Website-Themes umstellen (alte Designs aus der Auswahl, im Code eingefroren)
 7. End-to-End-Test: neue Website anlegen, Unterseiten prüfen, veröffentlichen, bestehende Landings gegenchecken
 
 ## Offene Punkte
-- Anzahl und Namensgebung der ersten Theme-Generation (Vorschlag: 3, wie oben)
-- Ob „eigenen Unterseiten selbst erstellen" in Generation 1 per Seiten-Duplizierung abgedeckt ist (empfohlen) oder als eigene Funktion folgt
 - Deploy: Landing-Server-Sync über `scripts/sync-landing-server.sh` (bestehender Prozess)
+- Freie „Seite von Null erstellen"-Funktion (über Duplizieren hinaus) — späterer Ausbau
