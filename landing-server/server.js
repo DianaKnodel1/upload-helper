@@ -1024,11 +1024,11 @@ body.lov-apply-open{overflow:hidden}
 `;
 
 function renderCss(row) {
-  return loadTheme(row.theme_id).then((theme) => theme ? `${applyPlaceholders(theme.css, row.branding, row.slots)}\n${APPLY_MODAL_CSS}` : "/* theme missing */");
+  return loadTheme(row.site_theme || row.theme_id).then((theme) => theme ? `${applyPlaceholders(theme.css, row.branding, row.slots)}\n${APPLY_MODAL_CSS}` : "/* theme missing */");
 }
 
 function renderJs(row) {
-  return loadTheme(row.theme_id).then((theme) => theme ? applyPlaceholders(theme.js, row.branding, row.slots) : "// theme missing");
+  return loadTheme(row.site_theme || row.theme_id).then((theme) => theme ? applyPlaceholders(theme.js, row.branding, row.slots) : "// theme missing");
 }
 
 
@@ -1138,16 +1138,24 @@ const server = createServer(async (req, res) => {
     if (path.startsWith("/assets/")) {
       const rel = path.slice("/assets/".length);
       if (!rel || rel.includes("..") || rel.includes("/")) return send(res, 404, "not found");
-      const asset = await loadAsset(row.theme_id, rel);
+      const asset = await loadAsset(row.site_theme || row.theme_id, rel);
       if (!asset) return send(res, 404, "asset not found");
       return send(res, 200, asset.buf, { "content-type": asset.ct, "cache-control": "public,max-age=86400,immutable" });
     }
     if (path === "/" || path === "/index.html") {
+      if (isSiteLanding(row)) {
+        const { body, status } = await renderSiteHtml(row, host, "view", "");
+        return send(res, status, body, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+      }
       const { body, status } = await renderHtml(row, host);
       return send(res, status, body, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
     }
 
     if (path === "/bewerben" || path === "/bewerben.html") {
+      if (isSiteLanding(row)) {
+        const { body, status } = await renderSiteHtml(row, host, "apply", "");
+        return send(res, status, body, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+      }
       const { body, status } = await renderHtml(row, host, "apply");
       return send(res, status, body, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
     }
