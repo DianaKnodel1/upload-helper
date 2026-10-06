@@ -241,6 +241,15 @@ export type ThemeSlot = {
   default: string;
 };
 
+export type SitePageDef = {
+  id: string;
+  slug: string;
+  title: string;
+  enabled?: boolean;
+  seo_title?: string;
+  seo_description?: string;
+};
+
 export type ThemeFiles = {
   id: string;
   name: string;
@@ -249,6 +258,10 @@ export type ThemeFiles = {
   css: string;
   js: string;
   slots: ThemeSlot[];
+  /** "site" = mehrseitige Komplett-Website, "single" (Default) = Einseiten-Landing */
+  kind?: "single" | "site";
+  /** Nur bei kind "site": Standard-Unterseiten des Themes */
+  pages?: SitePageDef[];
 };
 
 function pickSlots(meta: any): ThemeSlot[] {
@@ -404,6 +417,8 @@ function withSharedForm(t: ThemeFiles): ThemeFiles {
 
 
 export const THEMES: ThemeFiles[] = [
+  // Website-Themes (mehrseitige Komplett-Websites) — die aktive Auswahl bei „Neue Landing".
+  { id: site1Meta.id, name: site1Meta.name, description: site1Meta.description, kind: "site" as const, pages: site1Meta.pages, html: site1Html, css: site1Css, js: site1Js, slots: pickSlots(site1Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
