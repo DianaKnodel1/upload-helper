@@ -1175,6 +1175,11 @@ const server = createServer(async (req, res) => {
       return send(res, 302, "", { location: "/#blog" });
     }
     if (path === "/blog" || path === "/blog/") return send(res, 302, "", { location: "/#blog" });
+    // Website-Themes: unbekannte Pfade → 404 im Theme-Look (Unterseiten wie /team)
+    if (isSiteLanding(row)) {
+      const { body, status } = await renderSiteHtml(row, host, "view", path);
+      return send(res, status, body, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+    }
     return send(res, 404, "not found");
   } catch (e) {
     console.error("[landing-server] request error:", e?.message || e);
