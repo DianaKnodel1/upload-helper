@@ -222,6 +222,13 @@ import tnfCss from "../landing-themes/theme-nebula-flux/style.css?raw";
 import tnfJs from "../landing-themes/theme-nebula-flux/script.js?raw";
 import tnfMeta from "../landing-themes/theme-nebula-flux/meta.json";
 
+// ===== Website-Themes (mehrseitige Komplett-Websites) =====
+import site1Html from "../landing-themes/site-1/template.html?raw";
+import site1Css from "../landing-themes/site-1/style.css?raw";
+import site1Js from "../landing-themes/site-1/script.js?raw";
+import site1Meta from "../landing-themes/site-1/meta.json";
+
+
 
 
 
