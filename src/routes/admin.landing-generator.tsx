@@ -19,7 +19,8 @@ import {
 } from "@/lib/landing-pages.functions";
 import { listPartnerCompanies } from "@/lib/partner-companies.functions";
 import { adminListSchedules } from "@/lib/appointments.functions";
-import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme } from "@/lib/landing-themes";
+import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, type SitePageDef } from "@/lib/landing-themes";
+import { renderSitePage } from "@/lib/landing-site";
 import { THEME_ASSETS } from "@/lib/theme-assets.generated";
 import { PORTAL_THEMES, type PortalThemeId } from "@/lib/portal-themes";
 import { setTenantPortalTheme } from "@/lib/portal-theme.functions";
@@ -267,6 +268,8 @@ function LandingGeneratorPage() {
   const [lastFile, setLastFile] = useState<string | null>(null);
   // Editor-State: welche Landing wird gerade bearbeitet (id) + slug
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [sitePages, setSitePages] = useState<SitePageDef[] | null>(null);
+  const [previewPageSlug, setPreviewPageSlug] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
   const saveFn = useServerFn(saveLandingPage);
   const listFn = useServerFn(listLandingPages);
@@ -445,6 +448,8 @@ function LandingGeneratorPage() {
     setTemplateId(null);
     setPageTemplate(null);
     setThemeId(id);
+    setSitePages(isSiteTheme(id) ? defaultSitePages(id) : null);
+    setPreviewPageSlug("");
     setSlotValues(normalizeSlotsForTheme(id, {}, withSeoDefaults(branding)));
   };
   const setSlot = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -520,7 +525,9 @@ function LandingGeneratorPage() {
       }
       return out;
     };
-    let html = replace(theme.html);
+    let html = isSiteTheme(themeId)
+      ? replace(renderSitePage(theme as any, { pages: sitePages ?? undefined, slug: previewPageSlug }).html)
+      : replace(theme.html);
     const css = replace(theme.css);
     // Leere/kaputte Meta-Tags auch im Preview entfernen
     if (!branding.seo_image) {
@@ -840,6 +847,13 @@ document.addEventListener('submit', function(e){
             : {}),
         },
         slots: slotsForOutput,
+        ...(isSiteTheme(themeId)
+          ? {
+              site_theme: themeId,
+              site_pages: { pages: sitePages ?? defaultSitePages(themeId) },
+              site_settings: {},
+            }
+          : {}),
         ...(selectedTemplate
           ? {
               sections: (Array.isArray(selectedTemplate.sections) ? selectedTemplate.sections : []).map((s: any) => ({
@@ -947,6 +961,12 @@ document.addEventListener('submit', function(e){
         booking_window_days: row.booking_window_days ?? 30,
       } as Branding;
       setThemeId(row.theme_id);
+      setSitePages(
+        isSiteTheme(row.theme_id)
+          ? (row.site_pages?.pages?.length ? row.site_pages.pages : defaultSitePages(row.theme_id))
+          : null,
+      );
+      setPreviewPageSlug("");
       setSlotValues(normalizeSlotsForTheme(row.theme_id, row.slots ?? {}, withSeoDefaults(loadedBranding)));
       setBranding(loadedBranding);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -962,6 +982,8 @@ document.addEventListener('submit', function(e){
     setTemplateId(null); setPageTemplate(null);
     setLogoDataUrl(null); setFaviconDataUrl(null); setSlotValues({});
     setThemeId(nextThemeId);
+    setSitePages(isSiteTheme(nextThemeId) ? defaultSitePages(nextThemeId) : null);
+    setPreviewPageSlug("");
     setSlotValues(themeSlotDefaults(nextThemeId));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
