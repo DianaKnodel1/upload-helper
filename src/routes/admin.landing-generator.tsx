@@ -800,7 +800,7 @@ document.addEventListener('submit', function(e){
     if (!editingId && !selectedTemplate && themeId && !isActiveTheme(themeId)) {
       toast({
         title: "Archiv-Theme nicht wählbar",
-        description: "Alte Vorlagen laufen nur für bestehende Seiten weiter. Bitte eine der 6 aktuellen Vorlagen auswählen.",
+        description: "Alte Vorlagen laufen nur für bestehende Seiten weiter. Bitte ein aktuelles Website-Theme auswählen.",
         variant: "destructive",
       });
       return;
@@ -1236,7 +1236,7 @@ document.addEventListener('submit', function(e){
             <CardHeader className="pb-3">
               <CardTitle className="text-sm">1. Theme wählen</CardTitle>
               <CardDescription>
-                Sechs aktuelle Premium-Vorlagen — alle führen direkt zur Bewerbung.
+                Website-Themes: komplette Websites mit Unterseiten, eigenem Design, Farben und Texten.
                 Frühere Vorlagen liegen im Archiv und laufen nur für bestehende Seiten weiter.
               </CardDescription>
             </CardHeader>
@@ -1995,6 +1995,25 @@ document.addEventListener('submit', function(e){
                   {branding.landing_domain || "preview.localhost"}
                 </div>
               </div>
+              {isSiteTheme(themeId) && !selectedTemplate && (
+                <div className="flex flex-wrap gap-1 bg-muted/30 px-2 py-1.5 border-b">
+                  {(sitePages ?? defaultSitePages(themeId)).filter((p) => p.enabled !== false).map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setPreviewPageSlug(p.slug)}
+                      className={cn(
+                        "px-2 py-0.5 text-[11px] rounded-full border transition-colors",
+                        (previewPageSlug || "") === p.slug
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40",
+                      )}
+                    >
+                      {p.title}
+                    </button>
+                  ))}
+                </div>
+              )}
               <iframe
                 title="Landing Preview"
                 srcDoc={selectedTemplate ? templatePreviewHtml : previewSrcDoc}
