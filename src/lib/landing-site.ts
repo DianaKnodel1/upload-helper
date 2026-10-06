@@ -49,7 +49,7 @@ function pickPage(pages: SitePageRow[], slug: string | undefined): SitePageRow |
 export function renderSitePage(
   theme: ThemeFiles,
   opts: {
-    pages: SitePageRow[];
+    pages?: SitePageRow[];
     slug?: string;
     slots?: Record<string, unknown>;
     mode?: "view" | "apply";
