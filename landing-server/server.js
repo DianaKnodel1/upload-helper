@@ -25,7 +25,7 @@ const ASSET_VERSION = process.env.LANDING_ASSET_VERSION || process.env.RELEASE_V
 const ASSET_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const assetCache = new Map();
 
-const LANDING_SELECT = "id,slug,domain,tenant_id,theme_id,branding,slots,sections,logo_url,favicon_url,flow_type,source_slug,is_published,calendly_url,intermediate_company_name,updated_at,linked_fasttrack_landing_id,linked_fasttrack:landing_pages!linked_fasttrack_landing_id(domain,branding,calendly_url,intermediate_company_name,logo_url)";
+const LANDING_SELECT = "id,slug,domain,tenant_id,theme_id,branding,slots,sections,site_theme,site_pages,site_settings,logo_url,favicon_url,flow_type,source_slug,is_published,calendly_url,intermediate_company_name,updated_at,linked_fasttrack_landing_id,linked_fasttrack:landing_pages!linked_fasttrack_landing_id(domain,branding,calendly_url,intermediate_company_name,logo_url)";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // Themes-Verzeichnis: zuerst ENV, dann Portal-Repo (automatisch), dann lokales themes/
 function resolveThemesDir() {
@@ -750,6 +750,87 @@ async function renderHtml(row, host, mode) {
   if (row.logo_url) html = html.replace(/assets\/logo\.[a-z]+/gi, `/assets/logo${ver}`);
   if (row.favicon_url) html = html.replace(/assets\/favicon\.[a-z]+/gi, `/assets/favicon${ver}`);
   return { body: html, status: 200 };
+}
+
+// ── Website-Themes (mehrseitige Komplett-Websites) ──────────────────────────
+// Spiegel derselben Logik wie src/lib/landing-site.ts (Admin-Preview) —
+// Änderungen unbedingt in beiden Dateien nachziehen!
+function isSiteLanding(row) {
+  return Boolean(
+    row.site_theme &&
+    row.site_pages &&
+    Array.isArray(row.site_pages.pages) &&
+    row.site_pages.pages.length
+  );
+}
+
+function parseSiteThemeHtml(html) {
+  const fragments = {};
+  const re = /<!--\s*lv-page:([a-z0-9_-]+)\s*-->([\s\S]*?)<!--\s*\/lv-page\s*-->/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    fragments[m[1].toLowerCase()] = m[2];
+  }
+  return { shell: html.replace(re, ""), fragments };
+}
+
+async function renderSiteHtml(row, host, mode, slug) {
+  const theme = await loadTheme(row.site_theme);
+  if (!theme) return { body: `Theme nicht gefunden: ${row.site_theme}`, status: 500 };
+  const pages = row.site_pages.pages;
+  const { shell, fragments } = parseSiteThemeHtml(theme.html);
+  const enabled = pages.filter((p) => p && p.enabled !== false);
+
+  // Seite nach Slug wählen ("" → Startseite)
+  const key = String(slug || "").replace(/\.html?$/i, "").replace(/^\//, "").toLowerCase();
+  let page = null;
+  if (!key || key === "index") page = enabled[0] || null;
+  else page = enabled.find((p) => String(p.slug || "").toLowerCase() === key) || null;
+
+  // Nav-Einträge deaktivierter Seiten entfernen
+  let nav = shell;
+  for (const p of pages) {
+    if (p.enabled === false) {
+      nav = nav.replace(new RegExp(`<!--\\s*lv-nav:${p.id}\\s*-->[\\s\\S]*?<!--\\s*\\/lv-nav\\s*-->`, "gi"), "");
+    }
+  }
+
+  let fragment;
+  let status = 200;
+  if (!page) {
+    fragment = fragments["404"] || '<section style="padding:80px 24px;text-align:center"><h1>Seite nicht gefunden</h1><p><a href="/">Zur Startseite</a></p></section>';
+    status = 404;
+  } else {
+    fragment = page.fragment || fragments[String(page.id || "").toLowerCase()] || "";
+  }
+
+  const branding = { ...(row.branding || {}) };
+  if (page) {
+    // SEO pro Seite (leere Werte erben die globalen Einstellungen)
+    if (page.seo_title) branding.seo_title = page.seo_title;
+    else if (page.title && branding.firmenname) branding.seo_title = `${page.title} – ${branding.firmenname}`;
+    if (page.seo_description) branding.seo_description = page.seo_description;
+  }
+
+  const slots = { ...(row.slots || {}) };
+  slots.impressum_url = "impressum.html";
+  slots.datenschutz_url = "datenschutz.html";
+  const ver = row.updated_at ? `?v=${Date.parse(row.updated_at) || ""}` : "";
+  if (row.logo_url && !slots.logo_image) slots.logo_image = `/assets/logo${ver}`;
+  if (row.favicon_url && !slots.favicon_image) slots.favicon_image = `/assets/favicon${ver}`;
+
+  let html = nav.replace("{{page_content}}", fragment);
+  html = applyPlaceholders(html, branding, slots);
+  html = cleanEmptyMeta(html, branding, host);
+  if (mode === "apply") html = unwrapApplyModal(html);
+  html = injectTrustFooter(html, branding);
+  // Bewerbungs-CTAs öffnen das Modal direkt auf der aktuellen Unterseite.
+  html = injectLandingConfig(html, row, mode);
+  html = versionThemeAssets(html);
+  if (row.logo_url) html = html.replace(/assets\/logo\.[a-z]+/gi, `/assets/logo${ver}`);
+  if (row.favicon_url) html = html.replace(/assets\/favicon\.[a-z]+/gi, `/assets/favicon${ver}`);
+  html = await injectClientLogos(html, row);
+  return { body: html, status };
 }
 
 // ── Auftraggeber-Logoleiste (Standard auf allen Fast-Track-Landings) ──
