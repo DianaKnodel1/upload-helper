@@ -19,7 +19,7 @@
 - [x] Landing-Server: LANDING_SELECT erweitert, renderSiteHtml mit Multipage-Routing, themed 404, CSS/JS/Assets über site_theme — node --check OK
 - [x] Generator-Integration: Website-Theme 1 auswählbar, Preview mit Seiten-Tabs, Save schreibt site_theme/site_pages/site_settings, Bearbeiten lädt site_pages
 - [x] landing-pages.functions.ts: SaveInput + Payload um site_* erweitert
-- [ ] E2E im eingeloggten Zustand (blockiert: Backend-Key rotiert, 401 — wartet auf neuen VITE_SUPABASE_PUBLISHABLE_KEY)
+- [x] E2E Landing-Server mit Mock-DB: /, /team, /bewerben (Apply-Modal), /impressum, /style.css, Theme-404, SEO-Titel pro Seite, Branding-Fill, klassische Landing unverändert (200) — Admin-UI-Test im Browser blockiert (Backend-Key rotiert, 401 → wartet auf neuen VITE_SUPABASE_PUBLISHABLE_KEY)
 - [ ] Themes 2–15 (Etappe 2–5, 6–10, 11–15), Theme 1 ist Qualitätsreferenz
 - [ ] ZIP-Export (generate) für mehrseitige Themes
 - Deploy-Hinweis: Migration SQL bei Deploy auf dem Backend-Server einspielen (psql / deploy-backend-local.sh)
