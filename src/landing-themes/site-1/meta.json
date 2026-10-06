@@ -92,7 +92,7 @@
     { "key": "team_p2_line", "label": "Person 2 Text", "type": "longtext", "default": "Spezialisiert für kaufmännische Fachkräfte und Office." },
     { "key": "team_p3_name", "label": "Person 3 Name", "type": "text", "default": "Deniz Arslan" },
     { "key": "team_p3_role", "label": "Person 3 Rolle", "type": "text", "default": "Berater Technik & Logistik" },
-    { "key": "team_p3_line", "label": "Person 3 Text", "type": "longtext", "default": "Kennt die Branche aus eigener Anawender-Erfahrung – 10 Jahre Werkzeugbau." },
+    { "key": "team_p3_line", "label": "Person 3 Text", "type": "longtext", "default": "Kennt die Branche aus eigener Berufserfahrung – 10 Jahre Werkzeugbau." },
     { "key": "team_p4_name", "label": "Person 4 Name", "type": "text", "default": "Claudia Renner" },
     { "key": "team_p4_role", "label": "Person 4 Rolle", "type": "text", "default": "Coaching & Bewerberbetreuung" },
     { "key": "team_p4_line", "label": "Person 4 Text", "type": "longtext", "default": "Begleitet Bewerber von der ersten Bewerbung bis zum Vorstellungsgespräch." },
