@@ -20,16 +20,26 @@ Der Landing-Generator erstellt künftig **ganze Websites** statt einseitiger Lan
 - Navigation/Topbar des Themes verlinkt die vorhandenen Seiten; SEO-Metadaten pro Unterseite (eigener Titel/Description).
 - Formular-Abschnitt der Startseite (Bewerbung) bleibt an den bestehenden Flow angebunden (Magic-Link/Calendly unverändert).
 
-## Neue Themes: erste Generation (3 Stück)
-1. **„Seriös & Klassisch"** — helle, vertrauensvolle Anmutung, Serifen-Schriften, ruhiges Layout (Beratung/Finanzen-Sektor).
-2. **„Modern & Technisch"** — dunkel, kontrastreich, Grotesk-Schriften, große Typografie, dezente Animationen (Tech/IT-Sektor).
-3. **„Warm & Menschlich"** — warme Farben, runde Formen, viel Weißraum, Bildstark (Pflege/Soziales-Sektor).
+## Neue Themes: 15 Stück, benannt „1" bis „15"
+- Die Themes bekommen schlichte Nummern als Namen: **„Website-Theme 1" … „Website-Theme 15"** (Anzeige im Generator).
+- 15 Themes auf höchstem Design-Niveau, gebaut in Etappen:
+  - **Etappe 1:** Theme 1 komplett fertigstellen (alle Unterseiten) — Qualitätsreferenz
+  - **Etappe 2:** Themes 2–5, **Etappe 3:** Themes 6–10, **Etappe 4:** Themes 11–15
+- Jedes Theme eine eigene visuelle Welt: eigene Farbpalette, eigene Schriften, eigenes Layout, eigene Anmutung (hell/dunkel, ruhig/kraftvoll, seriös/warm) — keine ähnlichen Zwillinge.
+- Jedes Theme enthält feste Unterseiten: Start, Leistungen/Jobs, Über uns/Team, FAQ, Kontakt, Impressum, Datenschutz — mit eigenem Header/Footer, Navigation und durchgestylten Bausteinen je Seite.
 
-Jedes Theme enthält feste Unterseiten-Templates: Start, Leistungen/Jobs, Team, FAQ, Kontakt, Impressum, Datenschutz — mit eigenem Header/Footer, eigener Navigation und durchgestylten Bausteinen je Seite.
+## Bearbeitbarkeit nach Theme-Auswahl
+Editierbar (pro Website, unabhängig vom Original-Theme):
+- **Alle Texte:** Überschriften, Beschreibungen, FAQ, Team-Mitglieder, Kontaktdaten
+- **Alle Bilder:** Logo und Fotos hochladen oder KI-generieren
+- **Farben:** Haupt-/Akzent-/Hintergrundfarbe — innerhalb von Kontrast-Grenzen (Lesbarkeit bleibt garantiert)
+- **Schriften:** pro Theme 2–3 abgestimmte Alternativen
+- **Struktur:** Unterseiten ein-/ausblenden, umbenennen, **duplizieren** (eigene Unterseite entsteht aus Kopie einer bestehenden, z. B. FAQ → Standorte)
+- **Nicht editierbar:** Layout-Philosophie und Charakter des Themes (garantiert die professionelle Optik)
 
 ## Admin-Editor (im bestehenden Generator)
-- Neue Seiten-Verwaltung: Tabs pro Unterseite (Start, Team, FAQ …), Bausteine pro Seite bearbeiten, Seiten hinzufügen/ausblenden, Reihenfolge der Navigation ändern.
-- Live-Vorschau wie bisher, aber mit Seitenwechsel innerhalb der Vorschau.
+- Neue Seiten-Verwaltung: Tabs pro Unterseite (Start, Team, FAQ …), Bausteine pro Seite bearbeiten, Seiten duplizieren/ausblenden/umbenennen, Reihenfolge der Navigation ändern.
+- Farbwahl und Schriftalternativen direkt im Editor; Live-Vorschau mit Seitenwechsel.
 - Speichern/Veröffentlichen wie gewohnt; alte Einseiten-Seiten zeigen den bestehenden Editor ohne die neuen Tabs.
 
 ## Reihenfolge
