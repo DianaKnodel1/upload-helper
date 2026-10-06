@@ -511,6 +511,9 @@ export function themeFlow(id: string): ThemeFlow {
  * weiterlaufen — es ändert sich ausschließlich die Anzeige im Generator.
  */
 const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
+  // ---- Website-Themes (aktive Auswahl) ----
+  "site-1": { name: "Website-Theme 1", description: "Seriös & klassisch: helle Flächen, Serifen-Typo, dezente Goldakzente. Mehrseitige Komplett-Website mit Start, Leistungen & Jobs, Über uns & Team, FAQ und Kontakt." },
+
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
   "theme-modern-business": { name: "Modern Business", description: "Modern, dynamisch und professionell. Dunkles Anthrazit mit Petrol-Akzenten und überlappenden Karten." },
@@ -576,13 +579,27 @@ export const THEME_LIST = THEMES.filter((t) => !HIDDEN_THEMES.has(t.id)).map((t)
 // älteren Themes bleiben technisch vollständig erhalten (bestehende Landings
 // laufen unverändert weiter) und werden im Archiv angezeigt — keine Migration.
 export const ACTIVE_THEME_IDS = new Set<string>([
-  "theme-consulting-corporate",
-  "theme-modern-business",
-  "theme-minimal-professional",
-  "theme-executive-premium",
-  "theme-human-business",
-  "theme-digital-professional",
+  "site-1", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
+
+/** Theme-IDs mit mehrseitigen Komplett-Websites. */
+export function isSiteTheme(id: string): boolean {
+  return getTheme(id)?.kind === "site";
+}
+
+/** Standard-Unterseiten eines Website-Themes (für neue Landings). */
+export function defaultSitePages(id: string): SitePageDef[] {
+  const theme = getTheme(id);
+  if (theme?.kind !== "site" || !theme.pages) return [];
+  return theme.pages.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    enabled: p.enabled !== false,
+    seo_title: "",
+    seo_description: "",
+  }));
+}
 
 function toThemeEntry(t: ThemeFiles) {
   return {
