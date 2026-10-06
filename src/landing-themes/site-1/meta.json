@@ -23,6 +23,7 @@
     { "key": "font_set", "label": "Schrift-Set: klassisch / elegant / modern", "type": "text", "default": "klassisch" },
     { "key": "footer_claim", "label": "Fußzeile – Anspruch", "type": "longtext", "default": "Ihr starker Partner für Personalvermittlung und Karriere. Persönlich, diskret, verbindlich." },
 
+    { "key": "nav_home_label", "label": "Nav: Start", "type": "text", "default": "Start" },
     { "key": "nav_jobs", "label": "Nav: Leistungen & Jobs", "type": "text", "default": "Leistungen & Jobs" },
     { "key": "nav_team", "label": "Nav: Über uns & Team", "type": "text", "default": "Über uns & Team" },
     { "key": "nav_faq", "label": "Nav: FAQ", "type": "text", "default": "FAQ" },
