@@ -10,6 +10,20 @@
 - [ ] Deckblatt „Landing-Generator" im Chat senden (mit 6 Themes + Archiv)
 - Deploy: `cd /opt/apps/portal && git pull && bash scripts/deploy.sh`
 
+## Aktiv: Website-Themes (mehrseitige Komplett-Websites, Plan 2026-10-06)
+- [x] Migration geschrieben: supabase/manual-migrations/20261006000000_landing_site_themes.sql (site_theme, site_pages, site_settings) — noch NICHT angewendet, läuft beim Deploy auf dem Server
+- [x] Theme 1 „Klassik" (site-1) komplett: template.html (5 Seiten + 404), style.css, script.js, meta.json, Assets komprimiert
+- [x] Asset-Bundle neu gebaut (theme-assets.generated.ts, 9.8 MB — nicht committen, >10MB-Limit)
+- [x] Registry (landing-themes.ts): site-Themes-Typ, site-1 vorn, ACTIVE_THEME_IDS nur noch site-1, isSiteTheme/defaultSitePages
+- [x] Renderer src/lib/landing-site.ts (parseSiteTheme, renderSitePage) + Unit-Test via bun (Fragmente, disabled Nav, 404 OK)
+- [x] Landing-Server: LANDING_SELECT erweitert, renderSiteHtml mit Multipage-Routing, themed 404, CSS/JS/Assets über site_theme — node --check OK
+- [x] Generator-Integration: Website-Theme 1 auswählbar, Preview mit Seiten-Tabs, Save schreibt site_theme/site_pages/site_settings, Bearbeiten lädt site_pages
+- [x] landing-pages.functions.ts: SaveInput + Payload um site_* erweitert
+- [ ] E2E im eingeloggten Zustand (blockiert: Backend-Key rotiert, 401 — wartet auf neuen VITE_SUPABASE_PUBLISHABLE_KEY)
+- [ ] Themes 2–15 (Etappe 2–5, 6–10, 11–15), Theme 1 ist Qualitätsreferenz
+- [ ] ZIP-Export (generate) für mehrseitige Themes
+- Deploy-Hinweis: Migration SQL bei Deploy auf dem Backend-Server einspielen (psql / deploy-backend-local.sh)
+
 ## Hintergrund / fertig
 - Vorlagen sind jetzt alle „direkt" (kein Fast-Track/Vermittlung bei neuen Seiten) — Teil 1 erledigt 2026-09-29.
 - Stichprobe alt (amber-consult, device-stack, quality-report) — überholt durch die komplette neue Theme-Welt.
