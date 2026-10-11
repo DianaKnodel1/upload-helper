@@ -1132,7 +1132,7 @@ document.addEventListener('submit', function(e){
                     onClick={() => selectTheme(t.id)}
                     className={cn(
                       "text-left rounded-lg border-2 p-3 transition-all",
-                      themeId === t.id && !templateId
+                      themeId === t.id
                         ? "border-primary bg-primary/5 shadow-sm"
                         : "border-border hover:border-primary/40",
                     )}
@@ -1141,76 +1141,12 @@ document.addEventListener('submit', function(e){
                       <span className="font-semibold text-sm truncate">{t.name}</span>
                       <div className="flex items-center gap-2 shrink-0">
                         <span className="text-[10px] text-muted-foreground/70 font-mono">{t.id}</span>
-                        {themeId === t.id && !templateId && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                        {themeId === t.id && <CheckCircle2 className="h-4 w-4 text-primary" />}
                       </div>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-2">{t.description}</p>
                   </button>
                 ))}
-                {savedTemplates.map((t) => (
-                  <button
-                    key={`tpl-${t.id}`}
-                    type="button"
-                    onClick={() => selectTemplate(t)}
-                    className={cn(
-                      "text-left rounded-lg border-2 p-3 transition-all",
-                      templateId === t.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/40",
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="font-semibold text-sm truncate">{t.name}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[10px] rounded px-1.5 py-0.5 font-medium bg-muted text-muted-foreground">
-                          Eigene Vorlage
-                        </span>
-                        {templateId === t.id && <CheckCircle2 className="h-4 w-4 text-primary" />}
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {t.description || `${Array.isArray(t.sections) ? t.sections.length : 0} Abschnitte aus dem Baukasten`}
-                    </p>
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-4 border-t pt-3 space-y-2">
-                <div className="text-sm font-semibold">Gespeicherte Baukasten-Seiten verwenden</div>
-                <p className="text-xs text-muted-foreground">
-                  Erstellt eine neue, unveröffentlichte Kopie. Die bestehende Seite bleibt unverändert.
-                </p>
-                {landingsLoading ? (
-                  <p className="text-xs text-muted-foreground">Seiten werden geladen …</p>
-                ) : landings.filter((landing) => Array.isArray(landing.sections) && landing.sections.length > 0).length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Noch keine Seite aus dem Baukasten gespeichert.</p>
-                ) : (
-                  <div className="grid grid-cols-1 gap-2">
-                    {landings
-                      .filter((landing) => Array.isArray(landing.sections) && landing.sections.length > 0)
-                      .map((landing) => (
-                        <button
-                          key={landing.id}
-                          type="button"
-                          onClick={() => usePageAsTemplate(landing)}
-                          className={cn(
-                            "text-left rounded-lg border-2 p-3 transition-all block w-full",
-                            templateId === `page-${landing.id}` ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40",
-                          )}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-sm truncate">
-                              {landing.branding?.firmenname?.trim?.() || landing.slug}
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-xs text-primary shrink-0">
-                              {templateId === `page-${landing.id}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />} Als Vorlage verwenden
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{landing.domain || landing.slug}</p>
-                        </button>
-                      ))}
-                  </div>
-                )}
               </div>
 
               {/* Archiv: frühere Themes — nur ansehen, keine Auswahl für neue Seiten */}
@@ -1235,7 +1171,7 @@ document.addEventListener('submit', function(e){
                             <span className="text-[10px] rounded px-1.5 py-0.5 font-medium bg-muted text-muted-foreground shrink-0">
                               Archiv
                             </span>
-                            {themeId === t.id && !templateId && (
+                            {themeId === t.id && (
                               <span className="text-[10px] text-muted-foreground shrink-0">wird angezeigt</span>
                             )}
                           </div>
