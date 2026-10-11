@@ -361,8 +361,6 @@ function LandingGeneratorPage() {
     .map(([label]) => label);
 
   const selectTheme = (id: string) => {
-    setTemplateId(null);
-    setPageTemplate(null);
     setThemeId(id);
     setSitePages(isSiteTheme(id) ? defaultSitePages(id) : null);
     setPreviewPageSlug("");
@@ -713,7 +711,7 @@ document.addEventListener('submit', function(e){
   const handleSaveLive = async () => {
     // Archivierte Themes sind für bestehende Seiten weiter bearbeitbar,
     // dürfen aber nicht versehentlich für eine neue Seite verwendet werden.
-    if (!editingId && !selectedTemplate && themeId && !isActiveTheme(themeId)) {
+    if (!editingId && themeId && !isActiveTheme(themeId)) {
       toast({
         title: "Archiv-Theme nicht wählbar",
         description: "Alte Vorlagen laufen nur für bestehende Seiten weiter. Bitte ein aktuelles Website-Theme auswählen.",
@@ -752,15 +750,6 @@ document.addEventListener('submit', function(e){
           seo_title: b.seo_title, seo_description: b.seo_description, seo_image: b.seo_image,
           recruiter_name: b.recruiter_name || "Martin Schneider",
           recruiter_avatar_url: b.recruiter_avatar_url || null,
-          ...(selectedTemplate
-            ? {
-                style: {
-                  ...(selectedTemplate.style || {}),
-                  primary: b.primary_color,
-                  accent: b.secondary_color,
-                },
-              }
-            : {}),
         },
         slots: slotsForOutput,
         ...(isSiteTheme(themeId)
@@ -768,15 +757,6 @@ document.addEventListener('submit', function(e){
               site_theme: themeId,
               site_pages: { pages: sitePages ?? defaultSitePages(themeId) },
               site_settings: {},
-            }
-          : {}),
-        ...(selectedTemplate
-          ? {
-              sections: (Array.isArray(selectedTemplate.sections) ? selectedTemplate.sections : []).map((s: any) => ({
-                ...s,
-                data: { ...s.data },
-                id: `sec_${Math.random().toString(36).slice(2, 10)}`,
-              })),
             }
           : {}),
         flow_type: branding.flow_type,
