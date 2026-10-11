@@ -1794,7 +1794,7 @@ document.addEventListener('submit', function(e){
                 variant="outline"
                 className="h-7 gap-1.5 text-xs"
                 onClick={() => {
-                  const blob = new Blob([selectedTemplate ? templatePreviewHtml : previewSrcDoc], { type: "text/html" });
+                  const blob = new Blob([previewSrcDoc], { type: "text/html" });
                   const url = URL.createObjectURL(blob);
                   window.open(url, "_blank", "noopener,noreferrer");
                   setTimeout(() => URL.revokeObjectURL(url), 60_000);
@@ -1814,7 +1814,7 @@ document.addEventListener('submit', function(e){
                   {branding.landing_domain || "preview.localhost"}
                 </div>
               </div>
-              {isSiteTheme(themeId) && !selectedTemplate && (
+              {isSiteTheme(themeId) && (
                 <div className="flex flex-wrap gap-1 bg-muted/30 px-2 py-1.5 border-b">
                   {(sitePages ?? defaultSitePages(themeId)).filter((p) => p.enabled !== false).map((p) => (
                     <button
@@ -1835,7 +1835,7 @@ document.addEventListener('submit', function(e){
               )}
               <iframe
                 title="Landing Preview"
-                srcDoc={selectedTemplate ? templatePreviewHtml : previewSrcDoc}
+                srcDoc={previewSrcDoc}
                 sandbox="allow-same-origin allow-scripts"
                 className="w-full h-[calc(100vh-180px)] min-h-[600px] border-0 bg-white"
               />
