@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { generateLandingZip } from "@/lib/landing-generator.functions";
-import { listLandingTemplates } from "@/lib/landing-templates.functions";
-import { renderSectionsPreview } from "@/lib/landing-builder.functions";
 
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -333,88 +331,6 @@ function LandingGeneratorPage() {
   }, [listFn, toast]);
 
   useEffect(() => { reloadLandings(); }, [reloadLandings]);
-  const listTemplatesFn = useServerFn(listLandingTemplates);
-  const [savedTemplates, setSavedTemplates] = useState<any[]>([]);
-  useEffect(() => {
-    listTemplatesFn().then((r: any) => setSavedTemplates(r?.rows ?? [])).catch(() => setSavedTemplates([]));
-  }, [listTemplatesFn]);
-  // Eigene Baukasten-Vorlage als Grundlage (statt festem Theme)
-  const [templateId, setTemplateId] = useState<string | null>(null);
-  // Gespeicherte Baukasten-Seite als Vorlage im Generator (Original bleibt unverändert)
-  const [pageTemplate, setPageTemplate] = useState<any | null>(null);
-  const selectedTemplate =
-    savedTemplates.find((t) => t.id === templateId) ??
-    (pageTemplate && pageTemplate.id === templateId ? pageTemplate : null);
-  const selectTemplate = (template: any) => {
-    const style = template?.style && typeof template.style === "object" ? template.style : {};
-    setPageTemplate(null);
-    setTemplateId(template.id);
-    setEditingId(null);
-    setSlug("");
-    setBranding((current) => ({
-      ...current,
-      primary_color: typeof style.primary === "string" ? style.primary : current.primary_color,
-      secondary_color: typeof style.accent === "string" ? style.accent : current.secondary_color,
-    }));
-    setLogoDataUrl(null);
-    setFaviconDataUrl(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const usePageAsTemplate = (landing: any) => {
-    const template = {
-      id: `page-${landing.id}`,
-      name: landing.branding?.firmenname?.trim?.() || landing.slug,
-      sections: Array.isArray(landing.sections) ? landing.sections : [],
-      style: landing.branding?.style || {},
-    };
-    setPageTemplate(template);
-    const style = template.style && typeof template.style === "object" ? template.style : {};
-    setTemplateId(template.id);
-    setEditingId(null);
-    setSlug("");
-    setBranding((current) => ({
-      ...current,
-      primary_color: typeof style.primary === "string" ? style.primary : current.primary_color,
-      secondary_color: typeof style.accent === "string" ? style.accent : current.secondary_color,
-    }));
-    setLogoDataUrl(null);
-    setFaviconDataUrl(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const sectionsPreviewFn = useServerFn(renderSectionsPreview);
-  const [templatePreviewHtml, setTemplatePreviewHtml] = useState("");
-  useEffect(() => {
-    if (!selectedTemplate) return;
-    let cancelled = false;
-    const t = setTimeout(async () => {
-      try {
-        const res: any = await sectionsPreviewFn({
-          data: {
-            sections: Array.isArray(selectedTemplate.sections) ? selectedTemplate.sections : [],
-            branding: {
-              firmenname: branding.firmenname, primary_color: branding.primary_color,
-              secondary_color: branding.secondary_color, kontakt_email: branding.email,
-              email: branding.email, telefon: branding.telefon,
-              whatsapp_number: branding.whatsapp_number, whatsapp_enabled: branding.whatsapp_enabled,
-              impressum: branding.impressum, seo_title: branding.seo_title,
-              seo_description: branding.seo_description,
-              style: {
-                ...(selectedTemplate.style || {}),
-                primary: branding.primary_color,
-                accent: branding.secondary_color,
-              },
-            },
-            logo_url: logoDataUrl && logoDataUrl.length < 500 ? logoDataUrl : null,
-          },
-        });
-        if (!cancelled) setTemplatePreviewHtml(res?.html ?? "");
-      } catch {
-        if (!cancelled) setTemplatePreviewHtml("");
-      }
-    }, 450);
-    return () => { cancelled = true; clearTimeout(t); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTemplate, branding, logoDataUrl]);
 
   // Slot-Werte pro Theme — bei Theme-Wechsel mit Defaults vorbelegen.
   const [slotValues, setSlotValues] = useState<Record<string, string>>(() => {
