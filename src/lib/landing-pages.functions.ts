@@ -545,3 +545,16 @@ export const toggleLandingPublished = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// KI-Bild-Generierung für den Website-Theme-Editor (aus dem entfernten Baukasten übernommen).
+export const generateLandingImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ prompt: z.string().min(3).max(800) }).parse(i))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { generateAiImage } = await import("@/lib/landing-ai.server");
+    const url = await generateAiImage(
+      `${data.prompt}\n\nStil: professionelle, realistische Werbefotografie für eine deutsche Recruiting-Webseite. Kein Text, keine Logos, keine Wasserzeichen im Bild.`
+    );
+    return { url };
+  });
