@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { generateLandingZip } from "@/lib/landing-generator.functions";
-import { listLandingTemplates } from "@/lib/landing-templates.functions";
-import { renderSectionsPreview } from "@/lib/landing-builder.functions";
 
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -333,88 +331,6 @@ function LandingGeneratorPage() {
   }, [listFn, toast]);
 
   useEffect(() => { reloadLandings(); }, [reloadLandings]);
-  const listTemplatesFn = useServerFn(listLandingTemplates);
-  const [savedTemplates, setSavedTemplates] = useState<any[]>([]);
-  useEffect(() => {
-    listTemplatesFn().then((r: any) => setSavedTemplates(r?.rows ?? [])).catch(() => setSavedTemplates([]));
-  }, [listTemplatesFn]);
-  // Eigene Baukasten-Vorlage als Grundlage (statt festem Theme)
-  const [templateId, setTemplateId] = useState<string | null>(null);
-  // Gespeicherte Baukasten-Seite als Vorlage im Generator (Original bleibt unverändert)
-  const [pageTemplate, setPageTemplate] = useState<any | null>(null);
-  const selectedTemplate =
-    savedTemplates.find((t) => t.id === templateId) ??
-    (pageTemplate && pageTemplate.id === templateId ? pageTemplate : null);
-  const selectTemplate = (template: any) => {
-    const style = template?.style && typeof template.style === "object" ? template.style : {};
-    setPageTemplate(null);
-    setTemplateId(template.id);
-    setEditingId(null);
-    setSlug("");
-    setBranding((current) => ({
-      ...current,
-      primary_color: typeof style.primary === "string" ? style.primary : current.primary_color,
-      secondary_color: typeof style.accent === "string" ? style.accent : current.secondary_color,
-    }));
-    setLogoDataUrl(null);
-    setFaviconDataUrl(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const usePageAsTemplate = (landing: any) => {
-    const template = {
-      id: `page-${landing.id}`,
-      name: landing.branding?.firmenname?.trim?.() || landing.slug,
-      sections: Array.isArray(landing.sections) ? landing.sections : [],
-      style: landing.branding?.style || {},
-    };
-    setPageTemplate(template);
-    const style = template.style && typeof template.style === "object" ? template.style : {};
-    setTemplateId(template.id);
-    setEditingId(null);
-    setSlug("");
-    setBranding((current) => ({
-      ...current,
-      primary_color: typeof style.primary === "string" ? style.primary : current.primary_color,
-      secondary_color: typeof style.accent === "string" ? style.accent : current.secondary_color,
-    }));
-    setLogoDataUrl(null);
-    setFaviconDataUrl(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const sectionsPreviewFn = useServerFn(renderSectionsPreview);
-  const [templatePreviewHtml, setTemplatePreviewHtml] = useState("");
-  useEffect(() => {
-    if (!selectedTemplate) return;
-    let cancelled = false;
-    const t = setTimeout(async () => {
-      try {
-        const res: any = await sectionsPreviewFn({
-          data: {
-            sections: Array.isArray(selectedTemplate.sections) ? selectedTemplate.sections : [],
-            branding: {
-              firmenname: branding.firmenname, primary_color: branding.primary_color,
-              secondary_color: branding.secondary_color, kontakt_email: branding.email,
-              email: branding.email, telefon: branding.telefon,
-              whatsapp_number: branding.whatsapp_number, whatsapp_enabled: branding.whatsapp_enabled,
-              impressum: branding.impressum, seo_title: branding.seo_title,
-              seo_description: branding.seo_description,
-              style: {
-                ...(selectedTemplate.style || {}),
-                primary: branding.primary_color,
-                accent: branding.secondary_color,
-              },
-            },
-            logo_url: logoDataUrl && logoDataUrl.length < 500 ? logoDataUrl : null,
-          },
-        });
-        if (!cancelled) setTemplatePreviewHtml(res?.html ?? "");
-      } catch {
-        if (!cancelled) setTemplatePreviewHtml("");
-      }
-    }, 450);
-    return () => { cancelled = true; clearTimeout(t); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTemplate, branding, logoDataUrl]);
 
   // Slot-Werte pro Theme — bei Theme-Wechsel mit Defaults vorbelegen.
   const [slotValues, setSlotValues] = useState<Record<string, string>>(() => {
@@ -445,8 +361,6 @@ function LandingGeneratorPage() {
     .map(([label]) => label);
 
   const selectTheme = (id: string) => {
-    setTemplateId(null);
-    setPageTemplate(null);
     setThemeId(id);
     setSitePages(isSiteTheme(id) ? defaultSitePages(id) : null);
     setPreviewPageSlug("");
@@ -797,7 +711,7 @@ document.addEventListener('submit', function(e){
   const handleSaveLive = async () => {
     // Archivierte Themes sind für bestehende Seiten weiter bearbeitbar,
     // dürfen aber nicht versehentlich für eine neue Seite verwendet werden.
-    if (!editingId && !selectedTemplate && themeId && !isActiveTheme(themeId)) {
+    if (!editingId && themeId && !isActiveTheme(themeId)) {
       toast({
         title: "Archiv-Theme nicht wählbar",
         description: "Alte Vorlagen laufen nur für bestehende Seiten weiter. Bitte ein aktuelles Website-Theme auswählen.",
@@ -836,15 +750,6 @@ document.addEventListener('submit', function(e){
           seo_title: b.seo_title, seo_description: b.seo_description, seo_image: b.seo_image,
           recruiter_name: b.recruiter_name || "Martin Schneider",
           recruiter_avatar_url: b.recruiter_avatar_url || null,
-          ...(selectedTemplate
-            ? {
-                style: {
-                  ...(selectedTemplate.style || {}),
-                  primary: b.primary_color,
-                  accent: b.secondary_color,
-                },
-              }
-            : {}),
         },
         slots: slotsForOutput,
         ...(isSiteTheme(themeId)
@@ -852,15 +757,6 @@ document.addEventListener('submit', function(e){
               site_theme: themeId,
               site_pages: { pages: sitePages ?? defaultSitePages(themeId) },
               site_settings: {},
-            }
-          : {}),
-        ...(selectedTemplate
-          ? {
-              sections: (Array.isArray(selectedTemplate.sections) ? selectedTemplate.sections : []).map((s: any) => ({
-                ...s,
-                data: { ...s.data },
-                id: `sec_${Math.random().toString(36).slice(2, 10)}`,
-              })),
             }
           : {}),
         flow_type: branding.flow_type,
@@ -935,8 +831,6 @@ document.addEventListener('submit', function(e){
       const row: any = await getFn({ data: { id } } as any);
       setEditingId(row.id);
       setSlug(row.slug);
-      setTemplateId(null);
-      setPageTemplate(null);
       setLogoDataUrl(null); setFaviconDataUrl(null);
       const loadedBranding = {
         ...EMPTY,
@@ -979,7 +873,6 @@ document.addEventListener('submit', function(e){
   const handleNewLanding = () => {
     const nextThemeId = THEME_LIST[0]?.id ?? "";
     setEditingId(null); setSlug(""); setBranding(EMPTY);
-    setTemplateId(null); setPageTemplate(null);
     setLogoDataUrl(null); setFaviconDataUrl(null); setSlotValues({});
     setThemeId(nextThemeId);
     setSitePages(isSiteTheme(nextThemeId) ? defaultSitePages(nextThemeId) : null);
@@ -1058,11 +951,6 @@ document.addEventListener('submit', function(e){
           </p>
         </div>
         <div className="flex gap-2">
-          <Link to="/admin/landing-baukasten">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Pencil className="h-4 w-4" /> Zum Baukasten (Abschnitte frei anordnen)
-            </Button>
-          </Link>
           {editingId && (
             <Button variant="outline" size="sm" onClick={handleNewLanding} className="gap-2">
               <Plus className="h-4 w-4" /> Neue Landing
@@ -1202,11 +1090,6 @@ document.addEventListener('submit', function(e){
                           <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleEditLanding(l.id)} title="Bearbeiten">
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
-                          {Array.isArray(l.sections) && l.sections.length > 0 && (
-                            <Button size="sm" variant="ghost" className="h-7 px-2" title="Als Vorlage für neue Seite verwenden" onClick={() => usePageAsTemplate(l)}>
-                              <Copy className="h-3.5 w-3.5" />
-                            </Button>
-                          )}
                           <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleTogglePublished(l.id, !l.is_published)} title={l.is_published ? "Pausieren" : "Aktivieren"}>
                             <Power className="h-3.5 w-3.5" />
                           </Button>
@@ -1249,7 +1132,7 @@ document.addEventListener('submit', function(e){
                     onClick={() => selectTheme(t.id)}
                     className={cn(
                       "text-left rounded-lg border-2 p-3 transition-all",
-                      themeId === t.id && !templateId
+                      themeId === t.id
                         ? "border-primary bg-primary/5 shadow-sm"
                         : "border-border hover:border-primary/40",
                     )}
@@ -1258,76 +1141,12 @@ document.addEventListener('submit', function(e){
                       <span className="font-semibold text-sm truncate">{t.name}</span>
                       <div className="flex items-center gap-2 shrink-0">
                         <span className="text-[10px] text-muted-foreground/70 font-mono">{t.id}</span>
-                        {themeId === t.id && !templateId && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                        {themeId === t.id && <CheckCircle2 className="h-4 w-4 text-primary" />}
                       </div>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-2">{t.description}</p>
                   </button>
                 ))}
-                {savedTemplates.map((t) => (
-                  <button
-                    key={`tpl-${t.id}`}
-                    type="button"
-                    onClick={() => selectTemplate(t)}
-                    className={cn(
-                      "text-left rounded-lg border-2 p-3 transition-all",
-                      templateId === t.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/40",
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="font-semibold text-sm truncate">{t.name}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[10px] rounded px-1.5 py-0.5 font-medium bg-muted text-muted-foreground">
-                          Eigene Vorlage
-                        </span>
-                        {templateId === t.id && <CheckCircle2 className="h-4 w-4 text-primary" />}
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {t.description || `${Array.isArray(t.sections) ? t.sections.length : 0} Abschnitte aus dem Baukasten`}
-                    </p>
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-4 border-t pt-3 space-y-2">
-                <div className="text-sm font-semibold">Gespeicherte Baukasten-Seiten verwenden</div>
-                <p className="text-xs text-muted-foreground">
-                  Erstellt eine neue, unveröffentlichte Kopie. Die bestehende Seite bleibt unverändert.
-                </p>
-                {landingsLoading ? (
-                  <p className="text-xs text-muted-foreground">Seiten werden geladen …</p>
-                ) : landings.filter((landing) => Array.isArray(landing.sections) && landing.sections.length > 0).length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Noch keine Seite aus dem Baukasten gespeichert.</p>
-                ) : (
-                  <div className="grid grid-cols-1 gap-2">
-                    {landings
-                      .filter((landing) => Array.isArray(landing.sections) && landing.sections.length > 0)
-                      .map((landing) => (
-                        <button
-                          key={landing.id}
-                          type="button"
-                          onClick={() => usePageAsTemplate(landing)}
-                          className={cn(
-                            "text-left rounded-lg border-2 p-3 transition-all block w-full",
-                            templateId === `page-${landing.id}` ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40",
-                          )}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-sm truncate">
-                              {landing.branding?.firmenname?.trim?.() || landing.slug}
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-xs text-primary shrink-0">
-                              {templateId === `page-${landing.id}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />} Als Vorlage verwenden
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{landing.domain || landing.slug}</p>
-                        </button>
-                      ))}
-                  </div>
-                )}
               </div>
 
               {/* Archiv: frühere Themes — nur ansehen, keine Auswahl für neue Seiten */}
@@ -1352,7 +1171,7 @@ document.addEventListener('submit', function(e){
                             <span className="text-[10px] rounded px-1.5 py-0.5 font-medium bg-muted text-muted-foreground shrink-0">
                               Archiv
                             </span>
-                            {themeId === t.id && !templateId && (
+                            {themeId === t.id && (
                               <span className="text-[10px] text-muted-foreground shrink-0">wird angezeigt</span>
                             )}
                           </div>
@@ -1975,7 +1794,7 @@ document.addEventListener('submit', function(e){
                 variant="outline"
                 className="h-7 gap-1.5 text-xs"
                 onClick={() => {
-                  const blob = new Blob([selectedTemplate ? templatePreviewHtml : previewSrcDoc], { type: "text/html" });
+                  const blob = new Blob([previewSrcDoc], { type: "text/html" });
                   const url = URL.createObjectURL(blob);
                   window.open(url, "_blank", "noopener,noreferrer");
                   setTimeout(() => URL.revokeObjectURL(url), 60_000);
@@ -1995,7 +1814,7 @@ document.addEventListener('submit', function(e){
                   {branding.landing_domain || "preview.localhost"}
                 </div>
               </div>
-              {isSiteTheme(themeId) && !selectedTemplate && (
+              {isSiteTheme(themeId) && (
                 <div className="flex flex-wrap gap-1 bg-muted/30 px-2 py-1.5 border-b">
                   {(sitePages ?? defaultSitePages(themeId)).filter((p) => p.enabled !== false).map((p) => (
                     <button
@@ -2016,7 +1835,7 @@ document.addEventListener('submit', function(e){
               )}
               <iframe
                 title="Landing Preview"
-                srcDoc={selectedTemplate ? templatePreviewHtml : previewSrcDoc}
+                srcDoc={previewSrcDoc}
                 sandbox="allow-same-origin allow-scripts"
                 className="w-full h-[calc(100vh-180px)] min-h-[600px] border-0 bg-white"
               />

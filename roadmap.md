@@ -22,7 +22,8 @@
 - [x] E2E Landing-Server mit Mock-DB: /, /team, /bewerben (Apply-Modal), /impressum, /style.css, Theme-404, SEO-Titel pro Seite, Branding-Fill, klassische Landing unverändert (200) — Admin-UI-Test im Browser blockiert (Backend-Key rotiert, 401 → wartet auf neuen VITE_SUPABASE_PUBLISHABLE_KEY)
 - [ ] Themes 2–15 (Etappe 2–5, 6–10, 11–15), Theme 1 ist Qualitätsreferenz
 - [ ] ZIP-Export (generate) für mehrseitige Themes
-- Deploy-Hinweis: Migration SQL bei Deploy auf dem Backend-Server einspielen (psql / deploy-backend-local.sh)
+- [x] Baukasten gelöscht (Editor-Route, landing-builder/-templates/-blueprints, Generator-UI; landing-sections.ts + sections-renderer.js bleiben für die Live-Seite b-h-v-agentur.com; Migration 20261011000000_drop_landing_templates.sql angelegt — beim Deploy einspielen); KI-Bilder jetzt als generateLandingImage in landing-pages.functions.ts
+- [ ] Deploy-Hinweis: Migration SQL bei Deploy auf dem Backend-Server einspielen (psql / deploy-backend-local.sh)
 
 ## Hintergrund / fertig
 - Vorlagen sind jetzt alle „direkt" (kein Fast-Track/Vermittlung bei neuen Seiten) — Teil 1 erledigt 2026-09-29.
