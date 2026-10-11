@@ -831,8 +831,6 @@ document.addEventListener('submit', function(e){
       const row: any = await getFn({ data: { id } } as any);
       setEditingId(row.id);
       setSlug(row.slug);
-      setTemplateId(null);
-      setPageTemplate(null);
       setLogoDataUrl(null); setFaviconDataUrl(null);
       const loadedBranding = {
         ...EMPTY,
@@ -875,7 +873,6 @@ document.addEventListener('submit', function(e){
   const handleNewLanding = () => {
     const nextThemeId = THEME_LIST[0]?.id ?? "";
     setEditingId(null); setSlug(""); setBranding(EMPTY);
-    setTemplateId(null); setPageTemplate(null);
     setLogoDataUrl(null); setFaviconDataUrl(null); setSlotValues({});
     setThemeId(nextThemeId);
     setSitePages(isSiteTheme(nextThemeId) ? defaultSitePages(nextThemeId) : null);
@@ -954,11 +951,6 @@ document.addEventListener('submit', function(e){
           </p>
         </div>
         <div className="flex gap-2">
-          <Link to="/admin/landing-baukasten">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Pencil className="h-4 w-4" /> Zum Baukasten (Abschnitte frei anordnen)
-            </Button>
-          </Link>
           {editingId && (
             <Button variant="outline" size="sm" onClick={handleNewLanding} className="gap-2">
               <Plus className="h-4 w-4" /> Neue Landing
@@ -1098,11 +1090,6 @@ document.addEventListener('submit', function(e){
                           <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleEditLanding(l.id)} title="Bearbeiten">
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
-                          {Array.isArray(l.sections) && l.sections.length > 0 && (
-                            <Button size="sm" variant="ghost" className="h-7 px-2" title="Als Vorlage für neue Seite verwenden" onClick={() => usePageAsTemplate(l)}>
-                              <Copy className="h-3.5 w-3.5" />
-                            </Button>
-                          )}
                           <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleTogglePublished(l.id, !l.is_published)} title={l.is_published ? "Pausieren" : "Aktivieren"}>
                             <Power className="h-3.5 w-3.5" />
                           </Button>
