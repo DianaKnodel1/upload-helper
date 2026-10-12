@@ -16,7 +16,7 @@ Nach dem Muster von Theme 1 (`src/landing-themes/site-1/`), jedes Theme mit:
 - `style.css` — eigene Farbpalette über CSS-Variablen (editierbar im Generator), 2–3 Schrift-Alternativen pro Theme.
 - `script.js` — Menü, Animationen, Jahreszahl.
 - `meta.json` — Seiten-Liste, Schriften, Farben, Text-Slots.
-- `assets/` — **professionelle, KI-generierte Bilder** (Hero, Team, Jobs, Kontakt), komprimiert (max. 900 px, JPEG q68), damit das Bundle unter dem 10-MB-Limit bleibt.
+- `assets/` — **professionelle, KI-generierte Bilder** (Hero, Team, Jobs, Kontakt) in hoher Auflösung. Die Bilder werden auf das Lovable-CDN hochgeladen (`lovable-assets`, `.asset.json`-Zeiger) statt als Base64 ins Code-Bundle — damit entfällt das bisherige 10-MB-Limit komplett und auch große, hochwertige Bilder sind kein Problem. Der Landing-Server und der ZIP-Export ziehen die Bilder über die CDN-URLs.
 
 Jedes Theme eine eigene visuelle Welt — keine ähnlichen Zwillinge:
 1. Theme 1 „Klassik" (fertig): navy/gold, Serifen, seriös
@@ -34,7 +34,7 @@ Reihenfolge: Themes 2–5 (Etappe), dann 6–10 (Etappe). Nach jeder Etappe: Bui
 
 ## Schritt 3: Registrierung & Test
 - `src/lib/landing-themes.ts`: neue Themes in die Registry, `ACTIVE_THEME_IDS` auf site-1 … site-10, Anzeigenamen „Website-Theme 1" … „Website-Theme 10".
-- Asset-Bundle neu bauen (`scripts/build-theme-assets.mjs`); `theme-assets.generated.ts` wird NICHT kommittet (>10 MB Commit-Limit).
+- Bilder per `lovable-assets create` aufs CDN hochladen, `.asset.json`-Zeiger im Theme ablegen; Theme-Templates referenzieren die CDN-URLs. Das Base64-Bundle (`theme-assets.generated.ts`) wird für neue Themes nicht mehr benötigt; Bestand (Theme 1 + alte Themes) bleibt unverändert.
 - Renderer-Unit-Test (Fragmente, disabled Nav, 404) + Landing-Server-E2E mit Mock-DB pro Theme.
 - Build-Check (`/tmp/observability/build-errors.log`).
 
