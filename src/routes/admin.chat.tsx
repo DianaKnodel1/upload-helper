@@ -379,28 +379,34 @@ function AdminChatPage() {
   const refreshActivity = async (userIds?: string[]) => {
     const ids = userIds ?? conversationsRef.current.map((c) => c.user_id);
     if (ids.length === 0) return;
-    try {
-      const res = await getLastSignIns({ data: { user_ids: ids } });
-      const map = res.activity ?? {};
-      const problems = [res.signInError, res.seenError].filter(Boolean) as string[];
-      // Die Anzeige "Zuletzt aktiv" basiert ausschließlich auf dem Heartbeat
-      // (last_seen_at). Fällt diese Quelle aus, ist die Anzeige nicht belastbar.
-      setActivityError(res.seenError ?? null);
-      if (problems.length > 0) console.warn("Aktivitäts-Quellen teilweise nicht verfügbar:", problems);
-      setConversations((prev) => prev.map((c) => ({
-        ...c,
-        lastSignInAt: map[c.user_id]?.last_sign_in_at ?? c.lastSignInAt ?? null,
-        lastSeenAt: map[c.user_id]?.last_seen_at ?? c.lastSeenAt ?? null,
-      })));
-    } catch (e: any) {
-      const msg = e?.message || String(e);
-      setActivityError(msg);
-      console.warn("Aktivitätsdaten konnten nicht geladen werden:", e);
+    // Server nimmt max. 500 IDs pro Aufruf → in Paketen laden. Ein fehlerhaftes
+    // Paket macht die übrigen nicht unbrauchbar.
+    const BATCH = 500;
+    const map: Record<string, { last_sign_in_at: string | null; last_seen_at: string | null }> = {};
+    let seenError: string | null = null;
+    for (let i = 0; i < ids.length; i += BATCH) {
+      try {
+        const res = await getLastSignIns({ data: { user_ids: ids.slice(i, i + BATCH) } });
+        Object.assign(map, res.activity ?? {});
+        const problems = [res.signInError, res.seenError].filter(Boolean) as string[];
+        if (problems.length > 0) console.warn("Aktivitäts-Quellen teilweise nicht verfügbar:", problems);
+        // "Zuletzt aktiv" basiert nur auf dem Heartbeat (last_seen_at).
+        if (res.seenError) seenError = res.seenError;
+      } catch (e: any) {
+        seenError = e?.message || String(e);
+        console.warn("Aktivitätsdaten konnten nicht geladen werden:", e);
+      }
     }
+    setActivityError(seenError);
+    setConversations((prev) => prev.map((c) => ({
+      ...c,
+      lastSignInAt: map[c.user_id]?.last_sign_in_at ?? c.lastSignInAt ?? null,
+      lastSeenAt: map[c.user_id]?.last_seen_at ?? c.lastSeenAt ?? null,
+    })));
   };
 
   const formatLastActive = (ts?: string | null) => {
-    if (!ts) return activityError ? "Status unbekannt" : "Keine Aktivität";
+    if (!ts) return activityError ? "Status unbekannt" : "Noch keine Aktivität erfasst";
     const diff = Date.now() - new Date(ts).getTime();
     const m = Math.floor(diff / 60000);
     if (m < 2) return "Gerade aktiv";
