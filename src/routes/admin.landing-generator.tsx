@@ -365,6 +365,11 @@ function LandingGeneratorPage() {
     setSitePages(isSiteTheme(id) ? defaultSitePages(id) : null);
     setPreviewPageSlug("");
     setSlotValues(normalizeSlotsForTheme(id, {}, withSeoDefaults(branding)));
+    // Website-Themes bringen eigene Farben mit — bei Auswahl vorbelegen (danach frei änderbar).
+    const c = isSiteTheme(id) ? getTheme(id)?.colors : undefined;
+    if (c?.primary || c?.secondary) {
+      setBranding((b) => ({ ...b, primary_color: c.primary || b.primary_color, secondary_color: c.secondary || b.secondary_color }));
+    }
   };
   const setSlot = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setSlotValues((v) => ({ ...v, [key]: e.target.value }));
