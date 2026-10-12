@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Saved section templates and section-based pages are selected, previewed, recolored, and saved directly in the classic generator; the Baukasten is never part of that selection flow. Keeps one renderer for section pages.
+- Website-Themes (site-N) declare their palette in meta.json `colors`; the generator pre-fills branding colors on theme selection, and theme CSS keeps element base rules inside :where() so component classes (buttons, headings) always win. Why: otherwise every theme looked like the tenant default color and base rules hid button text.
