@@ -406,7 +406,7 @@ function AdminChatPage() {
   };
 
   const formatLastActive = (ts?: string | null) => {
-    if (!ts) return activityError ? "Status unbekannt" : "Keine Aktivität";
+    if (!ts) return activityError ? "Status unbekannt" : "Noch keine Aktivität erfasst";
     const diff = Date.now() - new Date(ts).getTime();
     const m = Math.floor(diff / 60000);
     if (m < 2) return "Gerade aktiv";
