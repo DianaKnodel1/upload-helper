@@ -1487,9 +1487,9 @@ function AdminChatPage() {
                   Speichern
                 </Button>
               </div>
-              {isUnanswered(selectedConv!) && !selectedConv?.adminNote && (
+              {isLongOpen(selectedConv!) && (
                 <p className="text-[11px] text-red-600 dark:text-red-400 flex items-center gap-1 mt-2">
-                  <AlertCircle className="h-3 w-3" /> Seit über 4 Stunden unbeantwortet – kurz Notiz hinterlassen, falls du dranbleibst.
+                  <AlertCircle className="h-3 w-3" /> Antwort seit über 4 Stunden offen.
                 </p>
               )}
             </div>
