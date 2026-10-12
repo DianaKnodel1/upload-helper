@@ -46,11 +46,25 @@ export const getLastSignIns = createServerFn({ method: "POST" })
     const sb = context.supabase as any;
 
     // Beide Quellen unabhängig voneinander: fällt eine aus, bleibt die andere nutzbar.
+    // profiles-Abfrage ist ein GET: alle IDs landen in der URL (`in.(…)`).
+    // Bei vielen Mitarbeitern sprengt das das URL-Limit des Gateways
+    // ("URI too long"). Daher in kleinen Paketen à 100 IDs (~3,7 KB URL).
+    const PROFILE_CHUNK = 100;
+    const loadProfiles = async () => {
+      const rows: any[] = [];
+      for (let i = 0; i < data.user_ids.length; i += PROFILE_CHUNK) {
+        const r = await sb.from("profiles").select("user_id, last_seen_at")
+          .in("user_id", data.user_ids.slice(i, i + PROFILE_CHUNK));
+        if (r.error) return { data: null, error: r.error };
+        rows.push(...(r.data ?? []));
+      }
+      return { data: rows, error: null };
+    };
     const [rpcRes, profRes] = await Promise.all([
+      // RPC ist ein POST (IDs im Body) – kein URL-Limit.
       sb.rpc("get_last_sign_ins", { _user_ids: data.user_ids })
         .then((r: any) => r, (e: any) => ({ data: null, error: { message: String(e?.message ?? e) } })),
-      sb.from("profiles").select("user_id, last_seen_at").in("user_id", data.user_ids)
-        .then((r: any) => r, (e: any) => ({ data: null, error: { message: String(e?.message ?? e) } })),
+      loadProfiles().catch((e: any) => ({ data: null, error: { message: String(e?.message ?? e) } })),
     ]);
 
     const map: Record<string, UserActivity> = {};
