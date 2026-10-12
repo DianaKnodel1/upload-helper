@@ -1554,7 +1554,7 @@ function AdminChatPage() {
                   value={newMessage}
                   onChange={(e) => { setNewMessage(e.target.value); setSuggestionActive(false); broadcastTyping(e.target.value); }}
                   onKeyDown={handleKeyDown}
-                  placeholder="Nachricht schreiben… (KI Stil-Support)"
+                  placeholder="Nachricht schreiben… (Enter = neue Zeile, Strg+Enter = senden)"
                   rows={3}
                   className="flex-1 min-h-[80px] max-h-60 resize-y py-2 text-sm focus-visible:ring-blue-500"
                 />
