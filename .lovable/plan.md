@@ -34,7 +34,7 @@ Reihenfolge: Themes 2–5 (Etappe), dann 6–10 (Etappe). Nach jeder Etappe: Bui
 
 ## Schritt 3: Registrierung & Test
 - `src/lib/landing-themes.ts`: neue Themes in die Registry, `ACTIVE_THEME_IDS` auf site-1 … site-10, Anzeigenamen „Website-Theme 1" … „Website-Theme 10".
-- Asset-Bundle neu bauen (`scripts/build-theme-assets.mjs`); `theme-assets.generated.ts` wird NICHT kommittet (>10 MB Commit-Limit).
+- Bilder per `lovable-assets create` aufs CDN hochladen, `.asset.json`-Zeiger im Theme ablegen; Theme-Templates referenzieren die CDN-URLs. Das Base64-Bundle (`theme-assets.generated.ts`) wird für neue Themes nicht mehr benötigt; Bestand (Theme 1 + alte Themes) bleibt unverändert.
 - Renderer-Unit-Test (Fragmente, disabled Nav, 404) + Landing-Server-E2E mit Mock-DB pro Theme.
 - Build-Check (`/tmp/observability/build-errors.log`).
 
