@@ -28,9 +28,9 @@
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
-.s13 h1, .s13 h2, .s13 h3, .s13 h4 { font-family: var(--s13-font-head); line-height: 1.02; margin: 0; color: var(--s13-ink); font-weight: 800; text-transform: uppercase; letter-spacing: -.01em; }
-.s13 img { display: block; max-width: 100%; height: auto; filter: grayscale(.15) contrast(1.05); }
-.s13 a { color: var(--s13-orange); }
+:where(.s13) :where(h1, h2, h3, h4) { font-family: var(--s13-font-head); line-height: 1.02; margin: 0; color: var(--s13-ink); font-weight: 800; text-transform: uppercase; letter-spacing: -.01em; }
+:where(.s13) :where(img) { display: block; max-width: 100%; height: auto; filter: grayscale(.15) contrast(1.05); }
+:where(.s13) :where(a) { color: var(--s13-orange); }
 .s13-pre { white-space: pre-line; }
 
 .s13-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
@@ -284,3 +284,10 @@
   .s13-checks { grid-template-columns: 1fr; }
   .s13-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s13-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s13-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s13-header-actions { flex-shrink: 0; } }
+html, body { overflow-x: clip; }
+.s13-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s13 .s13-contact-head { color: var(--s13-ink); opacity: .7; }

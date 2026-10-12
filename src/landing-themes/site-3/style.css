@@ -28,9 +28,9 @@
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-.s3 h1, .s3 h2, .s3 h3, .s3 h4 { font-family: var(--s3-font-head); line-height: 1.18; margin: 0; color: var(--s3-ink); }
-.s3 img { display: block; max-width: 100%; height: auto; border-radius: 20px; }
-.s3 a { color: var(--s3-primary); }
+:where(.s3) :where(h1, h2, h3, h4) { font-family: var(--s3-font-head); line-height: 1.18; margin: 0; color: var(--s3-ink); }
+:where(.s3) :where(img) { display: block; max-width: 100%; height: auto; border-radius: 20px; }
+:where(.s3) :where(a) { color: var(--s3-primary); }
 .s3-pre { white-space: pre-line; }
 
 .s3-container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
@@ -312,3 +312,10 @@
   .s3-checks { grid-template-columns: 1fr; }
   .s3-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s3-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s3-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s3-header-actions { flex-shrink: 0; } }
+html, body { overflow-x: clip; }
+.s3-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s3 .s3-contact-head { color: var(--s3-ink); opacity: .7; }

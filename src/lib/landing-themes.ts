@@ -332,6 +332,8 @@ export type ThemeFiles = {
   kind?: "single" | "site";
   /** Nur bei kind "site": Standard-Unterseiten des Themes */
   pages?: SitePageDef[];
+  /** Nur bei kind "site": empfohlene Theme-Farben (werden bei Auswahl vorbelegt) */
+  colors?: { primary?: string; secondary?: string };
 };
 
 function pickSlots(meta: any): ThemeSlot[] {
@@ -488,21 +490,21 @@ function withSharedForm(t: ThemeFiles): ThemeFiles {
 
 export const THEMES: ThemeFiles[] = [
   // Website-Themes (mehrseitige Komplett-Websites) — die aktive Auswahl bei „Neue Landing".
-  { id: site1Meta.id, name: site1Meta.name, description: site1Meta.description, kind: "site" as const, pages: site1Meta.pages, html: site1Html, css: site1Css, js: site1Js, slots: pickSlots(site1Meta) },
-  { id: site2Meta.id, name: site2Meta.name, description: site2Meta.description, kind: "site" as const, pages: site2Meta.pages, html: site2Html, css: site2Css, js: site2Js, slots: pickSlots(site2Meta) },
-  { id: site3Meta.id, name: site3Meta.name, description: site3Meta.description, kind: "site" as const, pages: site3Meta.pages, html: site3Html, css: site3Css, js: site3Js, slots: pickSlots(site3Meta) },
-  { id: site4Meta.id, name: site4Meta.name, description: site4Meta.description, kind: "site" as const, pages: site4Meta.pages, html: site4Html, css: site4Css, js: site4Js, slots: pickSlots(site4Meta) },
-  { id: site5Meta.id, name: site5Meta.name, description: site5Meta.description, kind: "site" as const, pages: site5Meta.pages, html: site5Html, css: site5Css, js: site5Js, slots: pickSlots(site5Meta) },
-  { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
-  { id: site7Meta.id, name: site7Meta.name, description: site7Meta.description, kind: "site" as const, pages: site7Meta.pages, html: site7Html, css: site7Css, js: site7Js, slots: pickSlots(site7Meta) },
-  { id: site8Meta.id, name: site8Meta.name, description: site8Meta.description, kind: "site" as const, pages: site8Meta.pages, html: site8Html, css: site8Css, js: site8Js, slots: pickSlots(site8Meta) },
-  { id: site9Meta.id, name: site9Meta.name, description: site9Meta.description, kind: "site" as const, pages: site9Meta.pages, html: site9Html, css: site9Css, js: site9Js, slots: pickSlots(site9Meta) },
-  { id: site10Meta.id, name: site10Meta.name, description: site10Meta.description, kind: "site" as const, pages: site10Meta.pages, html: site10Html, css: site10Css, js: site10Js, slots: pickSlots(site10Meta) },
-  { id: site11Meta.id, name: site11Meta.name, description: site11Meta.description, kind: "site" as const, pages: site11Meta.pages, html: site11Html, css: site11Css, js: site11Js, slots: pickSlots(site11Meta) },
-  { id: site12Meta.id, name: site12Meta.name, description: site12Meta.description, kind: "site" as const, pages: site12Meta.pages, html: site12Html, css: site12Css, js: site12Js, slots: pickSlots(site12Meta) },
-  { id: site13Meta.id, name: site13Meta.name, description: site13Meta.description, kind: "site" as const, pages: site13Meta.pages, html: site13Html, css: site13Css, js: site13Js, slots: pickSlots(site13Meta) },
-  { id: site14Meta.id, name: site14Meta.name, description: site14Meta.description, kind: "site" as const, pages: site14Meta.pages, html: site14Html, css: site14Css, js: site14Js, slots: pickSlots(site14Meta) },
-  { id: site15Meta.id, name: site15Meta.name, description: site15Meta.description, kind: "site" as const, pages: site15Meta.pages, html: site15Html, css: site15Css, js: site15Js, slots: pickSlots(site15Meta) },
+  { id: site1Meta.id, name: site1Meta.name, description: site1Meta.description, kind: "site" as const, pages: site1Meta.pages, colors: (site1Meta as any).colors, html: site1Html, css: site1Css, js: site1Js, slots: pickSlots(site1Meta) },
+  { id: site2Meta.id, name: site2Meta.name, description: site2Meta.description, kind: "site" as const, pages: site2Meta.pages, colors: (site2Meta as any).colors, html: site2Html, css: site2Css, js: site2Js, slots: pickSlots(site2Meta) },
+  { id: site3Meta.id, name: site3Meta.name, description: site3Meta.description, kind: "site" as const, pages: site3Meta.pages, colors: (site3Meta as any).colors, html: site3Html, css: site3Css, js: site3Js, slots: pickSlots(site3Meta) },
+  { id: site4Meta.id, name: site4Meta.name, description: site4Meta.description, kind: "site" as const, pages: site4Meta.pages, colors: (site4Meta as any).colors, html: site4Html, css: site4Css, js: site4Js, slots: pickSlots(site4Meta) },
+  { id: site5Meta.id, name: site5Meta.name, description: site5Meta.description, kind: "site" as const, pages: site5Meta.pages, colors: (site5Meta as any).colors, html: site5Html, css: site5Css, js: site5Js, slots: pickSlots(site5Meta) },
+  { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, colors: (site6Meta as any).colors, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
+  { id: site7Meta.id, name: site7Meta.name, description: site7Meta.description, kind: "site" as const, pages: site7Meta.pages, colors: (site7Meta as any).colors, html: site7Html, css: site7Css, js: site7Js, slots: pickSlots(site7Meta) },
+  { id: site8Meta.id, name: site8Meta.name, description: site8Meta.description, kind: "site" as const, pages: site8Meta.pages, colors: (site8Meta as any).colors, html: site8Html, css: site8Css, js: site8Js, slots: pickSlots(site8Meta) },
+  { id: site9Meta.id, name: site9Meta.name, description: site9Meta.description, kind: "site" as const, pages: site9Meta.pages, colors: (site9Meta as any).colors, html: site9Html, css: site9Css, js: site9Js, slots: pickSlots(site9Meta) },
+  { id: site10Meta.id, name: site10Meta.name, description: site10Meta.description, kind: "site" as const, pages: site10Meta.pages, colors: (site10Meta as any).colors, html: site10Html, css: site10Css, js: site10Js, slots: pickSlots(site10Meta) },
+  { id: site11Meta.id, name: site11Meta.name, description: site11Meta.description, kind: "site" as const, pages: site11Meta.pages, colors: (site11Meta as any).colors, html: site11Html, css: site11Css, js: site11Js, slots: pickSlots(site11Meta) },
+  { id: site12Meta.id, name: site12Meta.name, description: site12Meta.description, kind: "site" as const, pages: site12Meta.pages, colors: (site12Meta as any).colors, html: site12Html, css: site12Css, js: site12Js, slots: pickSlots(site12Meta) },
+  { id: site13Meta.id, name: site13Meta.name, description: site13Meta.description, kind: "site" as const, pages: site13Meta.pages, colors: (site13Meta as any).colors, html: site13Html, css: site13Css, js: site13Js, slots: pickSlots(site13Meta) },
+  { id: site14Meta.id, name: site14Meta.name, description: site14Meta.description, kind: "site" as const, pages: site14Meta.pages, colors: (site14Meta as any).colors, html: site14Html, css: site14Css, js: site14Js, slots: pickSlots(site14Meta) },
+  { id: site15Meta.id, name: site15Meta.name, description: site15Meta.description, kind: "site" as const, pages: site15Meta.pages, colors: (site15Meta as any).colors, html: site15Html, css: site15Css, js: site15Js, slots: pickSlots(site15Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },

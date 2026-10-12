@@ -29,9 +29,9 @@
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-.s8 h1, .s8 h2, .s8 h3, .s8 h4 { font-family: var(--s8-font-head); line-height: 1.14; margin: 0; color: var(--s8-ink); font-weight: 800; letter-spacing: -0.02em; }
-.s8 img { display: block; max-width: 100%; height: auto; border-radius: 24px; }
-.s8 a { color: var(--s8-primary); }
+:where(.s8) :where(h1, h2, h3, h4) { font-family: var(--s8-font-head); line-height: 1.14; margin: 0; color: var(--s8-ink); font-weight: 800; letter-spacing: -0.02em; }
+:where(.s8) :where(img) { display: block; max-width: 100%; height: auto; border-radius: 24px; }
+:where(.s8) :where(a) { color: var(--s8-primary); }
 .s8-pre { white-space: pre-line; }
 
 .s8-container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
@@ -326,3 +326,10 @@
   .s8-checks { grid-template-columns: 1fr; }
   .s8-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s8-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s8-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s8-header-actions { flex-shrink: 0; } }
+html, body { overflow-x: clip; }
+.s8-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s8 .s8-contact-head { color: var(--s8-ink); opacity: .7; }

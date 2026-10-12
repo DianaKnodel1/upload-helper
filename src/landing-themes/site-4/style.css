@@ -28,9 +28,9 @@
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
-.s4 h1, .s4 h2, .s4 h3, .s4 h4 { font-family: var(--s4-font-head); line-height: 1.02; margin: 0; color: var(--s4-ink); text-transform: uppercase; letter-spacing: -0.01em; }
-.s4 img { display: block; max-width: 100%; height: auto; }
-.s4 a { color: var(--s4-primary); }
+:where(.s4) :where(h1, h2, h3, h4) { font-family: var(--s4-font-head); line-height: 1.02; margin: 0; color: var(--s4-ink); text-transform: uppercase; letter-spacing: -0.01em; }
+:where(.s4) :where(img) { display: block; max-width: 100%; height: auto; }
+:where(.s4) :where(a) { color: var(--s4-primary); }
 .s4-pre { white-space: pre-line; }
 
 .s4-container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
@@ -283,3 +283,10 @@
   .s4-checks { grid-template-columns: 1fr; }
   .s4-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s4-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s4-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s4-header-actions { flex-shrink: 0; } }
+html, body { overflow-x: clip; }
+.s4-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s4 .s4-contact-head { color: var(--s4-ink); opacity: .7; }

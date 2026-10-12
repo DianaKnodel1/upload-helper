@@ -28,9 +28,9 @@
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-.s9 h1, .s9 h2, .s9 h3, .s9 h4 { font-family: var(--s9-font-head); line-height: 1.08; margin: 0; color: var(--s9-ink); font-weight: 600; letter-spacing: -0.02em; }
-.s9 img { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
-.s9 a { color: var(--s9-ink); }
+:where(.s9) :where(h1, h2, h3, h4) { font-family: var(--s9-font-head); line-height: 1.08; margin: 0; color: var(--s9-ink); font-weight: 600; letter-spacing: -0.02em; }
+:where(.s9) :where(img) { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
+:where(.s9) :where(a) { color: var(--s9-ink); }
 .s9-pre { white-space: pre-line; }
 
 .s9-container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
@@ -260,3 +260,11 @@
   .s9-checks { grid-template-columns: 1fr; }
   .s9-footer-grid { grid-template-columns: 1fr; }
 }
+.s9 a.s9-btn-gold { color: #fff; } .s9 a.s9-btn-gold:hover, .s9 a.s9-btn-outline { color: var(--s9-ink); } .s9 a.s9-btn-outline:hover { color: #fff; } .s9 .s9-final a.s9-btn-gold { color: var(--s9-ink); } .s9 .s9-final a.s9-btn-gold:hover { color: #fff; }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s9-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s9-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s9-header-actions { flex-shrink: 0; } }
+html, body { overflow-x: clip; }
+.s9-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s9 .s9-contact-head { color: var(--s9-ink); opacity: .7; }
