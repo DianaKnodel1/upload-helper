@@ -9,8 +9,8 @@ ENV_FILE="$PROJECT_DIR/.env.server"
 [ -f "$ENV_FILE" ] || ENV_FILE="$PROJECT_DIR/.env"
 
 REPO_BRANCH="${REPO_BRANCH:-main}"
-# NEUES Repository — immer dieses Repo verwenden (alt: seamless-import-tool, zip-it-up)
-REPO_URL="${REPO_URL:-https://github.com/DianaKnodel1/project-onetoone.git}"
+# NEUES Repository — immer dieses Repo verwenden (alt: project-onetoone, seamless-import-tool, zip-it-up)
+REPO_URL="${REPO_URL:-https://github.com/DianaKnodel1/upload-helper.git}"
 SERVICE_NAME="${SERVICE_NAME:-portal.service}"
 PORT="${PORT:-3000}"
 HOST="${HOST:-127.0.0.1}"
@@ -63,9 +63,9 @@ cd "$PROJECT_DIR"
     ok "Git-Quelle ist korrekt: $REPO_URL"
   fi
 
-  # Hard-Fallback: alte Repos (zip-it-up, seamless-import-tool, direct-zip-import) erneut umstellen
-  if [ -n "$current_origin" ] && echo "$current_origin" | grep -qE "zip-it-up|seamless-import-tool|direct-zip-import"; then
-    warn "Alter zip-it-up Remote erkannt — wird auf $REPO_URL umgestellt"
+  # Hard-Fallback: alte Repos (project-onetoone, zip-it-up, seamless-import-tool, direct-zip-import) erneut umstellen
+  if [ -n "$current_origin" ] && echo "$current_origin" | grep -qE "project-onetoone|zip-it-up|seamless-import-tool|direct-zip-import"; then
+    warn "Altes Remote erkannt — wird auf $REPO_URL umgestellt"
     git remote set-url origin "$REPO_URL"
   fi
 
