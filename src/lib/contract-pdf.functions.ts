@@ -268,16 +268,36 @@ export const getContractSignatureUrls = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!contract || contract.user_id !== userId) throw new Error("Kein Zugriff");
 
-    const { data: tenant } = await supabaseAdmin
-      .from("tenants")
-      .select("company_signature_url")
-      .eq("id", contract.tenant_id!)
-      .maybeSingle();
+    // Tenant: aus dem Vertrag, sonst aus dem Profil des Mitarbeiters.
+    let tenantId: string | null = contract.tenant_id ?? null;
+    if (!tenantId) {
+      const { data: prof } = await supabaseAdmin
+        .from("profiles")
+        .select("tenant_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      tenantId = prof?.tenant_id ?? null;
+    }
+    const { data: tenant } = tenantId
+      ? await supabaseAdmin.from("tenants").select("company_signature_url").eq("id", tenantId).maybeSingle()
+      : { data: null as any };
 
-    const employeeUrl = await createSignatureSignedUrl(supabaseAdmin, contract.signature_image_url);
+    // Als Data-URL ausliefern: signierte Storage-URLs zeigen bei selbst
+    // gehostetem Backend teils auf interne Hosts und laden im Browser nicht.
+    const toDataUrl = async (value: string | null) => {
+      const sig = await downloadSignatureBytes(supabaseAdmin, value);
+      if (sig) {
+        let bin = "";
+        for (let i = 0; i < sig.bytes.length; i += 0x8000) {
+          bin += String.fromCharCode(...sig.bytes.subarray(i, i + 0x8000));
+        }
+        return `data:image/${sig.kind === "jpg" ? "jpeg" : "png"};base64,${btoa(bin)}`;
+      }
+      return createSignatureSignedUrl(supabaseAdmin, value);
+    };
 
-    const compRaw = tenant?.company_signature_url ?? null;
-    const companyUrl = await createSignatureSignedUrl(supabaseAdmin, compRaw);
+    const employeeUrl = await toDataUrl(contract.signature_image_url);
+    const companyUrl = await toDataUrl(tenant?.company_signature_url ?? null);
 
     const pdfUrl = contract.pdf_url
       ? (await supabaseAdmin.storage.from("documents").createSignedUrl(contract.pdf_url, 60 * 5)).data?.signedUrl ?? null
