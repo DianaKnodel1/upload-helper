@@ -278,4 +278,4 @@
 @media (max-width: 640px) { .s11-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s11-header-actions { flex-shrink: 0; } }
 html, body { overflow-x: clip; }
 .s11-center-text { margin-left: auto !important; margin-right: auto !important; }
-.s11 .s11-contact-head { color: var(--s11-deep); opacity: .7; }
+.s11 .s11-contact-head { color: var(--s11-gold); }
