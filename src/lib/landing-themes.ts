@@ -263,6 +263,11 @@ import site8Css from "../landing-themes/site-8/style.css?raw";
 import site8Js from "../landing-themes/site-8/script.js?raw";
 import site8Meta from "../landing-themes/site-8/meta.json";
 
+import site9Html from "../landing-themes/site-9/template.html?raw";
+import site9Css from "../landing-themes/site-9/style.css?raw";
+import site9Js from "../landing-themes/site-9/script.js?raw";
+import site9Meta from "../landing-themes/site-9/meta.json";
+
 
 
 
@@ -461,6 +466,7 @@ export const THEMES: ThemeFiles[] = [
   { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
   { id: site7Meta.id, name: site7Meta.name, description: site7Meta.description, kind: "site" as const, pages: site7Meta.pages, html: site7Html, css: site7Css, js: site7Js, slots: pickSlots(site7Meta) },
   { id: site8Meta.id, name: site8Meta.name, description: site8Meta.description, kind: "site" as const, pages: site8Meta.pages, html: site8Html, css: site8Css, js: site8Js, slots: pickSlots(site8Meta) },
+  { id: site9Meta.id, name: site9Meta.name, description: site9Meta.description, kind: "site" as const, pages: site9Meta.pages, html: site9Html, css: site9Css, js: site9Js, slots: pickSlots(site9Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -562,6 +568,7 @@ const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
   "site-6": { name: "Website-Theme 6", description: "Technisch & präzise: kühles Blau-Grau, sichtbares Raster, Mono-Akzente. Mehrseitige Komplett-Website." },
   "site-7": { name: "Website-Theme 7", description: "Editorial & hochwertig: Magazin-Look, große Serifen-Titel, Creme und Burgund. Mehrseitige Komplett-Website." },
   "site-8": { name: "Website-Theme 8", description: "Frisch & dynamisch: lebendige Farbverläufe, runde Formen, junge Energie. Mehrseitige Komplett-Website." },
+  "site-9": { name: "Website-Theme 9", description: "Minimal & zeitlos: Schwarz-Weiß, viel Leere, feine Linien. Mehrseitige Komplett-Website." },
 
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
@@ -635,7 +642,8 @@ export const ACTIVE_THEME_IDS = new Set<string>([
   "site-5",
   "site-6",
   "site-7",
-  "site-8", // Website-Themes 1–15: weitere folgen in Etappen
+  "site-8",
+  "site-9", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
