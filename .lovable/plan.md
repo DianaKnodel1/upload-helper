@@ -5,6 +5,11 @@
 2. Eine verständliche Übersicht für dich: Was kannst du pro Theme alles ändern, bevor die Seite live geht?
 3. Alle 15 Themes prüfen: professionell, verständlich, gut gestaltet, auf Handy und Desktop.
 
+## Deploy vorher oder nachher?
+- Beides geht. Vorschau, Bearbeiten und Design-Prüfung funktionieren auch ohne Deploy.
+- Deployst du vorher (inkl. Datenbank-Update), kann ich zusätzlich echtes Speichern und die Ausgabe auf deinem Live-Server prüfen. Das ist der aussagekräftigere Test und empfohlen.
+- Ohne Deploy teste ich Speichern nur nachgebildet; du bekommst dann eine Checkliste für danach.
+
 ## Schritt 1 – Generator-Funktionstest (im Browser, automatisiert)
 - Generator öffnen, nacheinander jedes Theme auswählen.
 - Pro Theme ändern und prüfen, ob die Vorschau es sofort übernimmt:
