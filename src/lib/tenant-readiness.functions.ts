@@ -66,7 +66,7 @@ export const getTenantReadiness = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const sb = await getSupabaseAdmin();
 
-    const [{ data: tenants }, { data: landings }, { data: schedules }, { data: templates }, { data: defaultTasks }] =
+    const [{ data: tenants }, { data: landings }, { data: schedules }, { data: templates }] =
       await Promise.all([
         sb.from("tenants").select("*").order("name"),
         sb
@@ -76,7 +76,6 @@ export const getTenantReadiness = createServerFn({ method: "POST" })
           ),
         sb.from("availability_schedules").select("id,tenant_id,landing_page_id,timezone,active,min_notice_hours"),
         sb.from("contract_templates").select("tenant_id,employment_type,is_active"),
-        sb.from("tenant_default_tasks").select("tenant_id"),
       ]);
 
     const scheduleIds = (schedules ?? []).map((s: any) => s.id);
@@ -247,19 +246,6 @@ export const getTenantReadiness = createServerFn({ method: "POST" })
               detail: "Es steht noch der Platzhalter „Teamleiter“ — Bewerber sehen keinen echten Namen.",
               severity: "warn",
               href: "/admin/tenants",
-            },
-      );
-      const hasTasks = (defaultTasks ?? []).some((d: any) => d.tenant_id === t.id) || Boolean(t.default_task_template_id);
-      checks.push(
-        hasTasks
-          ? ok({ key: "tasks", group: "Onboarding", label: "Standard-Aufgaben gesetzt", detail: "Neue Mitarbeiter bekommen automatisch Aufgaben.", href: "/admin/tasks" })
-          : {
-              key: "tasks",
-              group: "Onboarding",
-              label: "Standard-Aufgaben gesetzt",
-              detail: "Kein Standard-Aufgabenpaket — neue Mitarbeiter sehen nach der Registrierung ein leeres Portal.",
-              severity: "warn",
-              href: "/admin/tasks",
             },
       );
       const missingContracts = allowed.filter((a) => !myTemplates.some((c: any) => c.employment_type === a));

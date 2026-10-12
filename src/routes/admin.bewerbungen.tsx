@@ -337,16 +337,14 @@ function AdminBewerbungenPage() {
     { key: "interview",   label: "Interview",         emoji: "🎙", phases: ["interview_laeuft", "auswertung_fehler"] },
     { key: "no_show",     label: "Nicht erschienen",  emoji: "⚠️", phases: ["no_show"] },
     { key: "abgesagt",    label: "Abgesagt",          emoji: "🚫", phases: ["abgesagt"] },
-    { key: "zusage",      label: "Zusage erteilt",    emoji: "✅", phases: ["angenommen"] },
-    // Nachfass-Liste: Zusage erteilt, aber noch kein Portal-Konto.
-    { key: "nachfassen",  label: "Zusage ohne Registrierung", emoji: "📲", phases: [] },
+    // Zusage ohne Portal-Konto (wer registriert ist, steht unter "Onboarded").
+    { key: "zusage",      label: "Zusage – noch nicht registriert", emoji: "✅", phases: ["angenommen"] },
     { key: "abgelehnt",   label: "Abgelehnt",         emoji: "❌", phases: ["abgelehnt"] },
     { key: "onboarded",   label: "Onboarded",         emoji: "🚀", phases: ["registriert", "onboarding_komplett", "mitarbeiter_aktiv"] },
   ];
   const groupOf = (p: Phase): string => GROUPS.find(g => g.phases.includes(p))?.key ?? "alle";
   const matchesGroup = (r: { phase: Phase; hasProfile: boolean }, key: string): boolean => {
     if (key === "alle") return true;
-    if (key === "nachfassen") return r.phase === "angenommen" && !r.hasProfile;
     return groupOf(r.phase) === key;
   };
 
@@ -654,7 +652,7 @@ function AdminBewerbungenPage() {
                         </td>
                         <td className="px-4 py-2.5 text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            {tab === "nachfassen" && (
+                            {tab === "zusage" && (
                               <Button
                                 variant="outline"
                                 size="sm"

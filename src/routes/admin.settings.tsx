@@ -16,7 +16,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Lock, Save, Palette, Bot, ArrowRight, Globe, Users as UsersIcon, Mail, History, Handshake, CalendarClock, Server, FileText, AlertTriangle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookingLimitsCard } from "@/components/admin/BookingLimitsCard";
-import { StandardTasksCard } from "@/components/admin/StandardTasksCard";
 import { WhatsAppSupportCard } from "@/components/admin/WhatsAppSupportCard";
 import { Link } from "@tanstack/react-router";
 
@@ -72,7 +71,7 @@ function AdminSettingsPage() {
             </div>
             {section.value === "bewerbung" && <BookingLimitsCard />}
             {section.value === "bewerbung" && <WhatsAppSupportCard />}
-            {section.value === "auftraege" && <StandardTasksCard />}
+            
             {section.value === "konto" && (
               <>
                 <Card>
