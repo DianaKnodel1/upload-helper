@@ -284,3 +284,6 @@
   .s15-checks { grid-template-columns: 1fr; }
   .s15-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s15-nav-cta { display: none !important; } }

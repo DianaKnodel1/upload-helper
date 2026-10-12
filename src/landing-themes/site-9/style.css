@@ -260,3 +260,7 @@
   .s9-checks { grid-template-columns: 1fr; }
   .s9-footer-grid { grid-template-columns: 1fr; }
 }
+.s9-btn-gold, .s9-nav .s9-btn-gold { color: #fff; } .s9-btn-gold:hover { color: var(--s9-ink); }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s9-nav-cta { display: none !important; } }

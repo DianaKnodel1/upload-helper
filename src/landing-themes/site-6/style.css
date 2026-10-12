@@ -312,3 +312,6 @@
   .s6-checks { grid-template-columns: 1fr; }
   .s6-footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
+@media (max-width: 640px) { .s6-nav-cta { display: none !important; } }

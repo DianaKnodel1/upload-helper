@@ -17,7 +17,7 @@ import {
 } from "@/lib/landing-pages.functions";
 import { listPartnerCompanies } from "@/lib/partner-companies.functions";
 import { adminListSchedules } from "@/lib/appointments.functions";
-import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, type SitePageDef } from "@/lib/landing-themes";
+import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, getTheme, type SitePageDef } from "@/lib/landing-themes";
 import { renderSitePage } from "@/lib/landing-site";
 import { THEME_ASSETS } from "@/lib/theme-assets.generated";
 import { PORTAL_THEMES, type PortalThemeId } from "@/lib/portal-themes";
