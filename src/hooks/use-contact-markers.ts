@@ -1,6 +1,6 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 /** Kontakt-Markierung (wer kontaktiert per WhatsApp). Quelle: applications.contact_marker. */
 export type ContactMarker = "green" | "blue";
@@ -43,7 +43,7 @@ export async function setContactMarker(appId: string, marker: ContactMarker | nu
   if (error) {
     if (prev) state.byApp.set(appId, prev); else state.byApp.delete(appId);
     emit();
-    toast.error("Markierung konnte nicht gespeichert werden", { description: error.message });
+    toast({ title: "Markierung konnte nicht gespeichert werden", description: error.message, variant: "destructive" });
   }
 }
 

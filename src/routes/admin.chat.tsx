@@ -4,6 +4,8 @@ export const Route = createFileRoute("/admin/chat")({
   component: AdminChatPage,
 });
 
+import { ContactMarkerDot } from "@/components/admin/ContactMarkerPicker";
+import { useContactMarkers } from "@/hooks/use-contact-markers";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -1197,6 +1199,7 @@ function AdminChatPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className={`text-sm font-medium truncate ${conv.blocked ? "line-through text-destructive" : "text-foreground"}`}>{conv.full_name}</p>
+                    <ContactMarkerDot marker={markers.forUser(conv.user_id)} />
                     {conv.blocked && (
                       <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded bg-destructive/15 text-destructive font-medium">
                         Gesperrt
@@ -1271,6 +1274,7 @@ function AdminChatPage() {
                 <div className="flex items-center gap-2">
                   <p className={`text-sm font-semibold group-hover:text-primary transition-colors ${selectedConv?.blocked ? "line-through text-destructive" : "text-foreground"}`}>
                     {selectedName}
+                    <span className="ml-2 inline-flex align-middle"><ContactMarkerDot marker={markers.forUser(selectedUserId)} /></span>
                     {selectedConv?.blocked && (
                       <span className="ml-2 align-middle no-underline text-[9px] px-1.5 py-0.5 rounded bg-destructive/15 text-destructive font-medium">
                         Gesperrt
