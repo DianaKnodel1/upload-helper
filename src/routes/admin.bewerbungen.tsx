@@ -1,4 +1,6 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { ContactMarkerPicker, markerRowClass } from "@/components/admin/ContactMarkerPicker";
+import { useContactMarkers } from "@/hooks/use-contact-markers";
 import { useNavigate } from "@/lib/router-compat";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
@@ -185,6 +187,7 @@ export const Route = createFileRoute("/admin/bewerbungen")({
 });
 
 function AdminBewerbungenPage() {
+  const markers = useContactMarkers();
   const { applications, profiles, allBookings, interviewAppointments, loadingApplications: loading, loadData } = useAdminData();
   const search = useSearch({ from: "/admin/bewerbungen" });
   const navigate = useNavigate();
@@ -618,12 +621,12 @@ function AdminBewerbungenPage() {
                   {pagination.paged.map(r => {
                     const meta = PHASES.find(x => x.key === r.phase);
                     return (
-                      <tr key={r.id} className={`hover:bg-muted/20 ${selected.has(r.id) ? "bg-primary/5" : ""}`}>
+                      <tr key={r.id} className={`hover:bg-muted/20 ${markerRowClass(markers.forApp(r.id))} ${selected.has(r.id) ? "bg-primary/5" : ""}`}>
                         <td className="px-3 py-3">
                           <Checkbox checked={selected.has(r.id)} onCheckedChange={() => toggleOne(r.id)} aria-label="Auswählen" />
                         </td>
                         <td className="px-4 py-3 font-medium">
-                          <div>{r.name}</div>
+                          <div className="flex items-center gap-2">{r.name}<ContactMarkerPicker appId={r.id} /></div>
                           <div className="text-[10px] text-muted-foreground font-normal mt-0.5 flex flex-wrap items-center gap-1">
                             <span className={`inline-block px-1.5 py-0.5 rounded ${PHASE_COLOR[r.phase]}`}>
                               {meta?.emoji} {meta?.label}

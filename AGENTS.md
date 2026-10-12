@@ -11,3 +11,4 @@
 
 - Saved section templates and section-based pages are selected, previewed, recolored, and saved directly in the classic generator; the Baukasten is never part of that selection flow. Keeps one renderer for section pages.
 - Website-Themes (site-N) declare their palette in meta.json `colors`; the generator pre-fills branding colors on theme selection, and theme CSS keeps element base rules inside :where() so component classes (buttons, headings) always win. Why: otherwise every theme looked like the tenant default color and base rules hid button text.
+- Kontakt-Markierung (green/blue) lives only on applications.contact_marker; employees and chat resolve it via profiles.application_id / applications.user_id through src/hooks/use-contact-markers.ts. Why: one source of truth so a marker follows the person from applicant to employee to chat.
