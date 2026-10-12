@@ -16,7 +16,7 @@ Nach dem Muster von Theme 1 (`src/landing-themes/site-1/`), jedes Theme mit:
 - `style.css` — eigene Farbpalette über CSS-Variablen (editierbar im Generator), 2–3 Schrift-Alternativen pro Theme.
 - `script.js` — Menü, Animationen, Jahreszahl.
 - `meta.json` — Seiten-Liste, Schriften, Farben, Text-Slots.
-- `assets/` — **professionelle, KI-generierte Bilder** (Hero, Team, Jobs, Kontakt), komprimiert (max. 900 px, JPEG q68), damit das Bundle unter dem 10-MB-Limit bleibt.
+- `assets/` — **professionelle, KI-generierte Bilder** (Hero, Team, Jobs, Kontakt) in hoher Auflösung. Die Bilder werden auf das Lovable-CDN hochgeladen (`lovable-assets`, `.asset.json`-Zeiger) statt als Base64 ins Code-Bundle — damit entfällt das bisherige 10-MB-Limit komplett und auch große, hochwertige Bilder sind kein Problem. Der Landing-Server und der ZIP-Export ziehen die Bilder über die CDN-URLs.
 
 Jedes Theme eine eigene visuelle Welt — keine ähnlichen Zwillinge:
 1. Theme 1 „Klassik" (fertig): navy/gold, Serifen, seriös
