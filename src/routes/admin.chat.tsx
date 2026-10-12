@@ -18,7 +18,9 @@ import { useChatNotifications } from "@/hooks/use-chat-notifications";
 import { Send, Bot, UserCheck, Search, MessageCircle, Building2, EyeOff, Archive, ChevronRight, MailOpen, StickyNote, AlertCircle, Lock, Pencil, Trash2, Check, X, Mail, Sparkles, Loader2, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getLastSignIns } from "@/lib/last-sign-ins.functions";
-import { replaceMessages, type ChatConnectionState } from "@/lib/chat-sync";
+import { replaceMessages, useChatResync, type ChatConnectionState } from "@/lib/chat-sync";
+import { computeOpenCase, isInternalNote, isRealAdminReply } from "@/lib/chat-open-status";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { fetchAll } from "@/lib/fetch-all";
 import { useOnlineUsers } from "@/hooks/use-presence";
 import { useSearchParams } from "@/lib/router-compat";
@@ -44,14 +46,21 @@ interface Conversation {
   adminUnread?: boolean;
   adminNote?: string | null;
   lastFromEmployeeAt?: string | null;
+  /** Unbeantwortete Mitarbeiter-Nachrichten seit der letzten echten Admin-Antwort. */
+  openCount?: number;
+  openSince?: string | null;
+  openPreview?: string | null;
   hiddenAt?: string | null;
   blocked?: boolean;
 }
 
-const UNANSWERED_THRESHOLD_MS = 4 * 60 * 60 * 1000; // 4h
-const isUnanswered = (c: Conversation) =>
-  !!c.lastFromEmployeeAt &&
-  Date.now() - new Date(c.lastFromEmployeeAt).getTime() > UNANSWERED_THRESHOLD_MS;
+const UNANSWERED_THRESHOLD_MS = 4 * 60 * 60 * 1000; // 4h – nur noch Warnstufe
+
+/** Antwort offen – unabhängig von gelesen/geöffnet/Notiz. */
+const isOpen = (c: Conversation) => (c.openCount ?? 0) > 0;
+const isLongOpen = (c: Conversation) =>
+  isOpen(c) && !!c.openSince &&
+  Date.now() - new Date(c.openSince).getTime() > UNANSWERED_THRESHOLD_MS;
 
 // Interne KI-/Eskalations-Notizen: clientseitig filtern, damit keine normale
 // Nachricht durch serverseitige Textfilter verloren geht.
@@ -170,6 +179,22 @@ function AdminChatPage() {
   useEffect(() => { selectedUserIdRef.current = selectedUserId; }, [selectedUserId]);
   useEffect(() => { conversationsRef.current = conversations; }, [conversations]);
 
+  // Chat-Scanner + Live-Abgleich der Liste
+  const [scanning, setScanning] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
+  const [scanResult, setScanResult] = useState<Conversation[]>([]);
+  const openCaseCount = useMemo(() => conversations.filter(isOpen).length, [conversations]);
+  const loadConversationsRef = useRef<null | (() => Promise<unknown>)>(null);
+  const lastListSyncRef = useRef(0);
+  // Liste neu berechnen bei Tab-Rückkehr, Fokus, Netz zurück und alle 60 s –
+  // so kann ein veralteter Browserzustand den roten Punkt nicht verlieren.
+  useChatResync(() => {
+    const now = Date.now();
+    if (now - lastListSyncRef.current < 15_000) return;
+    lastListSyncRef.current = now;
+    void loadConversationsRef.current?.();
+  }, { enabled: !!user, intervalMs: 60_000 });
+
   // "Zuletzt aktiv" aktuell halten: Werte alle 60s neu laden (nur bei
   // sichtbarem Tab) sowie sofort bei Fokus/Sichtbarwechsel. Zusätzlich ein
   // Tick, damit die relative Textanzeige ("Aktiv vor X Min") mitläuft.
@@ -213,7 +238,7 @@ function AdminChatPage() {
         for (let from = 0; from < 5000; from += 1000) {
           const { data } = await supabase
             .from("chat_messages")
-            .select("sender_id, receiver_id, message, read, created_at")
+            .select("sender_id, receiver_id, message, read, created_at, is_system")
             .order("created_at", { ascending: false })
             .range(from, from + 999);
           const chunk = (data ?? []) as any[];
@@ -242,11 +267,13 @@ function AdminChatPage() {
     const profileMap = new Map(profiles.map((p: any) => [p.user_id, { name: p.full_name as string, tenant_id: p.tenant_id as string | null, blocked: !!p.is_blocked }]));
     const convMap = new Map<string, any>((convsRes.data ?? []).map((c: any) => [c.user_id, c]));
 
-    type Agg = { lastMessage: string; lastAt: string; unread: number; lastFromEmployeeAt: string | null };
+    type Agg = { lastMessage: string; lastAt: string; unread: number; lastFromEmployeeAt: string | null; openCount: number; openSince: string | null; openPreview: string | null };
     const agg = new Map<string, Agg>();
 
     const aggRows = (aggRes as any)?.error ? null : ((aggRes as any)?.data as any[] | null);
-    if (aggRows && aggRows.length) {
+    // Neue Serverfunktion liefert open_count; alte Version (ohne Spalte) → Fallback.
+    const serverHasOpen = !!aggRows && aggRows.length > 0 && "open_count" in aggRows[0];
+    if (aggRows && aggRows.length && serverHasOpen) {
       for (const r of aggRows) {
         if (!r.partner_id || !profileMap.has(r.partner_id)) continue;
         agg.set(r.partner_id, {
@@ -254,27 +281,34 @@ function AdminChatPage() {
           lastAt: r.last_at,
           unread: Number(r.unread ?? 0),
           lastFromEmployeeAt: r.last_from_partner_at ?? null,
+          openCount: Number(r.open_count ?? 0),
+          openSince: r.open_since ?? null,
+          openPreview: r.open_preview ?? null,
         });
       }
     } else {
-      // msgs are ordered DESC → first entry per partner is the newest
+      // Fallback: dieselbe Regel wie die Serverfunktion (src/lib/chat-open-status.ts).
+      const byPartner = new Map<string, any[]>();
       for (const m of (msgsRes.data ?? []) as any[]) {
         if (isInternalAdminNote(m.message)) continue;
-        // Gegenüber = die Seite, die kein Admin-/Staff-Konto ist
         const partnerId = adminIds.has(m.sender_id) ? m.receiver_id : m.sender_id;
         if (!partnerId || adminIds.has(partnerId)) continue;
         if (!profileMap.has(partnerId)) continue;
-        let entry = agg.get(partnerId);
-        if (!entry) {
-          entry = {
-            lastMessage: m.message,
-            lastAt: m.created_at,
-            unread: 0,
-            lastFromEmployeeAt: m.sender_id === partnerId ? m.created_at : null,
-          };
-          agg.set(partnerId, entry);
-        }
-        if (m.sender_id === partnerId && !m.read) entry.unread += 1;
+        if (!byPartner.has(partnerId)) byPartner.set(partnerId, []);
+        byPartner.get(partnerId)!.push(m);
+      }
+      for (const [partnerId, rows] of byPartner) {
+        // rows sind DESC sortiert → erster Eintrag ist der neueste
+        const newest = rows[0];
+        const fromPartner = rows.filter((m) => m.sender_id === partnerId);
+        const open = computeOpenCase(rows, partnerId);
+        agg.set(partnerId, {
+          lastMessage: newest.message,
+          lastAt: newest.created_at,
+          unread: fromPartner.filter((m) => !m.read).length,
+          lastFromEmployeeAt: fromPartner[0]?.created_at ?? null,
+          ...open,
+        });
       }
     }
 
@@ -295,6 +329,9 @@ function AdminChatPage() {
         adminUnread: !!conv?.admin_unread,
         adminNote: conv?.admin_note ?? null,
         lastFromEmployeeAt: a.lastFromEmployeeAt,
+        openCount: a.openCount,
+        openSince: a.openSince,
+        openPreview: a.openPreview,
         hiddenAt: conv?.admin_hidden_at ?? null,
         blocked: !!prof?.blocked,
       });
@@ -303,6 +340,11 @@ function AdminChatPage() {
     list.sort((a, b) => {
       if (a.status === "escalated" && b.status !== "escalated") return -1;
       if (a.status !== "escalated" && b.status === "escalated") return 1;
+      // Offene Antworten immer oben, älteste zuerst
+      const aOpen = isOpen(a) ? 1 : 0;
+      const bOpen = isOpen(b) ? 1 : 0;
+      if (aOpen !== bOpen) return bOpen - aOpen;
+      if (aOpen && bOpen) return (a.openSince ?? "").localeCompare(b.openSince ?? "");
       const aFlag = a.unread || a.adminUnread ? 1 : 0;
       const bFlag = b.unread || b.adminUnread ? 1 : 0;
       if (aFlag !== bFlag) return bFlag - aFlag;
@@ -313,6 +355,20 @@ function AdminChatPage() {
     setLoading(false);
 
     if (list.length > 0) await refreshActivity(list.map((c) => c.user_id));
+    return list;
+  };
+  loadConversationsRef.current = loadConversations;
+
+  // Chat-Scanner: frische Prüfung aller Chats direkt aus der Datenbank.
+  const runChatScan = async () => {
+    setScanning(true);
+    try {
+      const list = (await loadConversations()) ?? [];
+      setScanResult(list.filter(isOpen).sort((a, b) => (a.openSince ?? "").localeCompare(b.openSince ?? "")));
+      setScanOpen(true);
+    } finally {
+      setScanning(false);
+    }
   };
 
   /**
@@ -713,7 +769,7 @@ function AdminChatPage() {
     ));
     setConversations((prev) => prev.map((conversation) =>
       conversation.user_id === recipientId
-        ? { ...conversation, lastMessage: inserted.message, lastAt: inserted.created_at, lastFromEmployeeAt: null }
+        ? { ...conversation, lastMessage: inserted.message, lastAt: inserted.created_at, lastFromEmployeeAt: null, openCount: 0, openSince: null, openPreview: null }
         : conversation
     ));
     // Still lernen: Abweichung zwischen Vorschlag und tatsächlich Gesendetem merken.
@@ -805,7 +861,17 @@ function AdminChatPage() {
             if (existing) {
               return prev.map((c) =>
                 c.user_id === partnerId
-                  ? { ...c, unread: c.user_id === activeUserId ? 0 : c.unread + 1, lastMessage: msg.message, lastAt: msg.created_at, lastFromEmployeeAt: msg.created_at }
+                  ? {
+                      ...c,
+                      unread: c.user_id === activeUserId ? 0 : c.unread + 1,
+                      lastMessage: msg.message,
+                      lastAt: msg.created_at,
+                      lastFromEmployeeAt: msg.created_at,
+                      // Offener Fall: Öffnen/Lesen schließt ihn nicht.
+                      openCount: (c.openCount ?? 0) + 1,
+                      openSince: c.openSince ?? msg.created_at,
+                      openPreview: msg.message,
+                    }
                   : c
               );
             }
@@ -831,6 +897,10 @@ function AdminChatPage() {
                 unread: 1,
                 lastMessage: msg.message,
                 lastAt: msg.created_at,
+                lastFromEmployeeAt: msg.created_at,
+                openCount: 1,
+                openSince: msg.created_at,
+                openPreview: msg.message,
               }, ...prev]);
             }
           }
@@ -840,10 +910,18 @@ function AdminChatPage() {
             notifyChat({ body: msg.message, senderName: partnerName });
           }
         } else {
-          // Eigene Nachricht → lastMessage in Liste updaten + Unanswered-Flag löschen
+          // Admin-Seite: nur eine ECHTE Antwort schließt den offenen Fall.
+          // Systemnachrichten und interne KI-Notizen lassen ihn offen.
+          const realReply = isRealAdminReply(msg, msg.receiver_id);
+          if (isInternalNote(msg.message)) return;
           setConversations((prev) => prev.map((c) =>
             c.user_id === msg.receiver_id
-              ? { ...c, lastMessage: msg.message, lastAt: msg.created_at, lastFromEmployeeAt: null }
+              ? {
+                  ...c,
+                  lastMessage: msg.message,
+                  lastAt: msg.created_at,
+                  ...(realReply ? { lastFromEmployeeAt: null, openCount: 0, openSince: null, openPreview: null } : {}),
+                }
               : c
           ));
         }
@@ -1052,6 +1130,39 @@ function AdminChatPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Suchen…" className="pl-9 h-9 text-sm" />
           </div>
+          <Button size="sm" variant="outline" className="w-full h-7 text-[11px]" onClick={runChatScan} disabled={scanning}>
+            {scanning ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <AlertCircle className="h-3.5 w-3.5 mr-1.5" />}
+            Chats prüfen{openCaseCount > 0 ? ` (${openCaseCount} offen)` : ""}
+          </Button>
+          <Dialog open={scanOpen} onOpenChange={setScanOpen}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Offene Antworten</DialogTitle>
+                <DialogDescription>
+                  {scanResult.length === 0
+                    ? "Keine unbeantworteten Mitarbeiter-Nachrichten gefunden."
+                    : `${scanResult.length} Chat(s) warten auf eine Antwort. Geprüft wurden alle Nachrichten in der Datenbank.`}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="max-h-[60vh] overflow-y-auto divide-y divide-border">
+                {scanResult.map((c) => (
+                  <div key={c.user_id} className="py-2.5 flex items-start gap-3">
+                    <span className={cn("mt-1.5 h-2 w-2 rounded-full bg-destructive shrink-0", isLongOpen(c) && "animate-pulse")} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{c.full_name}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        offen seit {c.openSince ? new Date(c.openSince).toLocaleString("de-DE") : "?"} · {c.openCount} Nachricht{c.openCount === 1 ? "" : "en"}
+                      </p>
+                      {c.openPreview && <p className="text-xs text-muted-foreground truncate mt-0.5">{c.openPreview}</p>}
+                    </div>
+                    <Button size="sm" variant="secondary" className="h-7 text-[11px] shrink-0" onClick={() => { setScanOpen(false); setViewTab(c.hiddenAt ? "hidden" : "active"); selectConversation(c.user_id); }}>
+                      Öffnen
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
           {activityError && (
             <p className="text-[10px] text-amber-600 dark:text-amber-400 leading-snug">
               Login-/Aktivitätsstatus nicht verfügbar: {activityError}
@@ -1207,10 +1318,13 @@ function AdminChatPage() {
                       </span>
                     )}
                     {statusBadge(conv.status)}
-                    {isUnanswered(conv) && !conv.adminNote && (
+                    {isOpen(conv) && (
                       <span
-                        title="Unbeantwortet seit > 4 h"
-                        className="h-2 w-2 rounded-full bg-red-500 shrink-0"
+                        title={`Antwort offen seit ${conv.openSince ? new Date(conv.openSince).toLocaleString("de-DE") : "?"} · ${conv.openCount} Nachricht(en)${isLongOpen(conv) ? " · länger als 4 h" : ""}`}
+                        className={cn(
+                          "h-2 w-2 rounded-full bg-destructive shrink-0",
+                          isLongOpen(conv) && "h-2.5 w-2.5 ring-2 ring-destructive/40 animate-pulse",
+                        )}
                       />
                     )}
                     {conv.adminNote && (
@@ -1373,9 +1487,9 @@ function AdminChatPage() {
                   Speichern
                 </Button>
               </div>
-              {isUnanswered(selectedConv!) && !selectedConv?.adminNote && (
+              {isLongOpen(selectedConv!) && (
                 <p className="text-[11px] text-red-600 dark:text-red-400 flex items-center gap-1 mt-2">
-                  <AlertCircle className="h-3 w-3" /> Seit über 4 Stunden unbeantwortet – kurz Notiz hinterlassen, falls du dranbleibst.
+                  <AlertCircle className="h-3 w-3" /> Antwort seit über 4 Stunden offen.
                 </p>
               )}
             </div>
