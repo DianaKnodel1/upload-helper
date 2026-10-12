@@ -267,3 +267,4 @@
 @media (max-width: 640px) { .s9-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s9-header-actions { flex-shrink: 0; } }
 html, body { overflow-x: clip; }
 .s9-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s9 .s9-contact-head { color: var(--s9-ink); opacity: .7; }

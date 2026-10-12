@@ -293,3 +293,4 @@
 @media (max-width: 640px) { .s12-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s12-header-actions { flex-shrink: 0; } }
 html, body { overflow-x: clip; }
 .s12-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s12 .s12-contact-head { color: var(--s12-ink); opacity: .7; }

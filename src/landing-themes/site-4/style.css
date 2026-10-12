@@ -289,3 +289,4 @@
 @media (max-width: 640px) { .s4-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s4-header-actions { flex-shrink: 0; } }
 html, body { overflow-x: clip; }
 .s4-center-text { margin-left: auto !important; margin-right: auto !important; }
+.s4 .s4-contact-head { color: var(--s4-ink); opacity: .7; }
