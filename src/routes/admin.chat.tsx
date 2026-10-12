@@ -90,6 +90,7 @@ function mergeChatMessages(current: ChatMessage[], incoming: ChatMessage[]) {
 }
 
 function AdminChatPage() {
+  const markers = useContactMarkers();
   const { user } = useAuth();
   const onlineUsers = useOnlineUsers();
   // Eigener Teamleiter-Status: steuert, was Mitarbeiter im Chat lesen.

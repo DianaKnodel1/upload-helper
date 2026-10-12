@@ -187,6 +187,7 @@ export const Route = createFileRoute("/admin/bewerbungen")({
 });
 
 function AdminBewerbungenPage() {
+  const markers = useContactMarkers();
   const { applications, profiles, allBookings, interviewAppointments, loadingApplications: loading, loadData } = useAdminData();
   const search = useSearch({ from: "/admin/bewerbungen" });
   const navigate = useNavigate();

@@ -37,6 +37,7 @@ export const Route = createFileRoute("/admin/mitarbeiter")({
 });
 
 function AdminMitarbeiterPage() {
+  const markers = useContactMarkers();
   const { applications, profiles, kycList, adminUserIds, userEmails, loadingProfiles: loading, loadData } = useAdminData();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
