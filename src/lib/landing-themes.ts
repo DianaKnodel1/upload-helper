@@ -253,6 +253,11 @@ import site6Css from "../landing-themes/site-6/style.css?raw";
 import site6Js from "../landing-themes/site-6/script.js?raw";
 import site6Meta from "../landing-themes/site-6/meta.json";
 
+import site7Html from "../landing-themes/site-7/template.html?raw";
+import site7Css from "../landing-themes/site-7/style.css?raw";
+import site7Js from "../landing-themes/site-7/script.js?raw";
+import site7Meta from "../landing-themes/site-7/meta.json";
+
 
 
 
@@ -449,6 +454,7 @@ export const THEMES: ThemeFiles[] = [
   { id: site4Meta.id, name: site4Meta.name, description: site4Meta.description, kind: "site" as const, pages: site4Meta.pages, html: site4Html, css: site4Css, js: site4Js, slots: pickSlots(site4Meta) },
   { id: site5Meta.id, name: site5Meta.name, description: site5Meta.description, kind: "site" as const, pages: site5Meta.pages, html: site5Html, css: site5Css, js: site5Js, slots: pickSlots(site5Meta) },
   { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
+  { id: site7Meta.id, name: site7Meta.name, description: site7Meta.description, kind: "site" as const, pages: site7Meta.pages, html: site7Html, css: site7Css, js: site7Js, slots: pickSlots(site7Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -548,6 +554,7 @@ const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
   "site-4": { name: "Website-Theme 4", description: "Kraftvoll & modern: kräftiges Rot, fette Headlines, scharfe Kanten. Mehrseitige Komplett-Website." },
   "site-5": { name: "Website-Theme 5", description: "Warm & menschlich: Erdfarben, Terrakotta, runde Formen. Mehrseitige Komplett-Website." },
   "site-6": { name: "Website-Theme 6", description: "Technisch & präzise: kühles Blau-Grau, sichtbares Raster, Mono-Akzente. Mehrseitige Komplett-Website." },
+  "site-7": { name: "Website-Theme 7", description: "Editorial & hochwertig: Magazin-Look, große Serifen-Titel, Creme und Burgund. Mehrseitige Komplett-Website." },
 
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
@@ -619,7 +626,8 @@ export const ACTIVE_THEME_IDS = new Set<string>([
   "site-3",
   "site-4",
   "site-5",
-  "site-6", // Website-Themes 1–15: weitere folgen in Etappen
+  "site-6",
+  "site-7", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
