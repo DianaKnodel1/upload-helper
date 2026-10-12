@@ -228,6 +228,31 @@ import site1Css from "../landing-themes/site-1/style.css?raw";
 import site1Js from "../landing-themes/site-1/script.js?raw";
 import site1Meta from "../landing-themes/site-1/meta.json";
 
+import site2Html from "../landing-themes/site-2/template.html?raw";
+import site2Css from "../landing-themes/site-2/style.css?raw";
+import site2Js from "../landing-themes/site-2/script.js?raw";
+import site2Meta from "../landing-themes/site-2/meta.json";
+
+import site3Html from "../landing-themes/site-3/template.html?raw";
+import site3Css from "../landing-themes/site-3/style.css?raw";
+import site3Js from "../landing-themes/site-3/script.js?raw";
+import site3Meta from "../landing-themes/site-3/meta.json";
+
+import site4Html from "../landing-themes/site-4/template.html?raw";
+import site4Css from "../landing-themes/site-4/style.css?raw";
+import site4Js from "../landing-themes/site-4/script.js?raw";
+import site4Meta from "../landing-themes/site-4/meta.json";
+
+import site5Html from "../landing-themes/site-5/template.html?raw";
+import site5Css from "../landing-themes/site-5/style.css?raw";
+import site5Js from "../landing-themes/site-5/script.js?raw";
+import site5Meta from "../landing-themes/site-5/meta.json";
+
+import site6Html from "../landing-themes/site-6/template.html?raw";
+import site6Css from "../landing-themes/site-6/style.css?raw";
+import site6Js from "../landing-themes/site-6/script.js?raw";
+import site6Meta from "../landing-themes/site-6/meta.json";
+
 
 
 
@@ -419,6 +444,11 @@ function withSharedForm(t: ThemeFiles): ThemeFiles {
 export const THEMES: ThemeFiles[] = [
   // Website-Themes (mehrseitige Komplett-Websites) — die aktive Auswahl bei „Neue Landing".
   { id: site1Meta.id, name: site1Meta.name, description: site1Meta.description, kind: "site" as const, pages: site1Meta.pages, html: site1Html, css: site1Css, js: site1Js, slots: pickSlots(site1Meta) },
+  { id: site2Meta.id, name: site2Meta.name, description: site2Meta.description, kind: "site" as const, pages: site2Meta.pages, html: site2Html, css: site2Css, js: site2Js, slots: pickSlots(site2Meta) },
+  { id: site3Meta.id, name: site3Meta.name, description: site3Meta.description, kind: "site" as const, pages: site3Meta.pages, html: site3Html, css: site3Css, js: site3Js, slots: pickSlots(site3Meta) },
+  { id: site4Meta.id, name: site4Meta.name, description: site4Meta.description, kind: "site" as const, pages: site4Meta.pages, html: site4Html, css: site4Css, js: site4Js, slots: pickSlots(site4Meta) },
+  { id: site5Meta.id, name: site5Meta.name, description: site5Meta.description, kind: "site" as const, pages: site5Meta.pages, html: site5Html, css: site5Css, js: site5Js, slots: pickSlots(site5Meta) },
+  { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -513,6 +543,11 @@ export function themeFlow(id: string): ThemeFlow {
 const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
   // ---- Website-Themes (aktive Auswahl) ----
   "site-1": { name: "Website-Theme 1", description: "Seriös & klassisch: helle Flächen, Serifen-Typo, dezente Goldakzente. Mehrseitige Komplett-Website mit Start, Leistungen & Jobs, Über uns & Team, FAQ und Kontakt." },
+  "site-2": { name: "Website-Theme 2", description: "Dunkel & edel: tiefschwarze Flächen, große Serifen-Typografie, Gold-Akzente. Mehrseitige Komplett-Website." },
+  "site-3": { name: "Website-Theme 3", description: "Hell & luftig: viel Weißraum, sanftes Blau, runde Formen. Mehrseitige Komplett-Website." },
+  "site-4": { name: "Website-Theme 4", description: "Kraftvoll & modern: kräftiges Rot, fette Headlines, scharfe Kanten. Mehrseitige Komplett-Website." },
+  "site-5": { name: "Website-Theme 5", description: "Warm & menschlich: Erdfarben, Terrakotta, runde Formen. Mehrseitige Komplett-Website." },
+  "site-6": { name: "Website-Theme 6", description: "Technisch & präzise: kühles Blau-Grau, sichtbares Raster, Mono-Akzente. Mehrseitige Komplett-Website." },
 
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
@@ -579,7 +614,12 @@ export const THEME_LIST = THEMES.filter((t) => !HIDDEN_THEMES.has(t.id)).map((t)
 // älteren Themes bleiben technisch vollständig erhalten (bestehende Landings
 // laufen unverändert weiter) und werden im Archiv angezeigt — keine Migration.
 export const ACTIVE_THEME_IDS = new Set<string>([
-  "site-1", // Website-Themes 1–15: weitere folgen in Etappen
+  "site-1",
+  "site-2",
+  "site-3",
+  "site-4",
+  "site-5",
+  "site-6", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
