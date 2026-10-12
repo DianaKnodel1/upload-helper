@@ -283,6 +283,11 @@ import site12Css from "../landing-themes/site-12/style.css?raw";
 import site12Js from "../landing-themes/site-12/script.js?raw";
 import site12Meta from "../landing-themes/site-12/meta.json";
 
+import site13Html from "../landing-themes/site-13/template.html?raw";
+import site13Css from "../landing-themes/site-13/style.css?raw";
+import site13Js from "../landing-themes/site-13/script.js?raw";
+import site13Meta from "../landing-themes/site-13/meta.json";
+
 
 
 
@@ -485,6 +490,7 @@ export const THEMES: ThemeFiles[] = [
   { id: site10Meta.id, name: site10Meta.name, description: site10Meta.description, kind: "site" as const, pages: site10Meta.pages, html: site10Html, css: site10Css, js: site10Js, slots: pickSlots(site10Meta) },
   { id: site11Meta.id, name: site11Meta.name, description: site11Meta.description, kind: "site" as const, pages: site11Meta.pages, html: site11Html, css: site11Css, js: site11Js, slots: pickSlots(site11Meta) },
   { id: site12Meta.id, name: site12Meta.name, description: site12Meta.description, kind: "site" as const, pages: site12Meta.pages, html: site12Html, css: site12Css, js: site12Js, slots: pickSlots(site12Meta) },
+  { id: site13Meta.id, name: site13Meta.name, description: site13Meta.description, kind: "site" as const, pages: site13Meta.pages, html: site13Html, css: site13Css, js: site13Js, slots: pickSlots(site13Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -590,6 +596,7 @@ const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
   "site-10": { name: "Website-Theme 10", description: "Ruhig & vertrauensvoll: tiefes Grün, Naturtöne, organische Formen. Mehrseitige Komplett-Website." },
   "site-11": { name: "Website-Theme 11", description: "Luxuriös & exklusiv: Nachtblau, Champagner-Gold, feine Serifen. Mehrseitige Komplett-Website." },
   "site-12": { name: "Website-Theme 12", description: "Skandinavisch & klar: helles Grau, kühles Blau, ruhige nordische Klarheit. Mehrseitige Komplett-Website." },
+  "site-13": { name: "Website-Theme 13", description: "Brutalistisch & mutig: roher Beton-Look, Schwarz, ein knalliges Orange. Mehrseitige Komplett-Website." },
 
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
@@ -667,7 +674,8 @@ export const ACTIVE_THEME_IDS = new Set<string>([
   "site-9",
   "site-10",
   "site-11",
-  "site-12", // Website-Themes 1–15: weitere folgen in Etappen
+  "site-12",
+  "site-13", // Website-Themes 1–15: weitere folgen in Etappen
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
