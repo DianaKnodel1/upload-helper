@@ -275,15 +275,15 @@ function AppointmentsPage() {
             </div>
 
             {/* Info-Banner */}
-            <div className="rounded-lg bg-primary/5 border border-primary/20 p-3 space-y-1.5">
+            <div className="rounded-lg bg-muted/60 border border-border p-3 space-y-1.5">
               <div className="flex items-center gap-1.5">
-                <Info className="h-3.5 w-3.5 text-primary" />
+                <Info className="h-3.5 w-3.5 text-foreground" />
                 <p className="text-xs font-semibold text-foreground">Bitte beachten Sie:</p>
               </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
+              <p className="text-[11px] text-foreground/80 leading-relaxed">
                 Sofern mit Ihrem Teamleiter nicht anders abgesprochen, können Sie:
               </p>
-              <ul className="text-[11px] text-muted-foreground space-y-0.5 pl-2">
+              <ul className="text-[11px] text-foreground/80 space-y-0.5 pl-2">
                 <li>• maximal einen Termin für denselben Tag buchen</li>
                 <li>• maximal {MAX_FUTURE_BOOKINGS} Termine im Voraus buchen</li>
               </ul>
@@ -295,7 +295,7 @@ function AppointmentsPage() {
 
             {/* Kalender */}
             <div className="rounded-lg border border-border overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-2 bg-primary/10 border-b border-border">
+              <div className="flex items-center justify-between px-3 py-2 bg-muted border-b border-border">
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-foreground" onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
