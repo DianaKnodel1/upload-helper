@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ContactMarkerPicker, ContactMarkerDot, markerRowClass } from "@/components/admin/ContactMarkerPicker";
+import { ContactMarkerPicker, markerRowClass } from "@/components/admin/ContactMarkerPicker";
 import { useContactMarkers } from "@/hooks/use-contact-markers";
 import { useNavigate } from "@/lib/router-compat";
 import { useEffect, useMemo, useState } from "react";
