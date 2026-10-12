@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{seo_title}}</title>
+  <meta name="description" content="{{seo_description}}"/>
+  <meta property="og:title" content="{{seo_title}}"/>
+  <meta property="og:description" content="{{seo_description}}"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=DM+Serif+Display&family=Outfit:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="s13 font-{{font_set}}">
+
+  <header class="s13-header">
+    <div class="s13-container s13-header-in">
+      <a href="/" class="s13-brand">{{brand_name}}</a>
+      <nav class="s13-nav" id="s13-nav">
+        <!-- lv-nav:home --><a href="/">{{nav_home_label}}</a><!-- /lv-nav -->
+        <!-- lv-nav:jobs --><a href="/jobs">{{nav_jobs}}</a><!-- /lv-nav -->
+        <!-- lv-nav:team --><a href="/team">{{nav_team}}</a><!-- /lv-nav -->
+        <!-- lv-nav:faq --><a href="/faq">{{nav_faq}}</a><!-- /lv-nav -->
+        <!-- lv-nav:kontakt --><a href="/kontakt">{{nav_kontakt}}</a><!-- /lv-nav -->
+      </nav>
+      <div class="s13-header-actions">
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-nav-cta">{{cta_label}}</a>
+        <button class="s13-burger" id="s13-burger" type="button" aria-label="Menü" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+{{page_content}}
+  </main>
+
+  <footer class="s13-footer">
+    <div class="s13-container s13-footer-grid">
+      <div class="s13-foot-col">
+        <div class="s13-foot-brand">{{brand_name}}</div>
+        <p class="s13-foot-text">{{footer_claim}}</p>
+      </div>
+      <div class="s13-foot-col">
+        <h4 class="s13-foot-head">Navigation</h4>
+        <div class="s13-foot-links">
+          <!-- lv-nav:home --><a href="/">{{nav_home_label}}</a><!-- /lv-nav -->
+          <!-- lv-nav:jobs --><a href="/jobs">{{nav_jobs}}</a><!-- /lv-nav -->
+          <!-- lv-nav:team --><a href="/team">{{nav_team}}</a><!-- /lv-nav -->
+          <!-- lv-nav:faq --><a href="/faq">{{nav_faq}}</a><!-- /lv-nav -->
+          <!-- lv-nav:kontakt --><a href="/kontakt">{{nav_kontakt}}</a><!-- /lv-nav -->
+        </div>
+      </div>
+      <div class="s13-foot-col">
+        <h4 class="s13-foot-head">Kontakt</h4>
+        <div class="s13-foot-links s13-foot-plain">
+          <span>{{contact_address}}</span>
+          <span>{{contact_phone}}</span>
+          <span>{{contact_email}}</span>
+        </div>
+      </div>
+      <div class="s13-foot-col">
+        <h4 class="s13-foot-head">Rechtliches</h4>
+        <div class="s13-foot-links">
+          <a href="/impressum.html">Impressum</a>
+          <a href="/datenschutz.html">Datenschutz</a>
+        </div>
+      </div>
+    </div>
+    <div class="s13-container s13-foot-bottom">© <span id="s13-year"></span> {{brand_name}} · Alle Rechte vorbehalten</div>
+  </footer>
+
+  <script src="script.js"></script>
+
+<!-- lv-page:home -->
+    <section class="s13-hero">
+      <div class="s13-container">
+        <div class="s13-hero-text" data-animate>
+          <p class="s13-kicker">{{home_hero_kicker}}</p>
+          <h1 class="s13-h1">{{home_hero_title}}</h1>
+          <p class="s13-lead">{{home_hero_sub}}</p>
+          <div class="s13-hero-actions">
+            <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+            <a href="/jobs" class="s13-btn s13-btn-outline s13-btn-lg">Leistungen & Jobs</a>
+          </div>
+        </div>
+      </div>
+      <div class="s13-hero-media" data-animate>
+        <img src="{{home_hero_image}}" alt="{{brand_name}} – Beratungsgespräch" loading="eager"/>
+      </div>
+    </section>
+
+    <section class="s13-facts">
+      <div class="s13-container s13-facts-row">
+        <div class="s13-fact" data-animate>
+          <div class="s13-fact-v">{{home_fact1_v}}</div>
+          <div class="s13-fact-l">{{home_fact1_l}}</div>
+        </div>
+        <div class="s13-fact" data-animate>
+          <div class="s13-fact-v">{{home_fact2_v}}</div>
+          <div class="s13-fact-l">{{home_fact2_l}}</div>
+        </div>
+        <div class="s13-fact" data-animate>
+          <div class="s13-fact-v">{{home_fact3_v}}</div>
+          <div class="s13-fact-l">{{home_fact3_l}}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container s13-split">
+        <div class="s13-split-text" data-animate>
+          <h2 class="s13-h2">{{home_intro_title}}</h2>
+          <p class="s13-body">{{home_intro_text}}</p>
+          <a href="/team" class="s13-link">Mehr über uns →</a>
+        </div>
+        <div class="s13-split-media" data-animate>
+          <img src="{{home_intro_image}}" alt="{{brand_name}} – Team" loading="lazy"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-section s13-section-tint">
+      <div class="s13-container">
+        <div class="s13-center" data-animate>
+          <h2 class="s13-h2">{{home_services_title}}</h2>
+          <p class="s13-body s13-center-text">{{home_services_sub}}</p>
+        </div>
+        <div class="s13-cards13">
+          <div class="s13-card" data-animate>
+            <div class="s13-card-num">01</div>
+            <h3 class="s13-card-title">{{home_sv1_t}}</h3>
+            <p class="s13-card-text">{{home_sv1_d}}</p>
+          </div>
+          <div class="s13-card" data-animate>
+            <div class="s13-card-num">02</div>
+            <h3 class="s13-card-title">{{home_sv2_t}}</h3>
+            <p class="s13-card-text">{{home_sv2_d}}</p>
+          </div>
+          <div class="s13-card" data-animate>
+            <div class="s13-card-num">03</div>
+            <h3 class="s13-card-title">{{home_sv3_t}}</h3>
+            <p class="s13-card-text">{{home_sv3_d}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-quote">
+      <div class="s13-container s13-quote-in" data-animate>
+        <p class="s13-quote-text">„{{home_quote_text}}“</p>
+        <p class="s13-quote-author">— {{home_quote_author}}</p>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container">
+        <div class="s13-center" data-animate>
+          <h2 class="s13-h2">{{home_steps_title}}</h2>
+        </div>
+        <div class="s13-steps">
+          <div class="s13-step" data-animate>
+            <div class="s13-step-num">1</div>
+            <h3 class="s13-step-title">{{home_s1_t}}</h3>
+            <p class="s13-card-text">{{home_s1_d}}</p>
+          </div>
+          <div class="s13-step" data-animate>
+            <div class="s13-step-num">2</div>
+            <h3 class="s13-step-title">{{home_s13_t}}</h3>
+            <p class="s13-card-text">{{home_s13_d}}</p>
+          </div>
+          <div class="s13-step" data-animate>
+            <div class="s13-step-num">3</div>
+            <h3 class="s13-step-title">{{home_s13_t}}</h3>
+            <p class="s13-card-text">{{home_s13_d}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-final">
+      <div class="s13-container s13-center" data-animate>
+        <h2 class="s13-h2 s13-final-title">{{home_final_title}}</h2>
+        <p class="s13-body s13-center-text s13-final-sub">{{home_final_sub}}</p>
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:jobs -->
+    <section class="s13-pagehead">
+      <div class="s13-container" data-animate>
+        <h1 class="s13-h1 s13-h1-sm">{{jobs_title}}</h1>
+        <p class="s13-lead s13-pagehead-lead">{{jobs_intro}}</p>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container s13-split s13-split-media-first">
+        <div class="s13-split-text" data-animate>
+          <div class="s13-job">
+            <h2 class="s13-card-title">{{jobs_j1_title}}</h2>
+            <p class="s13-job-meta">{{jobs_j1_meta}}</p>
+            <p class="s13-card-text">{{jobs_j1_text}}</p>
+          </div>
+          <div class="s13-job">
+            <h2 class="s13-card-title">{{jobs_j2_title}}</h2>
+            <p class="s13-job-meta">{{jobs_j2_meta}}</p>
+            <p class="s13-card-text">{{jobs_j2_text}}</p>
+          </div>
+          <div class="s13-job">
+            <h2 class="s13-card-title">{{jobs_j3_title}}</h2>
+            <p class="s13-job-meta">{{jobs_j3_meta}}</p>
+            <p class="s13-card-text">{{jobs_j3_text}}</p>
+          </div>
+          <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+        </div>
+        <div class="s13-split-media" data-animate>
+          <img src="{{jobs_image}}" alt="{{jobs_title}}" loading="lazy"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-section s13-section-tint">
+      <div class="s13-container">
+        <div class="s13-center" data-animate>
+          <h2 class="s13-h2">{{jobs_benefits_title}}</h2>
+        </div>
+        <div class="s13-checks">
+          <div class="s13-check" data-animate><span class="s13-check-mark">✓</span>{{jobs_b1}}</div>
+          <div class="s13-check" data-animate><span class="s13-check-mark">✓</span>{{jobs_b2}}</div>
+          <div class="s13-check" data-animate><span class="s13-check-mark">✓</span>{{jobs_b3}}</div>
+          <div class="s13-check" data-animate><span class="s13-check-mark">✓</span>{{jobs_b4}}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-final">
+      <div class="s13-container s13-center" data-animate>
+        <h2 class="s13-h2 s13-final-title">{{jobs_final_title}}</h2>
+        <p class="s13-body s13-center-text s13-final-sub">{{jobs_final_text}}</p>
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:team -->
+    <section class="s13-pagehead">
+      <div class="s13-container" data-animate>
+        <h1 class="s13-h1 s13-h1-sm">{{team_title}}</h1>
+        <p class="s13-lead s13-pagehead-lead">{{team_intro}}</p>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container">
+        <div class="s13-team-grid">
+          <div class="s13-person" data-animate>
+            <div class="s13-person-avatar">{{team_p1_name}}</div>
+            <h3 class="s13-card-title">{{team_p1_name}}</h3>
+            <p class="s13-person-role">{{team_p1_role}}</p>
+            <p class="s13-card-text">{{team_p1_line}}</p>
+          </div>
+          <div class="s13-person" data-animate>
+            <div class="s13-person-avatar">{{team_p2_name}}</div>
+            <h3 class="s13-card-title">{{team_p2_name}}</h3>
+            <p class="s13-person-role">{{team_p2_role}}</p>
+            <p class="s13-card-text">{{team_p2_line}}</p>
+          </div>
+          <div class="s13-person" data-animate>
+            <div class="s13-person-avatar">{{team_p3_name}}</div>
+            <h3 class="s13-card-title">{{team_p3_name}}</h3>
+            <p class="s13-person-role">{{team_p3_role}}</p>
+            <p class="s13-card-text">{{team_p3_line}}</p>
+          </div>
+          <div class="s13-person" data-animate>
+            <div class="s13-person-avatar">{{team_p4_name}}</div>
+            <h3 class="s13-card-title">{{team_p4_name}}</h3>
+            <p class="s13-person-role">{{team_p4_role}}</p>
+            <p class="s13-card-text">{{team_p4_line}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-section s13-section-tint">
+      <div class="s13-container s13-split">
+        <div class="s13-split-media" data-animate>
+          <img src="{{team_image}}" alt="{{team_title}}" loading="lazy"/>
+        </div>
+        <div class="s13-split-text" data-animate>
+          <h2 class="s13-h2">{{team_values_title}}</h2>
+          <div class="s13-values">
+            <div class="s13-value">
+              <h3 class="s13-card-title">{{team_v1_t}}</h3>
+              <p class="s13-card-text">{{team_v1_d}}</p>
+            </div>
+            <div class="s13-value">
+              <h3 class="s13-card-title">{{team_v2_t}}</h3>
+              <p class="s13-card-text">{{team_v2_d}}</p>
+            </div>
+            <div class="s13-value">
+              <h3 class="s13-card-title">{{team_v3_t}}</h3>
+              <p class="s13-card-text">{{team_v3_d}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-final">
+      <div class="s13-container s13-center" data-animate>
+        <h2 class="s13-h2 s13-final-title">{{home_final_title}}</h2>
+        <p class="s13-body s13-center-text s13-final-sub">{{home_final_sub}}</p>
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:faq -->
+    <section class="s13-pagehead">
+      <div class="s13-container" data-animate>
+        <h1 class="s13-h1 s13-h1-sm">{{faq_title}}</h1>
+        <p class="s13-lead s13-pagehead-lead">{{faq_intro}}</p>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container s13-faq-wrap">
+        <div class="s13-faq-item" data-animate>
+          <details open>
+            <summary class="s13-faq-q">{{faq_q1}}</summary>
+            <div class="s13-faq-a">{{faq_a1}}</div>
+          </details>
+        </div>
+        <div class="s13-faq-item" data-animate>
+          <details>
+            <summary class="s13-faq-q">{{faq_q2}}</summary>
+            <div class="s13-faq-a">{{faq_a2}}</div>
+          </details>
+        </div>
+        <div class="s13-faq-item" data-animate>
+          <details>
+            <summary class="s13-faq-q">{{faq_q3}}</summary>
+            <div class="s13-faq-a">{{faq_a3}}</div>
+          </details>
+        </div>
+        <div class="s13-faq-item" data-animate>
+          <details>
+            <summary class="s13-faq-q">{{faq_q4}}</summary>
+            <div class="s13-faq-a">{{faq_a4}}</div>
+          </details>
+        </div>
+        <div class="s13-faq-item" data-animate>
+          <details>
+            <summary class="s13-faq-q">{{faq_q5}}</summary>
+            <div class="s13-faq-a">{{faq_a5}}</div>
+          </details>
+        </div>
+        <div class="s13-faq-item" data-animate>
+          <details>
+            <summary class="s13-faq-q">{{faq_q6}}</summary>
+            <div class="s13-faq-a">{{faq_a6}}</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-final">
+      <div class="s13-container s13-center" data-animate>
+        <h2 class="s13-h2 s13-final-title">{{home_final_title}}</h2>
+        <p class="s13-body s13-center-text s13-final-sub">{{home_final_sub}}</p>
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:kontakt -->
+    <section class="s13-pagehead">
+      <div class="s13-container" data-animate>
+        <h1 class="s13-h1 s13-h1-sm">{{kontakt_title}}</h1>
+        <p class="s13-lead s13-pagehead-lead">{{kontakt_intro}}</p>
+      </div>
+    </section>
+
+    <section class="s13-section">
+      <div class="s13-container s13-split">
+        <div class="s13-split-text" data-animate>
+          <div class="s13-kontakt-block">
+            <h3 class="s13-foot-head">Adresse</h3>
+            <p class="s13-body">{{contact_address}}</p>
+          </div>
+          <div class="s13-kontakt-block">
+            <h3 class="s13-foot-head">Telefon & E-Mail</h3>
+            <p class="s13-body">{{contact_phone}}<br/>{{contact_email}}</p>
+          </div>
+          <div class="s13-kontakt-block">
+            <h3 class="s13-foot-head">Öffnungszeiten</h3>
+            <p class="s13-body s13-pre">{{kontakt_opening}}</p>
+          </div>
+        </div>
+        <div class="s13-split-media" data-animate>
+          <img src="{{kontakt_image}}" alt="{{kontakt_title}}" loading="lazy"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="s13-final">
+      <div class="s13-container s13-center" data-animate>
+        <h2 class="s13-h2 s13-final-title">{{kontakt_final_title}}</h2>
+        <p class="s13-body s13-center-text s13-final-sub">{{kontakt_final_text}}</p>
+        <a href="#bewerbung-form" class="s13-btn s13-btn-gold s13-btn-lg">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:404 -->
+    <section class="s13-section s13-404">
+      <div class="s13-container s13-center">
+        <h1 class="s13-h1 s13-h1-sm">Seite nicht gefunden</h1>
+        <p class="s13-body">Diese Seite existiert leider nicht (mehr).</p>
+        <a href="/" class="s13-btn s13-btn-gold s13-btn-lg">Zur Startseite</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+</body>
+</html>

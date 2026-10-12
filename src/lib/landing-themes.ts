@@ -253,6 +253,51 @@ import site6Css from "../landing-themes/site-6/style.css?raw";
 import site6Js from "../landing-themes/site-6/script.js?raw";
 import site6Meta from "../landing-themes/site-6/meta.json";
 
+import site7Html from "../landing-themes/site-7/template.html?raw";
+import site7Css from "../landing-themes/site-7/style.css?raw";
+import site7Js from "../landing-themes/site-7/script.js?raw";
+import site7Meta from "../landing-themes/site-7/meta.json";
+
+import site8Html from "../landing-themes/site-8/template.html?raw";
+import site8Css from "../landing-themes/site-8/style.css?raw";
+import site8Js from "../landing-themes/site-8/script.js?raw";
+import site8Meta from "../landing-themes/site-8/meta.json";
+
+import site9Html from "../landing-themes/site-9/template.html?raw";
+import site9Css from "../landing-themes/site-9/style.css?raw";
+import site9Js from "../landing-themes/site-9/script.js?raw";
+import site9Meta from "../landing-themes/site-9/meta.json";
+
+import site10Html from "../landing-themes/site-10/template.html?raw";
+import site10Css from "../landing-themes/site-10/style.css?raw";
+import site10Js from "../landing-themes/site-10/script.js?raw";
+import site10Meta from "../landing-themes/site-10/meta.json";
+
+import site11Html from "../landing-themes/site-11/template.html?raw";
+import site11Css from "../landing-themes/site-11/style.css?raw";
+import site11Js from "../landing-themes/site-11/script.js?raw";
+import site11Meta from "../landing-themes/site-11/meta.json";
+
+import site12Html from "../landing-themes/site-12/template.html?raw";
+import site12Css from "../landing-themes/site-12/style.css?raw";
+import site12Js from "../landing-themes/site-12/script.js?raw";
+import site12Meta from "../landing-themes/site-12/meta.json";
+
+import site13Html from "../landing-themes/site-13/template.html?raw";
+import site13Css from "../landing-themes/site-13/style.css?raw";
+import site13Js from "../landing-themes/site-13/script.js?raw";
+import site13Meta from "../landing-themes/site-13/meta.json";
+
+import site14Html from "../landing-themes/site-14/template.html?raw";
+import site14Css from "../landing-themes/site-14/style.css?raw";
+import site14Js from "../landing-themes/site-14/script.js?raw";
+import site14Meta from "../landing-themes/site-14/meta.json";
+
+import site15Html from "../landing-themes/site-15/template.html?raw";
+import site15Css from "../landing-themes/site-15/style.css?raw";
+import site15Js from "../landing-themes/site-15/script.js?raw";
+import site15Meta from "../landing-themes/site-15/meta.json";
+
 
 
 
@@ -449,6 +494,15 @@ export const THEMES: ThemeFiles[] = [
   { id: site4Meta.id, name: site4Meta.name, description: site4Meta.description, kind: "site" as const, pages: site4Meta.pages, html: site4Html, css: site4Css, js: site4Js, slots: pickSlots(site4Meta) },
   { id: site5Meta.id, name: site5Meta.name, description: site5Meta.description, kind: "site" as const, pages: site5Meta.pages, html: site5Html, css: site5Css, js: site5Js, slots: pickSlots(site5Meta) },
   { id: site6Meta.id, name: site6Meta.name, description: site6Meta.description, kind: "site" as const, pages: site6Meta.pages, html: site6Html, css: site6Css, js: site6Js, slots: pickSlots(site6Meta) },
+  { id: site7Meta.id, name: site7Meta.name, description: site7Meta.description, kind: "site" as const, pages: site7Meta.pages, html: site7Html, css: site7Css, js: site7Js, slots: pickSlots(site7Meta) },
+  { id: site8Meta.id, name: site8Meta.name, description: site8Meta.description, kind: "site" as const, pages: site8Meta.pages, html: site8Html, css: site8Css, js: site8Js, slots: pickSlots(site8Meta) },
+  { id: site9Meta.id, name: site9Meta.name, description: site9Meta.description, kind: "site" as const, pages: site9Meta.pages, html: site9Html, css: site9Css, js: site9Js, slots: pickSlots(site9Meta) },
+  { id: site10Meta.id, name: site10Meta.name, description: site10Meta.description, kind: "site" as const, pages: site10Meta.pages, html: site10Html, css: site10Css, js: site10Js, slots: pickSlots(site10Meta) },
+  { id: site11Meta.id, name: site11Meta.name, description: site11Meta.description, kind: "site" as const, pages: site11Meta.pages, html: site11Html, css: site11Css, js: site11Js, slots: pickSlots(site11Meta) },
+  { id: site12Meta.id, name: site12Meta.name, description: site12Meta.description, kind: "site" as const, pages: site12Meta.pages, html: site12Html, css: site12Css, js: site12Js, slots: pickSlots(site12Meta) },
+  { id: site13Meta.id, name: site13Meta.name, description: site13Meta.description, kind: "site" as const, pages: site13Meta.pages, html: site13Html, css: site13Css, js: site13Js, slots: pickSlots(site13Meta) },
+  { id: site14Meta.id, name: site14Meta.name, description: site14Meta.description, kind: "site" as const, pages: site14Meta.pages, html: site14Html, css: site14Css, js: site14Js, slots: pickSlots(site14Meta) },
+  { id: site15Meta.id, name: site15Meta.name, description: site15Meta.description, kind: "site" as const, pages: site15Meta.pages, html: site15Html, css: site15Css, js: site15Js, slots: pickSlots(site15Meta) },
   // Neue Premium-Generation zuerst — sie sind die einzige Auswahl bei „Neue Landing".
   { id: tccMeta.id, name: tccMeta.name, description: tccMeta.description, html: tccHtml, css: tccCss, js: tccJs, slots: pickSlots(tccMeta) },
   { id: tmbMeta.id, name: tmbMeta.name, description: tmbMeta.description, html: tmbHtml, css: tmbCss, js: tmbJs, slots: pickSlots(tmbMeta) },
@@ -548,6 +602,15 @@ const THEME_DISPLAY: Record<string, { name: string; description: string }> = {
   "site-4": { name: "Website-Theme 4", description: "Kraftvoll & modern: kräftiges Rot, fette Headlines, scharfe Kanten. Mehrseitige Komplett-Website." },
   "site-5": { name: "Website-Theme 5", description: "Warm & menschlich: Erdfarben, Terrakotta, runde Formen. Mehrseitige Komplett-Website." },
   "site-6": { name: "Website-Theme 6", description: "Technisch & präzise: kühles Blau-Grau, sichtbares Raster, Mono-Akzente. Mehrseitige Komplett-Website." },
+  "site-7": { name: "Website-Theme 7", description: "Editorial & hochwertig: Magazin-Look, große Serifen-Titel, Creme und Burgund. Mehrseitige Komplett-Website." },
+  "site-8": { name: "Website-Theme 8", description: "Frisch & dynamisch: lebendige Farbverläufe, runde Formen, junge Energie. Mehrseitige Komplett-Website." },
+  "site-9": { name: "Website-Theme 9", description: "Minimal & zeitlos: Schwarz-Weiß, viel Leere, feine Linien. Mehrseitige Komplett-Website." },
+  "site-10": { name: "Website-Theme 10", description: "Ruhig & vertrauensvoll: tiefes Grün, Naturtöne, organische Formen. Mehrseitige Komplett-Website." },
+  "site-11": { name: "Website-Theme 11", description: "Luxuriös & exklusiv: Nachtblau, Champagner-Gold, feine Serifen. Mehrseitige Komplett-Website." },
+  "site-12": { name: "Website-Theme 12", description: "Skandinavisch & klar: helles Grau, kühles Blau, ruhige nordische Klarheit. Mehrseitige Komplett-Website." },
+  "site-13": { name: "Website-Theme 13", description: "Brutalistisch & mutig: roher Beton-Look, Schwarz, ein knalliges Orange. Mehrseitige Komplett-Website." },
+  "site-14": { name: "Website-Theme 14", description: "Sanft & einladend: Creme, zartes Rosé, Salbei — warm und persönlich. Mehrseitige Komplett-Website." },
+  "site-15": { name: "Website-Theme 15", description: "Executive & souverän: tiefes Smaragdgrün, Messing, dunkles Holz. Mehrseitige Komplett-Website." },
 
   // ---- Neue Premium-Generation (aktive Auswahl) ----
   "theme-consulting-corporate": { name: "Corporate Consulting", description: "Klassisch, seriös und strukturiert. Navy/Weiß, ruhige Beratungsoptik mit klaren horizontalen Bereichen." },
@@ -619,7 +682,16 @@ export const ACTIVE_THEME_IDS = new Set<string>([
   "site-3",
   "site-4",
   "site-5",
-  "site-6", // Website-Themes 1–15: weitere folgen in Etappen
+  "site-6",
+  "site-7",
+  "site-8",
+  "site-9",
+  "site-10",
+  "site-11",
+  "site-12",
+  "site-13",
+  "site-14",
+  "site-15", // Website-Themes 1–15: komplett
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
