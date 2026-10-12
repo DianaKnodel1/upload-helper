@@ -329,3 +329,4 @@
 
 /* Handy: Kopfzeilen-Button ausblenden, Menü übernimmt */
 @media (max-width: 640px) { .s8-nav-cta { display: none !important; } }
+@media (max-width: 640px) { .s8-brand { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px !important; } .s8-header-actions { flex-shrink: 0; } }
