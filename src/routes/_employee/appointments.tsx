@@ -419,11 +419,7 @@ function AppointmentsPage() {
 
               <div className="space-y-2.5 text-xs">
                 <div>
-                  <p className="text-muted-foreground">Montags, Mittwochs und Freitags:</p>
-                  <p className="text-foreground font-medium tabular-nums">11:30 bis 13:30</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Dienstags:</p>
+                  <p className="text-muted-foreground">Montags, Dienstags, Mittwochs und Freitags:</p>
                   <p className="text-foreground font-medium tabular-nums">11:30 bis 13:30</p>
                 </div>
                 <div>
