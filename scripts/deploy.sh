@@ -65,7 +65,7 @@ cd "$PROJECT_DIR"
 
   # Hard-Fallback: alte Repos (project-onetoone, zip-it-up, seamless-import-tool, direct-zip-import) erneut umstellen
   if [ -n "$current_origin" ] && echo "$current_origin" | grep -qE "project-onetoone|zip-it-up|seamless-import-tool|direct-zip-import"; then
-    warn "Alter zip-it-up Remote erkannt — wird auf $REPO_URL umgestellt"
+    warn "Altes Remote erkannt — wird auf $REPO_URL umgestellt"
     git remote set-url origin "$REPO_URL"
   fi
 
