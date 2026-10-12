@@ -28,9 +28,9 @@
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-.s9 h1, .s9 h2, .s9 h3, .s9 h4 { font-family: var(--s9-font-head); line-height: 1.08; margin: 0; color: var(--s9-ink); font-weight: 600; letter-spacing: -0.02em; }
-.s9 img { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
-.s9 a { color: var(--s9-ink); }
+:where(.s9) :where(h1, h2, h3, h4) { font-family: var(--s9-font-head); line-height: 1.08; margin: 0; color: var(--s9-ink); font-weight: 600; letter-spacing: -0.02em; }
+:where(.s9) :where(img) { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
+:where(.s9) :where(a) { color: var(--s9-ink); }
 .s9-pre { white-space: pre-line; }
 
 .s9-container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }

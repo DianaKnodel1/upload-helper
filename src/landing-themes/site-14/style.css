@@ -30,9 +30,9 @@
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
 }
-.s14 h1, .s14 h2, .s14 h3, .s14 h4 { font-family: var(--s14-font-head); line-height: 1.25; margin: 0; color: var(--s14-brown); font-weight: 500; }
-.s14 img { display: block; max-width: 100%; height: auto; }
-.s14 a { color: var(--s14-rose); }
+:where(.s14) :where(h1, h2, h3, h4) { font-family: var(--s14-font-head); line-height: 1.25; margin: 0; color: var(--s14-brown); font-weight: 500; }
+:where(.s14) :where(img) { display: block; max-width: 100%; height: auto; }
+:where(.s14) :where(a) { color: var(--s14-rose); }
 .s14-pre { white-space: pre-line; }
 
 .s14-container { max-width: 1120px; margin: 0 auto; padding: 0 26px; }
