@@ -103,7 +103,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     let companySignature: string | null = (contract as any).company_signature_url ?? null;
     if (!companySignature && tenant?.company_signature_url) {
       companySignature = tenant.company_signature_url;
-      const patch: { company_signature_url: string; tenant_id?: string } = { company_signature_url: companySignature };
+      const patch: { company_signature_url: string; tenant_id?: string } = { company_signature_url: tenant.company_signature_url as string };
       if (!contract.tenant_id && tenantId) patch.tenant_id = tenantId;
       await supabaseAdmin.from("contracts").update(patch).eq("id", contract.id).is("company_signature_url", null);
     }
