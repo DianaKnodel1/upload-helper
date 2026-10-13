@@ -4,8 +4,22 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { applyEmploymentStartDate, formatGermanDate, resolveContractPlaceholders } from "@/lib/contract-utils";
 
+function sniffImageKind(bytes: Uint8Array): "png" | "jpg" | null {
+  if (bytes.length > 4 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return "png";
+  if (bytes.length > 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpg";
+  return null;
+}
+
+/** Tenant des Vertrags; Fallback: Tenant aus dem Profil des Mitarbeiters. Nie ein fremder Tenant. */
+async function resolveContractTenantId(supabaseAdmin: any, contract: { tenant_id: string | null; user_id: string }) {
+  if (contract.tenant_id) return contract.tenant_id;
+  const { data: prof } = await supabaseAdmin.from("profiles").select("tenant_id").eq("user_id", contract.user_id).maybeSingle();
+  return (prof?.tenant_id as string | null) ?? null;
+}
+
 function extractSignatureStoragePath(value: string | null): string | null {
   if (!value) return null;
+  if (/^data:/i.test(value)) return null;
   if (!/^https?:\/\//i.test(value)) return value.replace(/^signatures\//, "");
   const match = value.match(/\/storage\/v1\/object\/(?:public|sign)\/signatures\/([^?]+)/);
   return match?.[1] ? decodeURIComponent(match[1]) : null;
@@ -13,27 +27,40 @@ function extractSignatureStoragePath(value: string | null): string | null {
 
 async function downloadSignatureBytes(supabaseAdmin: any, path: string | null): Promise<{ bytes: Uint8Array; kind: "png" | "jpg" } | null> {
   if (!path) return null;
-  const storagePath = extractSignatureStoragePath(path);
-  if (storagePath) {
-    const { data, error } = await supabaseAdmin.storage.from("signatures").download(storagePath);
-    if (error || !data) return null;
-    const buf = new Uint8Array(await data.arrayBuffer());
-    const kind = storagePath.toLowerCase().endsWith(".jpg") || storagePath.toLowerCase().endsWith(".jpeg") ? "jpg" : "png";
-    return { bytes: buf, kind };
-  }
-  // If a full URL was stored (legacy company_signature_url), fetch directly.
-  if (/^https?:\/\//i.test(path)) {
-    try {
-      const res = await fetch(path);
-      if (!res.ok) return null;
-      const buf = new Uint8Array(await res.arrayBuffer());
-      const kind = path.toLowerCase().endsWith(".jpg") || path.toLowerCase().endsWith(".jpeg") ? "jpg" : "png";
-      return { bytes: buf, kind };
-    } catch {
-      return null;
+  let bytes: Uint8Array | null = null;
+  const dataMatch = path.match(/^data:image\/[a-z+]+;base64,(.+)$/i);
+  if (dataMatch) {
+    const bin = atob(dataMatch[1]!);
+    bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  } else {
+    const storagePath = extractSignatureStoragePath(path);
+    if (storagePath) {
+      const { data, error } = await supabaseAdmin.storage.from("signatures").download(storagePath);
+      if (error || !data) {
+        console.warn("[contract-pdf] Unterschrift nicht ladbar:", storagePath, error?.message);
+      } else {
+        bytes = new Uint8Array(await data.arrayBuffer());
+      }
+    }
+    if (!bytes && /^https?:\/\//i.test(path)) {
+      try {
+        const res = await fetch(path);
+        if (res.ok) bytes = new Uint8Array(await res.arrayBuffer());
+        else console.warn("[contract-pdf] Unterschrift-URL antwortet", res.status);
+      } catch (e) {
+        console.warn("[contract-pdf] Unterschrift-URL nicht erreichbar", e);
+      }
     }
   }
-  return null;
+  if (!bytes) return null;
+  // Format am Dateiinhalt erkennen, nicht an der Endung (pdf-lib kann nur PNG/JPG).
+  const kind = sniffImageKind(bytes);
+  if (!kind) {
+    console.warn("[contract-pdf] Unterschrift hat kein PNG/JPG-Format");
+    return null;
+  }
+  return { bytes, kind };
 }
 
 async function createSignatureSignedUrl(supabaseAdmin: any, value: string | null): Promise<string | null> {
@@ -55,7 +82,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     // Verify ownership via RLS-scoped client
     const { data: contract, error: cErr } = await context.supabase
       .from("contracts")
-      .select("id, user_id, tenant_id, generated_content, signed_name, signature_image_url, signed_at, pdf_url")
+      .select("id, user_id, tenant_id, company_signature_url, generated_content, signed_name, signature_image_url, signed_at, pdf_url")
       .eq("id", data.contractId)
       .maybeSingle();
     if (cErr) throw new Error(cErr.message);
@@ -63,11 +90,23 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     if (contract.user_id !== userId) throw new Error("Kein Zugriff auf diesen Vertrag");
 
     // Load tenant (admin – we just need company signature & meta)
-    const { data: tenant } = await supabaseAdmin
-      .from("tenants")
-      .select("name, company_ceo_name, company_signature_url, company_address, company_city")
-      .eq("id", contract.tenant_id!)
-      .maybeSingle();
+    const tenantId = await resolveContractTenantId(supabaseAdmin, contract as any);
+    const { data: tenant } = tenantId
+      ? await supabaseAdmin
+          .from("tenants")
+          .select("name, company_ceo_name, company_signature_url, company_address, company_city")
+          .eq("id", tenantId)
+          .maybeSingle()
+      : { data: null as any };
+
+    // Snapshot: einmal festgehaltene Firmen-Unterschrift gilt für diesen Vertrag dauerhaft.
+    let companySignature: string | null = (contract as any).company_signature_url ?? null;
+    if (!companySignature && tenant?.company_signature_url) {
+      companySignature = tenant.company_signature_url;
+      const patch: Record<string, unknown> = { company_signature_url: companySignature };
+      if (!contract.tenant_id && tenantId) patch.tenant_id = tenantId;
+      await supabaseAdmin.from("contracts").update(patch).eq("id", contract.id).is("company_signature_url", null);
+    }
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
@@ -197,7 +236,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     }
 
     // Company signature (right)
-    const compSig = await downloadSignatureBytes(supabaseAdmin, tenant?.company_signature_url ?? null);
+    const compSig = await downloadSignatureBytes(supabaseAdmin, companySignature);
     if (compSig) {
       try {
         const img = compSig.kind === "jpg" ? await pdf.embedJpg(compSig.bytes) : await pdf.embedPng(compSig.bytes);
@@ -205,9 +244,11 @@ export const generateContractPdf = createServerFn({ method: "POST" })
         const w = img.width * scale;
         const h = img.height * scale;
         page.drawImage(img, { x: rightX, y: sigY + (sigImgHeight - h) / 2, width: w, height: h });
-      } catch {
-        /* ignore */
+      } catch (e) {
+        console.warn("[contract-pdf] Firmen-Unterschrift nicht einbettbar", e);
       }
+    } else {
+      console.warn("[contract-pdf] Keine Firmen-Unterschrift für Vertrag", contract.id, "Tenant", tenantId);
     }
 
     y = sigY - 6;
@@ -263,24 +304,16 @@ export const getContractSignatureUrls = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: contract } = await context.supabase
       .from("contracts")
-      .select("id, user_id, tenant_id, signature_image_url, pdf_url")
+      .select("id, user_id, tenant_id, company_signature_url, signature_image_url, pdf_url")
       .eq("id", data.contractId)
       .maybeSingle();
     if (!contract || contract.user_id !== userId) throw new Error("Kein Zugriff");
 
-    // Tenant: aus dem Vertrag, sonst aus dem Profil des Mitarbeiters.
-    let tenantId: string | null = contract.tenant_id ?? null;
-    if (!tenantId) {
-      const { data: prof } = await supabaseAdmin
-        .from("profiles")
-        .select("tenant_id")
-        .eq("user_id", userId)
-        .maybeSingle();
-      tenantId = prof?.tenant_id ?? null;
-    }
+    const tenantId = await resolveContractTenantId(supabaseAdmin, contract as any);
     const { data: tenant } = tenantId
       ? await supabaseAdmin.from("tenants").select("company_signature_url").eq("id", tenantId).maybeSingle()
       : { data: null as any };
+    const companySignature: string | null = (contract as any).company_signature_url ?? tenant?.company_signature_url ?? null;
 
     // Als Data-URL ausliefern: signierte Storage-URLs zeigen bei selbst
     // gehostetem Backend teils auf interne Hosts und laden im Browser nicht.
@@ -297,7 +330,7 @@ export const getContractSignatureUrls = createServerFn({ method: "POST" })
     };
 
     const employeeUrl = await toDataUrl(contract.signature_image_url);
-    const companyUrl = await toDataUrl(tenant?.company_signature_url ?? null);
+    const companyUrl = await toDataUrl(companySignature);
 
     const pdfUrl = contract.pdf_url
       ? (await supabaseAdmin.storage.from("documents").createSignedUrl(contract.pdf_url, 60 * 5)).data?.signedUrl ?? null
