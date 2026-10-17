@@ -1,16 +1,16 @@
 [Unit]
 Description=Portal full backup orchestrator
-Wants=backup-orchestrator.timer
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=oneshot
 User=root
 WorkingDirectory=/opt/apps/portal
 ExecStart=/opt/apps/portal/scripts/backup-orchestrator.sh full
-EnvironmentFile=/opt/apps/portal/scripts/backup-orchestrator.env
+TimeoutStartSec=3h
+Nice=10
+IOSchedulingClass=idle
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=portal-backup-orchestrator
-
-[Install]
-WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Portal backup watchdog (alarm if last backup too old or disk full)
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/apps/portal
+ExecStart=/opt/apps/portal/scripts/backup-verify.sh watchdog
+SyslogIdentifier=portal-backup-watchdog
