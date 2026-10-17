@@ -6,7 +6,7 @@ import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, CheckCircle2 } from "lucide-react";
+import { Loader2, Send, CheckCircle2, RefreshCw } from "lucide-react";
 import { ZusageCard } from "@/components/interview/ZusageCard";
 import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 
@@ -21,6 +21,8 @@ const readDelay = () =>
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function postInterview(body: unknown) {
+  const unavailable = "Das Bewerbungsgespräch ist momentan nicht erreichbar. Bitte versuchen Sie es in wenigen Minuten erneut. Falls es weiterhin nicht klappt, wenden Sie sich bitte an Ihre Kontaktperson.";
+  try {
   const res = await fetch("/api/public/interview-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,21 +31,33 @@ async function postInterview(body: unknown) {
   const raw = await res.text();
   const ct = res.headers.get("content-type") || "";
   if (!ct.includes("application/json")) {
-    throw new Error(
-      res.ok
-        ? `Unerwartete Antwort vom Server (kein JSON, Status ${res.status}). Bitte Frontend neu deployen.`
-        : `Serverfehler ${res.status}. Bitte erneut versuchen oder Support kontaktieren.`,
-    );
+    throw new Error(unavailable);
   }
   let data: any = {};
-  try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error("Antwort konnte nicht gelesen werden."); }
+  try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error(unavailable); }
   // Termin-Gates gibt es nicht mehr — das Gespräch ist jederzeit startbar.
 
-  if (!res.ok) throw new Error(data?.error ?? `Fehler ${res.status}`);
+  if (!res.ok) {
+    if (res.status === 404) throw new Error("Ihre Bewerbung konnte nicht gefunden werden. Bitte prüfen Sie Ihren Einladungslink oder wenden Sie sich an Ihre Kontaktperson.");
+    if (res.status === 409) throw new Error("Dieses Bewerbungsgespräch wurde bereits abgeschlossen. Bitte wenden Sie sich bei Fragen an Ihre Kontaktperson.");
+    throw new Error(unavailable);
+  }
   return data;
+  } catch (error) {
+    if (error instanceof TypeError) throw new Error(unavailable);
+    throw error;
+  }
 }
 
 export const Route = createFileRoute("/interview/$appId")({
+  head: () => ({ meta: [
+    { title: "Bewerbungsgespräch | Mitarbeiter-Portal" },
+    { name: "description", content: "Ihr digitales Bewerbungsgespräch im Mitarbeiter-Portal." },
+    { property: "og:title", content: "Bewerbungsgespräch | Mitarbeiter-Portal" },
+    { property: "og:description", content: "Ihr digitales Bewerbungsgespräch im Mitarbeiter-Portal." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   validateSearch: (s: Record<string, unknown>) => ({
     landing: typeof s.landing === "string" ? s.landing : "",
     portal: typeof s.portal === "string" ? s.portal : "",
@@ -87,6 +101,9 @@ function InterviewPage() {
   // ohne auf eine Mail mit Token zu warten (Feld ist vorbefüllt).
   const [applicantEmail, setApplicantEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [retryAction, setRetryAction] = useState<"init" | "message" | "end" | null>(null);
+  const [initAttempt, setInitAttempt] = useState(0);
+  const pendingText = useRef<string | null>(null);
   const [consent, setConsent] = useState(false);
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [branding, setBranding] = useState<{ firmenname?: string; primary_color?: string; logo_url?: string | null; recruiter_name?: string; recruiter_avatar_url?: string | null } | null>(null);
@@ -150,6 +167,9 @@ function InterviewPage() {
     if (!consent) return;
     let cancelled = false;
     async function init() {
+      setError(null);
+      setRetryAction(null);
+      setInitializing(true);
       try {
         const data = await postInterview({ applicationId: appId, action: "init" });
         if (cancelled) return;
@@ -174,13 +194,14 @@ function InterviewPage() {
         setInitializing(false);
       } catch (e: any) {
         if (cancelled) return;
-        setError(e?.message ?? "Unbekannter Fehler");
+        setError(e?.message ?? "Die Verbindung ist unterbrochen. Bitte versuchen Sie es erneut.");
+        setRetryAction("init");
         setInitializing(false);
       }
     }
     init();
     return () => { cancelled = true; };
-  }, [appId, consent]);
+  }, [appId, consent, initAttempt]);
 
   // Kein Warten mehr auf den Termin: das Gespräch startet sofort.
 
@@ -215,13 +236,16 @@ function InterviewPage() {
   // Sprachausgabe läuft ausschließlich über /interview/voice/$appId (KI Telefon).
 
 
-  async function send() {
-    const text = input.trim();
+  async function send(retry = false) {
+    const text = (retry ? pendingText.current : input)?.trim();
     if (!text || loading || ended) return;
+    pendingText.current = text;
+    setError(null);
+    setRetryAction(null);
     setInput("");
     setLoading(true);
     // optimistic
-    setMessages((prev) => [...prev, { role: "user", text, ts: new Date().toISOString() }]);
+    if (!retry) setMessages((prev) => [...prev, { role: "user", text, ts: new Date().toISOString() }]);
     const startedAt = Date.now();
     // Lesepause: erst nach 1,2–2,5 s erscheint die Tippblase.
     const readMs = readDelay();
@@ -242,12 +266,14 @@ function InterviewPage() {
       const wait = Math.max(0, Math.max(targetMs, minVisible) - elapsed);
       if (wait > 0) await sleep(wait);
       setMessages(data.history ?? []);
+      pendingText.current = null;
       if (data.ended) setEnded(true);
       if (data.application_status) setAppStatus(data.application_status);
       const im = (data as any)?.invite_mail;
       if (im?.registration_link) setRegistrationLink(im.registration_link);
     } catch (e: any) {
-      setError(e?.message ?? "Unbekannter Fehler");
+      setError(e?.message ?? "Die Verbindung ist unterbrochen. Bitte versuchen Sie es erneut.");
+      setRetryAction("message");
     } finally {
       if (typingTimerRef.current) { clearTimeout(typingTimerRef.current); typingTimerRef.current = null; }
       setTyping(false);
@@ -255,9 +281,11 @@ function InterviewPage() {
     }
   }
 
-  async function endInterview() {
+  async function endInterview(retry = false) {
     if (loading || ended || messages.length === 0) return;
-    if (!window.confirm("Möchten Sie das Gespräch wirklich beenden?")) return;
+    if (!retry && !window.confirm("Möchten Sie das Gespräch wirklich beenden?")) return;
+    setError(null);
+    setRetryAction(null);
     setLoading(true);
     try {
       const data = await postInterview({ applicationId: appId, action: "end" });
@@ -267,7 +295,8 @@ function InterviewPage() {
       if (im?.registration_link) setRegistrationLink(im.registration_link);
       setEnded(true);
     } catch (e: any) {
-      setError(e?.message ?? "Unbekannter Fehler");
+      setError(e?.message ?? "Das Gespräch konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.");
+      setRetryAction("end");
     } finally {
       setLoading(false);
     }
@@ -325,7 +354,7 @@ function InterviewPage() {
   const avatarUrl = serverBranding?.recruiter_avatar_url || branding?.recruiter_avatar_url || null;
   const recruiterName = recruiterDisplayName;
   const initials = recruiterName.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase();
-  const status = typing ? `${recruiterName.split(" ")[0]} schreibt …` : ended ? "Gespräch beendet" : "online";
+  const status = error ? "Verbindung unterbrochen" : typing ? `${recruiterName.split(" ")[0]} schreibt …` : ended ? "Gespräch beendet" : "online";
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
@@ -340,7 +369,7 @@ function InterviewPage() {
                 {initials}
               </div>
             )}
-            {!ended && (
+            {!ended && !error && (
               <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
             )}
           </div>
@@ -374,8 +403,17 @@ function InterviewPage() {
 
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 pb-4 flex flex-col">
         {error && (
-          <div className="my-3 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm text-destructive">
-            {error}
+          <div role="alert" className="my-3 p-4 rounded-lg bg-muted border border-border text-sm text-foreground space-y-3">
+            <p className="font-semibold">Leider gibt es gerade ein technisches Problem</p>
+            <p>{error}</p>
+            {retryAction === "message" && <p>Ihre letzte Antwort bleibt hier sichtbar. Mit „Erneut versuchen“ senden Sie diese noch einmal.</p>}
+            <Button variant="outline" disabled={loading || initializing} onClick={() => {
+              if (retryAction === "init") setInitAttempt((attempt) => attempt + 1);
+              if (retryAction === "message") void send(true);
+              if (retryAction === "end") void endInterview(true);
+            }}>
+              <RefreshCw className="h-4 w-4 mr-2" />Erneut versuchen
+            </Button>
           </div>
         )}
 
@@ -448,13 +486,13 @@ function InterviewPage() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
                   placeholder="Nachricht schreiben…"
-                  disabled={loading || initializing}
+                  disabled={loading || initializing || Boolean(error)}
                   className="flex-1 bg-transparent text-[15px] focus:outline-none placeholder:text-muted-foreground"
                 />
               </div>
               <button
-                onClick={send}
-                disabled={loading || initializing || !input.trim()}
+                onClick={() => void send()}
+                disabled={loading || initializing || Boolean(error) || !input.trim()}
                 className="h-11 w-11 rounded-full flex items-center justify-center text-white shadow-sm transition disabled:opacity-40"
                 style={{ background: primary }}
                 aria-label="Senden"
@@ -465,8 +503,8 @@ function InterviewPage() {
             {messages.length > 2 && (
               <div className="text-center mt-2">
                 <button
-                  onClick={endInterview}
-                  disabled={loading}
+                  onClick={() => void endInterview()}
+                  disabled={loading || Boolean(error)}
                   className="text-xs text-muted-foreground hover:text-destructive underline disabled:opacity-50"
                 >
                   Gespräch beenden
