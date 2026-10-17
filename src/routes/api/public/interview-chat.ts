@@ -28,9 +28,6 @@ const Input = z.object({
   text: z.string().max(4000).optional(),
 });
 
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-const APINET_URL = "https://apinet.cloud/v1/chat/completions";
-const DEFAULT_MODEL = "gemini-2.5-flash";
 
 const DEFAULT_SYSTEM_PROMPT = `Du bist {recruiter}, Personalreferentin im HR-Team von {company}. Du führst ein kurzes Erstgespräch im Chat mit einer Bewerberin oder einem Bewerber.
 
