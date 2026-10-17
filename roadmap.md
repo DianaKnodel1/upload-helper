@@ -3,6 +3,7 @@
 ## Bewerbungsgespräch: technische Fehler
 - [x] Verständlicher deutscher Hinweis statt roher Anbieter-Fehler, letzter Antworttext bleibt sichtbar, expliziter Wiederholungsbutton für Start/Nachricht/Abschluss.
 - [x] Start- und Nachrichtenfehler mit simuliertem Ausfall im Browser geprüft: Wiederholung erfolgreich, letzte Antwort nur einmal sichtbar, Hinweis verschwindet nach Erfolg; Build OK. Live-Anbieter nicht geprüft.
+- [x] Automatische Fallback-Umschaltung: apinet-Ausfall → direkter Gemini-Zugang (callGateway in interview-engine.server.ts, Retry je Anbieter; 2 Versuche am ersten Anbieter, wenn ein Ersatzanbieter existiert). Typcheck OK.
 - [ ] Live-Übernahme durch Server-Deploy des Users.
 
 ## Aktiv: Landing-Generator Theme-Überarbeitung (Plan genehmigt 2026-09-29)
