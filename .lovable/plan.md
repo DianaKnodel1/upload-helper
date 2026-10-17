@@ -24,8 +24,8 @@ Im Projekt gibt es schon zwei Ansätze (`backup.sh` schiebt, `backup-orchestrato
    - Verschlüsselung mit `age`. Den privaten Schlüssel hast nur du, im Passwortmanager.
    - Status-Bug beheben. Status zusätzlich lokal speichern; die Datenbank-Meldung ist nur ein Bonus.
 2. **Prüfung pro Lauf:** Ist der Dump vollständig lesbar? Stimmt die Anzahl der Tabellen und Bewerbungen? Ist das Archiv größer als ein Mindestwert?
-3. **Alarm**, wenn ein Backup fehlschlägt oder älter als 12 Stunden ist (per E-Mail oder Telegram, wähle ich nach deiner Antwort).
-4. **Aufbewahrung:** 14 Tage alle 6 h, 3 Monate monatlich (wie bisher).
+3. **Alarm**, wenn ein Backup fehlschlägt, älter als 12 Stunden ist oder die Platte zu 80 % voll ist (per E-Mail oder Telegram, wähle ich nach deiner Antwort).
+4. **Aufbewahrung:** 14 Tage alle 6 h, 3 Monate monatlich (wie bisher). Gemessen: Datenbank 633 MB + Dateien 491 MB, also ca. 0,7 GB pro Sicherung und ca. 42 GB insgesamt. Der gewählte Server (4 Kerne, 8 GB, 90 GB) reicht.
 5. **restore.sh anpassen:** Neuen Backend-Server und neuen Frontend-Server getrennt einspielen (`restore.sh backend <archiv>` / `restore.sh frontend <archiv>`).
 6. **Optional:** zweite Kopie außer Haus (z. B. Hetzner Storage Box oder S3), falls auch der Backup-Server ausfällt.
 7. **Anleitung** `docs/DISASTER-RECOVERY.md` neu: Einrichtung Schritt für Schritt, dann Notfall-Ablauf (neue Server kaufen → Restore → DNS bei Cloudflare umstellen).
