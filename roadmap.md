@@ -28,3 +28,8 @@
 ## Hintergrund / fertig
 - Vorlagen sind jetzt alle „direkt" (kein Fast-Track/Vermittlung bei neuen Seiten) — Teil 1 erledigt 2026-09-29.
 - Stichprobe alt (amber-consult, device-stack, quality-report) — überholt durch die komplette neue Theme-Welt.
+
+## Backup-Server (Plan 2026-10-17)
+- [x] Orchestrator neu (DB+Rollen+Struktur, Storage, Schlüssel, Server-Einstellungen, Verschlüsselung, Prüfung, lokaler Status, Alarm, Außer-Haus optional)
+- [x] restore.sh pro Rolle (backend/frontend/landing/bot/webid/inspect), Anleitung docs/DISASTER-RECOVERY.md
+- [ ] Einrichtung auf dem Backup-Server durch den User + Probe-Wiederherstellung
