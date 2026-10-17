@@ -275,8 +275,6 @@ function rewriteHtml(html: string, row: DomainRow, targetHost: string, notice: N
   let out = html.replace(re, `https://${simHost}`);
   // Favicon-Links entfernen (wir setzen unser eigenes)
   out = out.replace(/<link[^>]+rel=["'][^"']*icon[^"']*["'][^>]*>/gi, "");
-  // Hinweis-Box der Original-Seite entfernen (z. B. Warnung zu "App-Tester"-Jobanzeigen).
-  out = out.replace(/<div[^>]*class="[^"]*message-container[^"]*"[^>]*>[\s\S]*?<\/div>\s*/gi, "");
   const favicon = `<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,${encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="%23f5c400"/><text x="16" y="22" font-family="Arial" font-weight="700" font-size="18" text-anchor="middle" fill="%23111">S</text></svg>'.replace(/%23/g, "#")
   )}">`;
