@@ -222,7 +222,10 @@ export async function callGateway(
   let lastErr: unknown;
   for (const p of providers) {
     try {
-      return await callOneProvider(p, messages, opts);
+      // Solange ein Ersatzanbieter verfügbar ist, nicht alle 3 Versuche am
+      // ersten Anbieter hängen — sonst läuft die Gesamtzeit ins 100-Sekunden-Limit.
+      const attempts = providers.length > 1 && p !== providers[providers.length - 1] ? 2 : 3;
+      return await callOneProvider(p, messages, opts, attempts);
     } catch (e) {
       lastErr = e;
       console.error(
