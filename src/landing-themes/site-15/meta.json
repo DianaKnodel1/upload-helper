@@ -47,7 +47,7 @@
       "key": "brand_name",
       "label": "Firmenname (Kopfbereich)",
       "type": "text",
-      "default": "Muster Personalberatung"
+      "default": "Muster Digital Services"
     },
     {
       "key": "cta_label",
@@ -65,7 +65,7 @@
       "key": "footer_claim",
       "label": "Fußzeile – Anspruch",
       "type": "longtext",
-      "default": "Ihr starker Partner für Personalvermittlung und Karriere. Persönlich, diskret, verbindlich."
+      "default": "Ihr Arbeitgeber für Qualitätssicherung im Homeoffice. Fest angestellt, flexibel, fair bezahlt."
     },
     {
       "key": "nav_home_label",
@@ -77,7 +77,7 @@
       "key": "nav_jobs",
       "label": "Nav: Leistungen & Jobs",
       "type": "text",
-      "default": "Leistungen & Jobs"
+      "default": "Aufgaben & Jobs"
     },
     {
       "key": "nav_team",
@@ -101,19 +101,19 @@
       "key": "home_hero_kicker",
       "label": "Start: Kicker",
       "type": "text",
-      "default": "Diskret. Kompetent. Erfolgreich."
+      "default": "Diskret. Kompetent. Zuverlässig."
     },
     {
       "key": "home_hero_title",
       "label": "Start: Hauptüberschrift",
       "type": "longtext",
-      "default": "Executive Personalberatung auf höchstem Niveau"
+      "default": "Qualitätssicherung auf höchstem Niveau"
     },
     {
       "key": "home_hero_sub",
       "label": "Start: Untertitel",
       "type": "longtext",
-      "default": "Wir besetzen Schlüsselpositionen im kaufmännischen Bereich — diskret, präzise und mit einem Netzwerk, das über Jahrzehnte gewachsen ist."
+      "default": "Sie prüfen digitale Produkte führender Auftraggeber – fest angestellt, im Homeoffice und mit klaren Standards."
     },
     {
       "key": "home_hero_image",
@@ -125,37 +125,37 @@
       "key": "home_fact1_v",
       "label": "Start: Zahl 1",
       "type": "text",
-      "default": "15+"
+      "default": "19–21 €"
     },
     {
       "key": "home_fact1_l",
       "label": "Start: Zahl 1 Text",
       "type": "text",
-      "default": "Jahre Erfahrung"
+      "default": "Stundenlohn"
     },
     {
       "key": "home_fact2_v",
       "label": "Start: Zahl 2",
       "type": "text",
-      "default": "2.400+"
+      "default": "100 %"
     },
     {
       "key": "home_fact2_l",
       "label": "Start: Zahl 2 Text",
       "type": "text",
-      "default": "Vermittlungen"
+      "default": "Homeoffice"
     },
     {
       "key": "home_fact3_v",
       "label": "Start: Zahl 3",
       "type": "text",
-      "default": "98 %"
+      "default": "8–21 Uhr"
     },
     {
       "key": "home_fact3_l",
       "label": "Start: Zahl 3 Text",
       "type": "text",
-      "default": "Weiterbeschäftigung"
+      "default": "freie Zeiteinteilung"
     },
     {
       "key": "home_intro_title",
@@ -167,7 +167,7 @@
       "key": "home_intro_text",
       "label": "Start: Über-uns-Text",
       "type": "longtext",
-      "default": "Seit über 15 Jahren begleiten wir Bewerber und Unternehmen durch den gesamten Vermittlungsprozess. Wir kennen unsere Kunden persönlich – und nehmen uns Zeit für Sie."
+      "default": "Wir prüfen Apps, Webseiten und digitale Abläufe für namhafte Auftraggeber. Sie arbeiten bei uns in Festanstellung von zuhause aus – mit bezahlter Einarbeitung und einem persönlichen Teamleiter an Ihrer Seite."
     },
     {
       "key": "home_intro_image",
@@ -179,127 +179,127 @@
       "key": "home_services_title",
       "label": "Start: Leistungen-Titel",
       "type": "text",
-      "default": "Unsere Leistungen"
+      "default": "Ihre Aufgaben"
     },
     {
       "key": "home_services_sub",
       "label": "Start: Leistungen-Untertitel",
       "type": "longtext",
-      "default": "Drei Wege zu Ihrem neuen Job – Sie entscheiden, wie viel Begleitung Sie wünschen."
+      "default": "Abwechslungsreiche Tätigkeiten am eigenen Rechner – Vorerfahrung ist nicht nötig."
     },
     {
       "key": "home_sv1_t",
       "label": "Start: Leistung 1 Titel",
       "type": "text",
-      "default": "Direktvermittlung"
+      "default": "Apps & Webseiten testen"
     },
     {
       "key": "home_sv1_d",
       "label": "Start: Leistung 1 Text",
       "type": "longtext",
-      "default": "Wir präsentieren Sie gezielt bei passenden Arbeitgebern – kostenlos für Sie als Bewerber."
+      "default": "Sie prüfen Anwendungen unserer Auftraggeber auf Funktion, Verständlichkeit und Nutzerfreundlichkeit."
     },
     {
       "key": "home_sv2_t",
       "label": "Start: Leistung 2 Titel",
       "type": "text",
-      "default": "Coaching & Bewerbung"
+      "default": "Ergebnisse dokumentieren"
     },
     {
       "key": "home_sv2_d",
       "label": "Start: Leistung 2 Text",
       "type": "longtext",
-      "default": "Anschreiben, Lebenslauf, Gesprächstraining: Wir bereiten Sie optimal auf die Bewerbung vor."
+      "default": "Ihre Eindrücke halten Sie in kurzen, standardisierten Fragebögen fest – klar strukturiert und schnell erledigt."
     },
     {
       "key": "home_sv3_t",
       "label": "Start: Leistung 3 Titel",
       "type": "text",
-      "default": "Personalberatung B2B"
+      "default": "Prozesse prüfen"
     },
     {
       "key": "home_sv3_d",
       "label": "Start: Leistung 3 Text",
       "type": "longtext",
-      "default": "Unternehmen beauftragen uns mit der Besetzung von Fach- und Führungspositionen."
+      "default": "Sie durchlaufen digitale Abläufe wie Registrierungen oder Bestellungen und melden, was nicht rund läuft."
     },
     {
       "key": "home_quote_text",
       "label": "Start: Zitat",
       "type": "longtext",
-      "default": "Innerhalb von drei Wochen saß ich im neuen Büro – ohne ein einziges Anschreiben zu schreiben."
+      "default": "Ich hatte nie im Homeoffice gearbeitet. Nach der bezahlten Einarbeitung lief alles rund – und ich bestimme selbst, wann ich starte."
     },
     {
       "key": "home_quote_author",
       "label": "Start: Zitat-Autor",
       "type": "text",
-      "default": "Sandra M., vermittelt als Vertriebsleiterin"
+      "default": "Sandra M., in Teilzeit seit 14 Monaten"
     },
     {
       "key": "home_steps_title",
       "label": "Start: Ablauf-Titel",
       "type": "text",
-      "default": "So läuft's ab"
+      "default": "So starten Sie bei uns"
     },
     {
       "key": "home_s1_t",
       "label": "Start: Schritt 1 Titel",
       "type": "text",
-      "default": "Kennenlernen"
+      "default": "Bewerben"
     },
     {
       "key": "home_s1_d",
       "label": "Start: Schritt 1 Text",
       "type": "longtext",
-      "default": "Sie bewerben sich online oder rufen uns an. Wir melden uns innerhalb von 48 Stunden."
+      "default": "Kurzes Online-Formular in zwei Minuten – ohne Anschreiben und ohne Lebenslauf-Pflicht."
     },
     {
       "key": "home_s2_t",
       "label": "Start: Schritt 2 Titel",
       "type": "text",
-      "default": "Passung prüfen"
+      "default": "Kennenlernen"
     },
     {
       "key": "home_s2_d",
       "label": "Start: Schritt 2 Text",
       "type": "longtext",
-      "default": "Im persönlichen Gespräch klären wir Ziele, Wünsche und mögliche Arbeitgeber."
+      "default": "In einem kurzen Gespräch klären wir Ihre Wunsch-Stunden und beantworten alle Fragen."
     },
     {
       "key": "home_s3_t",
       "label": "Start: Schritt 3 Titel",
       "type": "text",
-      "default": "Neuer Job"
+      "default": "Loslegen"
     },
     {
       "key": "home_s3_d",
       "label": "Start: Schritt 3 Text",
       "type": "longtext",
-      "default": "Wir verhandeln für Sie – bis Sie unterschreiben können. Kostenfrei für Bewerber."
+      "default": "Vertrag digital unterschreiben, bezahlte Einarbeitung starten – und schon nach wenigen Tagen arbeiten."
     },
     {
       "key": "home_final_title",
       "label": "Start: Abschluss-CTA Titel",
       "type": "text",
-      "default": "Bereit für den nächsten Schritt?"
+      "default": "Bereit für Ihren Start im Homeoffice?"
     },
     {
       "key": "home_final_sub",
       "label": "Start: Abschluss-CTA Text",
       "type": "longtext",
-      "default": "Jetzt Bewerbung in fünf Minuten abschließen – wir prüfen Ihre Unterlagen persönlich."
+      "default": "Bewerbung in zwei Minuten abschließen – wir melden uns schnell und persönlich."
     },
     {
       "key": "jobs_title",
       "label": "Jobs: Titel",
       "type": "text",
-      "default": "Leistungen & offene Stellen"
+      "default": "Aufgaben & offene Stellen"
     },
     {
       "key": "jobs_intro",
       "label": "Jobs: Einführung",
       "type": "longtext",
-      "default": "Wir besetzen Positionen in Office, Sales, Technik und Logistik. Nachfolgend eine Auswahl häufiger Profile – sprechen Sie uns gern auch auf andere Berufsfelder an."
+      "default": "Wir suchen sorgfältige Mitarbeitende, die von zuhause aus digitale Produkte testen. Wählen Sie das Stundenmodell, das zu Ihrem Leben passt."
     },
     {
       "key": "jobs_image",
@@ -311,97 +311,97 @@
       "key": "jobs_j1_title",
       "label": "Job 1 Titel",
       "type": "text",
-      "default": "Kaufmännische Fachkraft (m/w/d)"
+      "default": "Mitarbeiter Qualitätssicherung im Minijob (m/w/d)"
     },
     {
       "key": "jobs_j1_meta",
       "label": "Job 1 Details",
       "type": "text",
-      "default": "München · Festanstellung · ab sofort"
+      "default": "Homeoffice · ca. 40 Std./Monat · ab sofort"
     },
     {
       "key": "jobs_j1_text",
       "label": "Job 1 Text",
       "type": "longtext",
-      "default": "Sachbearbeitung, Officemanagement und Kundenkontakt für renommierte Unternehmen in Ihrer Region."
+      "default": "Ideal als Nebenverdienst: Apps und Webseiten testen, wann es Ihnen passt – zwischen 8 und 21 Uhr."
     },
     {
       "key": "jobs_j2_title",
       "label": "Job 2 Titel",
       "type": "text",
-      "default": "Vertriebsmitarbeiter (m/w/d)"
+      "default": "Mitarbeiter Qualitätssicherung in Teilzeit (m/w/d)"
     },
     {
       "key": "jobs_j2_meta",
       "label": "Job 2 Details",
       "type": "text",
-      "default": "Umland · Festanstellung · befristete Einarbeitung"
+      "default": "Homeoffice · ca. 120 Std./Monat · sozialversichert"
     },
     {
       "key": "jobs_j2_text",
       "label": "Job 2 Text",
       "type": "longtext",
-      "default": "Bestandskundenpflege mit echtem Gehalt statt reinem Provisionismus – wir kennen die Arbeitgeber genau."
+      "default": "Feste Anstellung mit vollem Sozialversicherungsschutz und freier Einteilung Ihrer Arbeitszeit."
     },
     {
       "key": "jobs_j3_title",
       "label": "Job 3 Titel",
       "type": "text",
-      "default": "Techniker (m/w/d)"
+      "default": "Mitarbeiter Qualitätssicherung in Vollzeit (m/w/d)"
     },
     {
       "key": "jobs_j3_meta",
       "label": "Job 3 Details",
       "type": "text",
-      "default": "Bayern · Festanstellung · Schichtzuschläge"
+      "default": "Homeoffice · ca. 160 Std./Monat · unbefristet"
     },
     {
       "key": "jobs_j3_text",
       "label": "Job 3 Text",
       "type": "longtext",
-      "default": "Wartung und Instandhaltung in der industriellen Fertigung – mit Übernahmegarantie bei Bewährung."
+      "default": "Voller Einsatz im eigenen Rhythmus – mit Equipment nach der Probezeit und persönlichem Teamleiter."
     },
     {
       "key": "jobs_benefits_title",
       "label": "Jobs: Benefits-Titel",
       "type": "text",
-      "default": "Was Sie von uns erwarten dürfen"
+      "default": "Was Sie bei uns erwartet"
     },
     {
       "key": "jobs_b1",
       "label": "Benefit 1",
       "type": "text",
-      "default": "Festanstellung direkt beim Arbeitgeber"
+      "default": "Festanstellung mit Sozialversicherung"
     },
     {
       "key": "jobs_b2",
       "label": "Benefit 2",
       "type": "text",
-      "default": "Vermittlung kostenlos für Bewerber"
+      "default": "19–21 € pro Stunde"
     },
     {
       "key": "jobs_b3",
       "label": "Benefit 3",
       "type": "text",
-      "default": "Persönliche Begleitung bis zur Unterschrift"
+      "default": "Bezahlte Einarbeitung"
     },
     {
       "key": "jobs_b4",
       "label": "Benefit 4",
       "type": "text",
-      "default": "Diskrete Prüfung von Unterlagen"
+      "default": "Freie Zeiteinteilung von 8 bis 21 Uhr"
     },
     {
       "key": "jobs_final_title",
       "label": "Jobs: Abschluss-CTA Titel",
       "type": "text",
-      "default": "Nichts Passendes dabei?"
+      "default": "Noch Fragen zur Stelle?"
     },
     {
       "key": "jobs_final_text",
       "label": "Jobs: Abschluss-CTA Text",
       "type": "longtext",
-      "default": "Wir prüfen Ihre Unterlagen gern auch außerhalb der ausgeschriebenen Profile."
+      "default": "Bewerben Sie sich unverbindlich – im Kennenlerngespräch klären wir alles Weitere."
     },
     {
       "key": "team_title",
@@ -413,7 +413,7 @@
       "key": "team_intro",
       "label": "Team: Einführung",
       "type": "longtext",
-      "default": "Wir sind ein eingespieltes Beraterteam aus Süddeutschland. Uns verbindet eine Überzeugung: Gute Vermittlung funktioniert nur persönlich."
+      "default": "Hinter jedem Auftrag steht ein eingespieltes Team. Ihr persönlicher Teamleiter ist im Portal jederzeit für Sie erreichbar."
     },
     {
       "key": "team_image",
@@ -437,7 +437,7 @@
       "key": "team_p1_line",
       "label": "Person 1 Text",
       "type": "longtext",
-      "default": "20 Jahre Personalberatung, zuvor Personalchef im Maschinenbau."
+      "default": "Verantwortet die Zusammenarbeit mit unseren Auftraggebern und die Qualität aller Tests."
     },
     {
       "key": "team_p2_name",
@@ -449,13 +449,13 @@
       "key": "team_p2_role",
       "label": "Person 2 Rolle",
       "type": "text",
-      "default": "Senior-Beraterin"
+      "default": "Teamleitung"
     },
     {
       "key": "team_p2_line",
       "label": "Person 2 Text",
       "type": "longtext",
-      "default": "Spezialisiert für kaufmännische Fachkräfte und Office."
+      "default": "Begleitet neue Mitarbeitende durch die Einarbeitung und beantwortet Fragen im Portal."
     },
     {
       "key": "team_p3_name",
@@ -467,13 +467,13 @@
       "key": "team_p3_role",
       "label": "Person 3 Rolle",
       "type": "text",
-      "default": "Berater Technik & Logistik"
+      "default": "Qualitätsmanagement"
     },
     {
       "key": "team_p3_line",
       "label": "Person 3 Text",
       "type": "longtext",
-      "default": "Kennt die Branche aus eigener Berufserfahrung – 10 Jahre Werkzeugbau."
+      "default": "Entwickelt die Testabläufe und sorgt dafür, dass jede Aufgabe klar beschrieben ist."
     },
     {
       "key": "team_p4_name",
@@ -485,13 +485,13 @@
       "key": "team_p4_role",
       "label": "Person 4 Rolle",
       "type": "text",
-      "default": "Coaching & Bewerberbetreuung"
+      "default": "Personal & Onboarding"
     },
     {
       "key": "team_p4_line",
       "label": "Person 4 Text",
       "type": "longtext",
-      "default": "Begleitet Bewerber von der ersten Bewerbung bis zum Vorstellungsgespräch."
+      "default": "Kümmert sich um Verträge, Gespräche und einen reibungslosen Start."
     },
     {
       "key": "team_values_title",
@@ -515,13 +515,13 @@
       "key": "team_v2_t",
       "label": "Wert 2 Titel",
       "type": "text",
-      "default": "Diskretion"
+      "default": "Sicherheit"
     },
     {
       "key": "team_v2_d",
       "label": "Wert 2 Text",
       "type": "longtext",
-      "default": "Unterlagen verlassen nur mit Ihrer ausdrücklichen Zustimmung unser Haus."
+      "default": "Feste Anstellung, pünktliche Bezahlung und voller Sozialversicherungsschutz – ohne Kleingedrucktes."
     },
     {
       "key": "team_v3_t",
@@ -545,19 +545,19 @@
       "key": "faq_intro",
       "label": "FAQ: Einführung",
       "type": "longtext",
-      "default": "Die wichtigsten Antworten rund um Bewerbung, Vermittlung und Kontakt."
+      "default": "Die wichtigsten Antworten rund um Bewerbung, Arbeit im Homeoffice und Vergütung."
     },
     {
       "key": "faq_q1",
       "label": "Frage 1",
       "type": "text",
-      "default": "Kostet die Vermittlung für Bewerber etwas?"
+      "default": "Was genau mache ich bei Ihnen?"
     },
     {
       "key": "faq_a1",
       "label": "Antwort 1",
       "type": "longtext",
-      "default": "Nein. Für Bewerber ist unsere Vermittlung vollständig kostenlos – die Arbeitgeber tragen die Kosten."
+      "default": "Sie testen Apps, Webseiten und digitale Abläufe unserer Auftraggeber und dokumentieren Ihre Ergebnisse in kurzen Fragebögen."
     },
     {
       "key": "faq_q2",
@@ -569,55 +569,55 @@
       "key": "faq_a2",
       "label": "Antwort 2",
       "type": "longtext",
-      "default": "Über den Button „Jetzt bewerben“ senden Sie uns Ihren Lebenslauf. Wir prüfen ihn persönlich und melden uns innerhalb von 48 Stunden."
+      "default": "Über „Jetzt bewerben“ füllen Sie ein kurzes Formular aus. Danach folgt ein Kennenlerngespräch, anschließend unterschreiben Sie Ihren Vertrag digital."
     },
     {
       "key": "faq_q3",
       "label": "Frage 3",
       "type": "text",
-      "default": "Wer erfährt von meiner Bewerbung?"
+      "default": "Brauche ich Vorerfahrung?"
     },
     {
       "key": "faq_a3",
       "label": "Antwort 3",
       "type": "longtext",
-      "default": "Ihre Unterlagen verlassen nur mit Ihrer Zustimmung unser Haus – kein Arbeitgeber erfährt vorab von Ihrer Bewerbung."
+      "default": "Nein. Sie erhalten eine bezahlte Einarbeitung. Wichtig sind ein ruhiger Arbeitsplatz, Internet und Sorgfalt."
     },
     {
       "key": "faq_q4",
       "label": "Frage 4",
       "type": "text",
-      "default": "Wie schnell bekomme ich eine Rückmeldung?"
+      "default": "Wie viel verdiene ich?"
     },
     {
       "key": "faq_a4",
       "label": "Antwort 4",
       "type": "longtext",
-      "default": "Spätestens zwei Werktage nach Eingang Ihrer Unterlagen."
+      "default": "Sie erhalten 19–21 € pro Stunde in Festanstellung – als Minijob, in Teilzeit oder Vollzeit."
     },
     {
       "key": "faq_q5",
       "label": "Frage 5",
       "type": "text",
-      "default": "Bieten Sie nur Jobs in meiner Stadt an?"
+      "default": "Wann arbeite ich?"
     },
     {
       "key": "faq_a5",
       "label": "Antwort 5",
       "type": "longtext",
-      "default": "Schwerpunkt Süddeutschland – aber wir pflegen Kundenkontakt in ganz Deutschland und Österreich."
+      "default": "Sie teilen Ihre Zeit frei ein, an Werktagen zwischen 8 und 21 Uhr."
     },
     {
       "key": "faq_q6",
       "label": "Frage 6",
       "type": "text",
-      "default": "Kann ich mich direkt an ein Unternehmen wenden?"
+      "default": "Wer hilft mir bei Fragen?"
     },
     {
       "key": "faq_a6",
       "label": "Antwort 6",
       "type": "longtext",
-      "default": "Wir empfehlen unseren Weg: In unseren Kundenunternehmen sind wir als erster Ansprechpartner etabliert und kennen die unveröffentlichten Positionen."
+      "default": "Ihr persönlicher Teamleiter ist im Mitarbeiter-Portal per Chat erreichbar."
     },
     {
       "key": "kontakt_title",
@@ -629,7 +629,7 @@
       "key": "kontakt_intro",
       "label": "Kontakt: Einführung",
       "type": "longtext",
-      "default": "Sie erreichen uns telefonisch, per E-Mail oder persönlich vor Ort – am besten vereinbaren Sie vorher einen Termin."
+      "default": "Sie erreichen uns per E-Mail oder telefonisch – oder bewerben Sie sich direkt online."
     },
     {
       "key": "kontakt_image",
@@ -641,31 +641,31 @@
       "key": "kontakt_opening",
       "label": "Kontakt: Öffnungszeiten",
       "type": "longtext",
-      "default": "Mo – Fr: 08:00 – 17:00 Uhr\nTermine nach Vereinbarung"
+      "default": "Mo – Fr: 08:00 – 21:00 Uhr"
     },
     {
       "key": "kontakt_final_title",
       "label": "Kontakt: Abschluss-CTA Titel",
       "type": "text",
-      "default": "Lernen wir uns kennen."
+      "default": "Starten Sie bei uns."
     },
     {
       "key": "kontakt_final_text",
       "label": "Kontakt: Abschluss-CTA Text",
       "type": "longtext",
-      "default": "Oder bewerten Sie selbst: Bewerben Sie sich in fünf Minuten und wir melden uns."
+      "default": "Bewerben Sie sich in zwei Minuten – wir melden uns persönlich bei Ihnen."
     },
     {
       "key": "seo_title",
       "label": "SEO: Titel",
       "type": "text",
-      "default": "{{company_name}} — Executive Personalberatung"
+      "default": "{{company_name}} — Qualitätssicherung auf höchstem Niveau"
     },
     {
       "key": "seo_description",
       "label": "SEO: Beschreibung",
       "type": "longtext",
-      "default": "Personalvermittlung mit Herz: Direktvermittlung, Coaching und Beratung. Kostenfrei für Bewerber – unkompliziert und persönlich."
+      "default": "Fest angestellt im Homeoffice: Apps und Webseiten testen, 19–21 €/h, freie Zeiten von 8 bis 21 Uhr, bezahlte Einarbeitung."
     }
   ]
 }
