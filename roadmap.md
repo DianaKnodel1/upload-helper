@@ -1,5 +1,9 @@
 # Roadmap
 
+## Theme-Hinweis zur Bewerbungsdauer
+- [x] Gemeinsamen Hinweis aus der Button-Reihe entfernen und ohne weiße Kapsel in der Theme-Schrift darunter anzeigen.
+- [ ] Alle 15 Website-Themes am Desktop und Handy prüfen, Bewerbungsbutton weiterhin funktionsfähig.
+
 ## Bewerbungsgespräch: technische Fehler
 - [x] Verständlicher deutscher Hinweis statt roher Anbieter-Fehler, letzter Antworttext bleibt sichtbar, expliziter Wiederholungsbutton für Start/Nachricht/Abschluss.
 - [x] Start- und Nachrichtenfehler mit simuliertem Ausfall im Browser geprüft: Wiederholung erfolgreich, letzte Antwort nur einmal sichtbar, Hinweis verschwindet nach Erfolg; Build OK. Live-Anbieter nicht geprüft.
