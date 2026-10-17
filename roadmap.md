@@ -2,7 +2,7 @@
 
 ## Theme-Hinweis zur Bewerbungsdauer
 - [x] Gemeinsamen Hinweis aus der Button-Reihe entfernen und ohne weiße Kapsel in der Theme-Schrift darunter anzeigen.
-- [ ] Alle 15 Website-Themes am Desktop und Handy prüfen, Bewerbungsbutton weiterhin funktionsfähig.
+- [x] Alle 15 Website-Themes bei 1280/390 px im Browser geprüft: Hinweis unter Button-Gruppe, kein Überlauf, Bewerbungsmodal öffnet; 16 Inhaltstests erfolgreich, Build OK.
 
 ## Bewerbungsgespräch: technische Fehler
 - [x] Verständlicher deutscher Hinweis statt roher Anbieter-Fehler, letzter Antworttext bleibt sichtbar, expliziter Wiederholungsbutton für Start/Nachricht/Abschluss.
