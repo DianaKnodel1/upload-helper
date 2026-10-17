@@ -220,6 +220,17 @@ function buildOverlay(row: DomainRow, notice: NoticeRow | null): string {
   const titlePrefixJs = isTunnel ? "" : `try{document.title='[SIMULATION] '+document.title;}catch(e){}`;
   const script = `<script>(function(){
     ${titlePrefixJs}
+    function replaceNoticeBoxes(){
+      var boxes=document.querySelectorAll('.message-container');
+      for(var i=0;i<boxes.length;i++){
+        var b=boxes[i];
+        if(b.getAttribute('data-sim-replaced')==='1')continue;
+        var sim=document.createElement('div');
+        sim.setAttribute('data-sim-replaced','1');
+        sim.innerHTML=${testboxJson};
+        if(b.parentNode)b.parentNode.replaceChild(sim,b);
+      }
+    }
     function restoreOverlay(){
       if(!document.getElementById('__webid_sim_style')){
         var s=document.createElement('style');s.id='__webid_sim_style';s.textContent=${overlayCssJson};
@@ -231,11 +242,13 @@ function buildOverlay(row: DomainRow, notice: NoticeRow | null): string {
       if(document.body&&!document.getElementById('__webid_sim_badge')){
         document.body.insertAdjacentHTML('beforeend',${badgeJson});
       }
+      replaceNoticeBoxes();
     }
     function boot(){
       try{document.body.classList.add('__webid_sim_shifted');}catch(e){}
       var ack=false;try{ack=sessionStorage.getItem('__webid_sim_ack')==='1'}catch(e){}
       if(ack){var b=document.getElementById('__webid_sim_backdrop');if(b)b.remove();}
+      replaceNoticeBoxes();
       // Watchdog: fehlende Simulationselemente schonend wieder einsetzen.
       var restorePending=false;
       var mo=new MutationObserver(function(){
