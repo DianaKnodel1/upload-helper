@@ -149,7 +149,7 @@ const OVERLAY_CSS = `
   box-shadow:0 2px 8px rgba(0,0,0,.25) !important;pointer-events:auto !important;}
 #__webid_sim_topbar span{background:rgba(0,0,0,.6);padding:4px 10px;border-radius:4px;display:inline-block;}
 body.__webid_sim_shifted{padding-top:44px !important;}
-.message-container.callcenter.info{display:none !important;} /* Hinweis-Box der Original-Seite ausblenden (Fallback, falls Entfernung im HTML greift) */
+.message-container{display:none !important;} /* Hinweis-Box der Original-Seite ausblenden (Fallback, falls Ersetzung im Script greift) */
 #__webid_sim_badge{position:fixed !important;right:14px !important;bottom:14px !important;z-index:2147483646 !important;
   background:#fff !important;border:1px solid rgba(0,0,0,.1) !important;border-radius:10px !important;
   padding:8px 12px !important;box-shadow:0 6px 24px rgba(0,0,0,.15) !important;
@@ -180,6 +180,15 @@ function buildOverlay(row: DomainRow, notice: NoticeRow | null): string {
   const style = `<style id="__webid_sim_style">${OVERLAY_CSS}</style>`;
   const topbarEl = `<div id="__webid_sim_topbar" role="alert"><span>⚠ ${topbar}</span></div>`;
   const badgeEl = `<div id="__webid_sim_badge">${logoImg}<span>${badgeName}${badgeSuffix}</span></div>`;
+  // Ersetzt die Original-Hinweisbox (z. B. "App-Tester"-Warnung) durch einen neutralen Simulations-Hinweis.
+  const testboxHtml = `<div class="__webid_sim_testbox" style="margin:24px auto;max-width:1000px;background:#00a1e0;color:#fff;border-radius:4px;padding:28px 32px;display:flex;align-items:center;gap:28px;font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;box-sizing:border-box">
+    <span style="flex:0 0 auto;width:64px;height:64px;border:3px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700">!</span>
+    <div style="flex:1 1 auto">
+      <p style="margin:0 0 8px;font-weight:700;font-size:16px">Simulierter Test</p>
+      <p style="margin:0">Diese Identifikation ist ein simulierter Test zu Schulungszwecken. Es handelt sich nicht um eine echte Prüfung – es werden keine echten Identifikationsdaten verarbeitet.</p>
+    </div>
+    <button type="button" onclick="var b=this.closest('.__webid_sim_testbox');if(b)b.remove()" style="flex:0 0 auto;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.7);border-radius:4px;padding:8px 22px;font-size:14px;cursor:pointer">Weiter</button>
+  </div>`;
 
   // Meldung (Karte oben rechts) – global, sobald aktiv und Text vorhanden.
   let noticeEl = "";
