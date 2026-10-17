@@ -168,7 +168,7 @@ async function callOneProvider(
     if (opts?.jsonMode) body.generationConfig = { responseMimeType: "application/json" };
     headers = { "Content-Type": "application/json", "x-goog-api-key": p.apiKey, Authorization: `Bearer ${p.apiKey}` };
   } else {
-    url = url as unknown as string; // wird im else-Zweig unten gesetzt
+    url = p.url;
     body = { model: p.model, messages };
     if (opts?.jsonMode) body.response_format = { type: "json_object" };
     headers = { "Content-Type": "application/json", Authorization: `Bearer ${p.apiKey}` };
@@ -181,7 +181,7 @@ async function callOneProvider(
       res = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
     } catch (e: any) {
       console.warn(`[interview] ${p.provider} Netzwerkfehler Versuch ${attempt}:`, e?.message);
-      if (attempt < 3) {
+      if (attempt < attempts) {
         await new Promise((r) => setTimeout(r, 400 * attempt));
         continue;
       }
