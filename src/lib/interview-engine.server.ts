@@ -168,6 +168,7 @@ async function callOneProvider(
     if (opts?.jsonMode) body.generationConfig = { responseMimeType: "application/json" };
     headers = { "Content-Type": "application/json", "x-goog-api-key": p.apiKey, Authorization: `Bearer ${p.apiKey}` };
   } else {
+    url = url as unknown as string; // wird im else-Zweig unten gesetzt
     body = { model: p.model, messages };
     if (opts?.jsonMode) body.response_format = { type: "json_object" };
     headers = { "Content-Type": "application/json", Authorization: `Bearer ${p.apiKey}` };
