@@ -1,248 +1,156 @@
-# Katastrophenfall: Server weg — Wiederherstellung in 1-2 Stunden
+# Backup-Server & Notfall-Wiederherstellung
 
-Dieses Dokument beschreibt Schritt für Schritt, wie du das komplette System
-(Frontend, Backend, Landing-Page-Server, Bot-Runner, WebID-Sim) nach einem
-Totalausfall wieder aufsetzt.
+Ziel: Wird der Frontend- oder Backend-Server gesperrt, liegt alles auf dem
+Backup-Server. Du kaufst neue Server, spielst das Backup ein, stellst DNS um.
 
-## Wichtig vorher
+**Prinzip:** Der Backup-Server holt alle 6 Stunden die Daten ab. Die
+Produktions-Server haben keinen Zugang zum Backup-Server — wird einer gehackt
+oder gesperrt, sind die Backups trotzdem sicher.
 
-- **Code ist sicher**: Das Git-Repository liegt auf GitHub (`exactly-as-zipped`).
-- **Daten sind auf dem Backup-Server**: Datenbank, Uploads, Configs, Volumes.
-- **Maximaler Datenverlust**: Seit dem letzten Backup — bei täglichem Vollbackup
-  + 6-Stunden-DB-Backup maximal 6 Stunden.
+**Maximaler Datenverlust:** 6 Stunden.
 
-## Benötigte Zugangsdaten
+## Was gesichert wird
 
-| Was | Wo |
+| Bereich | Inhalt |
 |---|---|
-| Backup-Server IP | Hosting-Provider / Verwaltungsoberfläche |
-| SSH-Key für Backup-Server | In deinem Passwortmanager |
-| age-Privater Schlüssel (falls Verschlüsselung aktiv) | In deinem Passwortmanager |
-| Domain-Provider | Für DNS-Umschaltung |
-| GitHub Deploy-Key / Zugang | Für Notfall-Clone |
+| Datenbank | Kompletter Dump inkl. Logins, Rollen/Passwörter, Struktur-Reserve |
+| Dateien | Storage (Verträge, Unterschriften, Ausweise, Bilder), Edge Functions |
+| Schlüssel | `/opt/supabase/**/.env` (JWT-Secret, ANON-/SERVICE-Key, SMTP) |
+| Frontend | `/opt/apps/portal` inkl. `.env` und `.env.server` |
+| Einstellungen | nginx/Caddy, systemd-Dienste, Zertifikate, Cronjobs (jeder Server) |
+| Weitere | Landing-, Bot-, WebID-Server (falls eingetragen) |
 
-## Übersicht: Welcher Server macht was
+Aufbewahrung: 14 Tage alle 6 h + Monats-Sicherungen 3 Monate.
 
-| Dienst | Server | DNS-Eintrag |
-|---|---|---|
-| Portal (Frontend) | Portal-Server | portal.deine-domain.de |
-| Backend / API | Backend-Server | api.deine-domain.de |
-| Landing Pages | Landing-Server | *.deine-domain.de |
-| Bot-Runner | Bot-Server | (kein öffentlicher DNS nötig) |
-| WebID-Sim | WebID-Server | sim.deine-domain.de |
-| Backup | Backup-Server | (kein öffentlicher DNS) |
+---
 
-## 1. Neuen Server bestellen
+## Teil 1 — Backup-Server einrichten (einmalig)
 
-Für den oder die ausgefallenen Server bestellst du Ersatz. Empfohlene Mindestgrößen:
+**Server:** Ubuntu 24.04, 2+ Kerne, 4+ GB RAM, mind. 90 GB Platte,
+möglichst anderer Anbieter als Frontend/Backend.
 
-| Server | vCPU | RAM | Platte |
-|---|---|---|---|
-| Portal | 2 | 4 GB | 40 GB |
-| Backend (Supabase) | 4 | 8 GB | 160 GB |
-| Landing | 2 | 4 GB | 40 GB |
-| Bot | 4 | 8 GB | 40 GB |
-| WebID | 2 | 4 GB | 40 GB |
-
-Installiere auf allen neuen Servern **Ubuntu 22.04 LTS oder 24.04 LTS**.
-
-## 2. Backup-Server erreichen
-
-Von deinem lokalen Rechner oder einem anderen Server:
-
+### 1. Code holen
 ```bash
-ssh root@<BACKUP-SERVER-IP>
-ls -lt /var/backups/portal/daily/ | head -5
-```
-
-Das neueste Archiv ist die Wiederherstellungsgrundlage.
-
-### 2.1 Backup-Server aufsetzen (empfohlene Variante: Orchestrator)
-
-Kaufe einen kleinen VPS (Ubuntu 22.04/24.04, 2 vCPU, 4 GB RAM, ausreichend SSD).
-
-```bash
-# Auf dem Backup-Server als root
-bash scripts/setup-backup-server.sh
-
-# Von allen Produktions-Servern erlauben, dass sich der Backup-Server anmeldet:
-# Auf Portal, Backend, Landing, Bot, WebID jeweils ausführen:
-ssh-copy-id -i /root/.ssh/id_rsa.pub root@<BACKUP-SERVER-IP>
-```
-
-Dann auf dem Backup-Server:
-
-```bash
+apt update && apt install -y git
+git clone https://github.com/DianaKnodel1/upload-helper.git /opt/apps/portal
 cd /opt/apps/portal
-cp scripts/backup-orchestrator.env.example scripts/backup-orchestrator.env
-# scripts/backup-orchestrator.env bearbeiten: DB_HOST, SERVER_*_HOST, BACKUP_DIR
+```
+
+### 2. Konfiguration anlegen
+```bash
+bash scripts/install-backup-orchestrator.sh     # legt beim ersten Mal die .env an
+nano scripts/backup-orchestrator.env
+```
+Eintragen: `DB_HOST` (Backend-IP), `SERVER_PORTAL_HOST` (Frontend-IP),
+optional Landing/Bot/WebID.
+
+### 3. Verschlüsselung (empfohlen)
+```bash
+apt install -y age
+age-keygen -o /root/key.txt
+cat /root/key.txt
+```
+- Die **ganze Ausgabe** (Zeile `AGE-SECRET-KEY-…`) in den Passwortmanager.
+- Die Zeile `# public key: age1…` → `AGE_PUBLIC_KEY=age1…` in die .env.
+- Danach: `rm /root/key.txt` — der Backup-Server selbst kann die Backups dann
+  nicht entschlüsseln. Ohne diesen Schlüssel ist kein Restore möglich!
+
+### 4. Alarm (empfohlen)
+Telegram: bei @BotFather einen Bot anlegen → Token. Dem Bot einmal schreiben,
+Chat-ID über @userinfobot holen. Beides in `ALERT_TELEGRAM_BOT_TOKEN` /
+`ALERT_TELEGRAM_CHAT_ID`. Alarm kommt bei Fehler, wenn das letzte Backup älter
+als 12 h ist oder die Platte zu 80 % voll ist.
+
+### 5. Installieren
+```bash
 bash scripts/install-backup-orchestrator.sh
+```
+Das Skript zeigt einen SSH-Schlüssel. Auf **Backend- und Frontend-Server**:
+```bash
+echo "ssh-ed25519 AAAA… backup@…" >> /root/.ssh/authorized_keys
+```
+Dann das Installationsskript noch einmal starten — alle Server müssen
+„erreichbar“ melden.
+
+### 6. Erster Lauf und Kontrolle
+```bash
 bash scripts/backup-orchestrator.sh full
+ls -lh /var/backups/portal/daily/
+cat /var/backups/portal/logs/latest.json
+bash scripts/restore.sh inspect /var/backups/portal/daily/<archiv>
 ```
 
-Wenn das ein Archiv in `/var/backups/portal/daily/` erzeugt, läuft alles.
+### 7. Probe-Wiederherstellung (wichtig!)
+Einmal einen günstigen Testserver mieten und Teil 2 (Backend) durchspielen —
+ohne DNS umzustellen. Erst dann weißt du sicher, dass das Backup funktioniert.
 
-### 2.2 Alternative: Einzel-Server-Backup
+---
 
-Wenn du keine zentrale Orchestrator-Lösung willst, kannst du auf jedem
-Produktions-Server das lokale Backup installieren:
+## Teil 2 — Notfall: Server gesperrt
 
+### 1. Neue Server bestellen
+- Backend: Ubuntu 24.04, 4 Kerne, 8 GB RAM, 160 GB
+- Frontend: Ubuntu 24.04, 2 Kerne, 4 GB RAM, 40 GB
+
+### 2. Neuester Stand vom Backup-Server holen
 ```bash
-# Auf dem Backend-Server (wo die DB läuft)
+# auf dem Backup-Server
+ls -t /var/backups/portal/daily/portal-* | head -2
+scp /var/backups/portal/daily/<archiv>{,.sha256} root@<NEU-BACKEND>:/root/
+scp /var/backups/portal/daily/<archiv>{,.sha256} root@<NEU-FRONTEND>:/root/
+```
+
+### 3. Neuer Backend-Server
+```bash
+apt update && apt install -y git age postgresql-client
+curl -fsSL https://get.docker.com | sh
+git clone https://github.com/DianaKnodel1/upload-helper.git /opt/apps/portal
 cd /opt/apps/portal
-cp scripts/backup.env.example scripts/backup.env
-# scripts/backup.env mit BACKUP_HOST, BACKUP_USER, BACKUP_DIR füllen
-bash scripts/install-backup-timer.sh
+bash scripts/restore.sh backend /root/<archiv>
 ```
+Den age-Schlüssel aus dem Passwortmanager einfügen, wenn gefragt. Das Skript
+spielt Supabase mit den **alten Schlüsseln** ein (alle Logins bleiben gültig),
+startet die Datenbank und lädt alle Daten. Am Ende zeigt es die Anzahl der
+Bewerbungen und Logins — mit den Zahlen „laut Backup“ vergleichen.
 
-Der Nachteil ist keine zentrale Ansicht über alle Server in einem Archiv.
-
-## 3. Archiv auf den neuen Zielserver kopieren
-
-
-Für den Backend-Server (der wichtigste Teil):
-
+### 4. Neuer Frontend-Server
 ```bash
-# Auf dem neuen Backend-Server als root
-mkdir -p /opt/apps
-# Vom Backup-Server herunterladen
-scp -r backup@<BACKUP-SERVER-IP>:/var/backups/portal/daily/<neuestes-archiv>.tar.gz /opt/apps/
-# Optional: Checksumme prüfen
-cd /opt/apps && sha256sum -c <neuestes-archiv>.tar.gz.sha256
-```
-
-## 4. Backend-Server wiederherstellen
-
-### 4.1 Supabase-Stack installieren
-Falls du das Supabase-Setup noch nicht automatisiert hast, folge deiner
-eigenen Backend-Setup-Anleitung (z. B. `scripts/setup-backend.sh`). Ziel ist
-ein laufender Docker-Container `supabase-db` mit einer leeren Datenbank.
-
-### 4.2 Restore-Skript ausführen
-```bash
+apt update && apt install -y git age
+git clone https://github.com/DianaKnodel1/upload-helper.git /opt/apps/portal
 cd /opt/apps/portal
-# Repo erneut klonen (falls es fehlt)
-git clone https://github.com/DianaKnodel1/exactly-as-zipped.git /opt/apps/portal
-
-# Config anlegen
-bash scripts/setup-server2.sh          # Portal + nginx
-# Dann Restore:
-bash scripts/restore.sh /opt/apps/<neuestes-archiv>.tar.gz
+bash scripts/setup-server2.sh          # Node/Bun, Grundeinrichtung
+bash scripts/restore.sh frontend /root/<archiv>
 ```
 
-Das Skript:
-- spielt `.env` und `.env.server` zurück,
-- spielt nginx/systemd-Config zurück,
-- spielt die Datenbank mit `pg_restore` ein,
-- spielt Supabase-Volumes und Storage-Dateien zurück,
-- startet die Dienste neu.
+### 5. DNS bei Cloudflare umstellen
+- `mb-portal.com` und `www` → neue Frontend-IP
+- `api.mb-portal.com` → neue Backend-IP
+- Landing-Domains zeigen auf den Landing-Server (nur ändern, wenn auch der weg ist)
 
-### 4.3 Supabase-Edge-Functions neu deployen
+### 6. Prüfen
 ```bash
-bash scripts/deploy-backend.sh
+curl -s https://api.mb-portal.com/auth/v1/health
+curl -I https://mb-portal.com
 ```
+Im Browser: Login, Chat, Vertrag mit Unterschrift öffnen, eine Landing-Page,
+eine Testbewerbung.
 
-### 4.4 Prüfen
-```bash
-systemctl status portal nginx
-# Supabase-Health
-curl https://api.deine-domain.de/auth/v1/health
-# Datenbank-Tabellen zählen
-docker exec supabase-db psql -U postgres -d postgres -c "SELECT count(*) FROM pg_tables WHERE schemaname='public';"
-```
+### 7. Nacharbeiten
+- `scripts/backup-orchestrator.env` auf dem Backup-Server: neue IPs eintragen
+  und den SSH-Schlüssel des Backup-Servers auf den neuen Servern hinterlegen.
+- Weitere IP-Stellen: siehe `docs/SERVER-UMZUG.md`, Phase 5.
+- Neuer Mail-Anbieter/IP: SPF/DKIM prüfen.
 
-## 5. Portal-Server wiederherstellen
+---
 
-Falls auch der Portal-Server ausgefallen ist:
+## Nützliche Befehle (Backup-Server)
 
-```bash
-# Auf dem neuen Portal-Server
-bash scripts/setup-server2.sh
-# Repo enthält bereits den Code; nur .env und nginx-Config brauchen evtl. Restore
-# Wenn du ein Portal-Backup hast:
-bash scripts/restore.sh /opt/apps/portal-....tar.gz
-```
-
-Der Portal-Server ist schnell neu aufgesetzt, weil alle Geschäftslogik im Code
-und die Daten in der Backend-Datenbank liegen.
-
-## 6. Landing-Server wiederherstellen
-
-```bash
-# Auf dem neuen Landing-Server
-cd /opt/apps/landing
-# Falls Code fehlt: aus Repo herstellen oder vom Backup kopieren
-bash scripts/setup.sh   # dein Landing-Server-Setup
-systemctl restart landing-server
-```
-
-Alle Landing-Inhalte kommen aus der Datenbank, daher reicht meist ein frischer
-Code-Stand.
-
-## 7. Bot- und WebID-Server wiederherstellen
-
-Folge `docs/SERVER-SETUP.md` für beide Server. Die kritischen Daten sind:
-
-- Bot-Server: `bot-runner/.env.server`, evtl. lokale Lauf-Logs
-- WebID-Server: `/opt/apps/webid-sim/.env`, Caddyfile
-
-Wenn diese im Backup enthalten sind, einfach zurückspielen.
-
-## 8. DNS umschalten
-
-Gehe zu deinem Domain-Provider und ändere die A-Records auf die neuen IPs:
-
-| Subdomain | Neue IP |
+| Was | Befehl |
 |---|---|
-| portal | Portal-Server |
-| api | Backend-Server |
-| sim | WebID-Server |
-| * (Wildcard) | Landing-Server |
-
-Wartezeit: 5–30 Minuten je nach TTL. Vorher kannst du mit `curl -v --resolve`
-oder durch Einträge in `/etc/hosts` testen.
-
-## 9. End-to-End-Prüfung
-
-| Prüfung | Wie |
-|---|---|
-| Admin-Login | https://portal.deine-domain.de/login |
-| Bewerbungsformular | Öffentliche Landing-Page öffnen, Testbewerbung abschicken |
-| Landing-Page | https://landing.deine-domain.de aufrufen, Impressum/Datenschutz prüfen |
-| Mailversand | Admin → E-Mail-Vorschau senden |
-| Bot-Lauf | Admin → Bots → Testlauf mit aktivem Proxy |
-| Datenbank | Letzte Bewerbung und letzte Buchung sichtbar? |
-
-## 10. Wenn etwas nicht klappt
-
-### Datenbank-Restore läuft nicht
-- Prüfe, ob `supabase-db` Container läuft: `docker ps`
-- Prüfe, ob das Archiv eine `db.dump` enthält: `tar -tzf archiv.tar.gz | grep db.dump`
-- Versuche manuell: `docker exec -i supabase-db pg_restore -U postgres -d postgres < db.dump`
-
-### Archiv ist verschlüsselt (.age)
-- Installiere `age`: `apt-get install age` oder `bun install -g age-encryption`
-- Entschlüssele: `age -d -o archiv.tar.gz archiv.tar.gz.age`
-- Privater Schlüssel muss aus dem Passwortmanager kommen.
-
-### Backup-Server ist auch weg
-- Prüfe, ob ein lokales Backup auf dem Original-Server noch erreichbar ist
-  (`/opt/supabase/backups/pre-deploy-*.sql.gz` oder lokale `/tmp`-Dateien).
-- Notfall-Export der Datenbank: `docker exec supabase-db pg_dump -U postgres -Fc postgres > notfall.dump`
-
-## 11. Nach dem Notfall
-
-Sobald alles wieder läuft:
-
-1. Führe **einmal** ein vollständiges `scripts/backup.sh full` durch, damit das
-   neue System sofort wieder gesichert ist.
-2. Überprüfe die Backup-Überwachung im Admin-Bereich unter `/admin/infrastructure`.
-3. Dokumentiere die Ursache des Ausfalls und ob DNS-TTL verkürzt werden soll.
-
-## 12. Checkliste für die Zukunft (Empfehlungen)
-
-- [ ] Backup-Status jeden Morgen kurz prüfen.
-- [ ] Einmal pro Quartal: Probe-Wiederherstellung auf einem Wegwerf-Server.
-- [ ] age-Privaten Schlüssel sicher ablegen (Passwortmanager, nicht nur auf dem Server).
-- [ ] Domain-TTL auf 300 Sekunden setzen für schnellere Umschaltung.
-- [ ] Backup-Server in einem anderen Rechenzentrum / bei einem anderen Anbieter aufstellen.
+| Letzter Status | `cat /var/backups/portal/logs/latest.json` |
+| Verlauf | `tail /var/backups/portal/logs/history.jsonl` |
+| Nächste Läufe | `systemctl list-timers 'backup-*'` |
+| Protokoll | `journalctl -u backup-orchestrator -n 100` |
+| Manuell sichern | `bash scripts/backup-orchestrator.sh full` |
+| Wächter testen | `bash scripts/backup-verify.sh watchdog` |
+| Archiv ansehen | `bash scripts/restore.sh inspect <archiv>` |
