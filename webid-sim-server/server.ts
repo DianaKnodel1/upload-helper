@@ -216,6 +216,7 @@ function buildOverlay(row: DomainRow, notice: NoticeRow | null): string {
   const overlayCssJson = JSON.stringify(OVERLAY_CSS);
   const topbarJson = JSON.stringify(topbarEl);
   const badgeJson = JSON.stringify(badgeEl);
+  const testboxJson = JSON.stringify(testboxHtml);
   const titlePrefixJs = isTunnel ? "" : `try{document.title='[SIMULATION] '+document.title;}catch(e){}`;
   const script = `<script>(function(){
     ${titlePrefixJs}
