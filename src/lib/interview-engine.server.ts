@@ -104,7 +104,13 @@ export type InterviewContext = {
   brandingFirstName: string;
 };
 
-async function loadAiCreds(): Promise<{ apiKey: string; model: string; url: string; provider: string }> {
+type AiProvider = { apiKey: string; model: string; url: string; provider: string };
+
+/**
+ * Liest ALLE eingerichteten KI-Anbieter. Reihenfolge = Fallback-Reihenfolge:
+ * apinet.cloud zuerst, direkter Gemini-Zugang als Ausfall-Ersatz.
+ */
+async function loadAiProviders(): Promise<AiProvider[]> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("system_settings")
@@ -112,61 +118,126 @@ async function loadAiCreds(): Promise<{ apiKey: string; model: string; url: stri
     .eq("id", 1)
     .maybeSingle();
   if (error) throw new Error(`system_settings: ${error.message}`);
+  const providers: AiProvider[] = [];
   const apinetKey = (data as any)?.apinet_api_key?.trim();
   const geminiKey = (data as any)?.gemini_api_key?.trim();
   if (apinetKey) {
-    return { apiKey: apinetKey, model: (data as any)?.apinet_model?.trim() || DEFAULT_MODEL, url: APINET_URL, provider: "apinet" };
+    providers.push({
+      apiKey: apinetKey,
+      model: (data as any)?.apinet_model?.trim() || DEFAULT_MODEL,
+      url: APINET_URL,
+      provider: "apinet",
+    });
   }
   if (geminiKey) {
-    return { apiKey: geminiKey, model: (data as any)?.gemini_model?.trim() || DEFAULT_MODEL, url: GEMINI_URL, provider: "gemini" };
+    providers.push({
+      apiKey: geminiKey,
+      model: (data as any)?.gemini_model?.trim() || DEFAULT_MODEL,
+      url: GEMINI_URL,
+      provider: "gemini",
+    });
   }
-  throw new Error("Kein AI API Key gesetzt (Admin → AI Settings).");
+  if (providers.length === 0) throw new Error("Kein AI API Key gesetzt (Admin → AI Settings).");
+  return providers;
 }
 
-export async function callGateway(
+async function callOneProvider(
+  p: AiProvider,
   messages: Array<{ role: string; content: string }>,
   opts?: { jsonMode?: boolean },
+  attempts = 3,
 ): Promise<string> {
-  const { apiKey, model, url, provider } = await loadAiCreds();
-  const isApinetNativeGemini = provider === "apinet" && /^gemini-/i.test(model);
+  const isApinetNativeGemini = p.provider === "apinet" && /^gemini-/i.test(p.model);
+
+  let url: string;
+  let body: any;
+  let headers: Record<string, string>;
 
   if (isApinetNativeGemini) {
     const systemMsgs = messages.filter((m) => m.role === "system").map((m) => m.content).join("\n\n");
     const contents = messages
       .filter((m) => m.role !== "system")
       .map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
+    // Native Gemini akzeptiert keinen Request, der nur aus system_instruction besteht.
     if (contents.length === 0) {
       contents.push({ role: "user", parts: [{ text: "Bitte beginne nun." }] });
     }
-    const nativeUrl = `https://apinet.cloud/v1beta/models/${encodeURIComponent(model)}:generateContent`;
-    const body: any = { contents };
+    url = `https://apinet.cloud/v1beta/models/${encodeURIComponent(p.model)}:generateContent`;
+    body = { contents };
     if (systemMsgs) body.system_instruction = { parts: [{ text: systemMsgs }] };
     if (opts?.jsonMode) body.generationConfig = { responseMimeType: "application/json" };
-    const res = await fetch(nativeUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey, Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`apinet-gemini ${res.status}: ${(await res.text()).slice(0, 400)}`);
-    const data = (await res.json()) as any;
-    const parts = data?.candidates?.[0]?.content?.parts;
-    const text = Array.isArray(parts) ? parts.map((p: any) => p?.text ?? "").join("") : "";
-    if (!text) throw new Error("Keine AI-Antwort (apinet-gemini)");
-    return text;
+    headers = { "Content-Type": "application/json", "x-goog-api-key": p.apiKey, Authorization: `Bearer ${p.apiKey}` };
+  } else {
+    url = p.url;
+    body = { model: p.model, messages };
+    if (opts?.jsonMode) body.response_format = { type: "json_object" };
+    headers = { "Content-Type": "application/json", Authorization: `Bearer ${p.apiKey}` };
   }
 
-  const body: any = { model, messages };
-  if (opts?.jsonMode) body.response_format = { type: "json_object" };
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`${provider} ${res.status}: ${(await res.text()).slice(0, 400)}`);
-  const data = (await res.json()) as any;
-  const content = data?.choices?.[0]?.message?.content;
-  if (typeof content !== "string") throw new Error("Keine AI-Antwort");
-  return content;
+  // Retry bei transienten 5xx / 429 / Netzwerkproblemen (z.B. apinet upstream_timeout).
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    let res: Response;
+    try {
+      res = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
+    } catch (e: any) {
+      console.warn(`[interview] ${p.provider} Netzwerkfehler Versuch ${attempt}:`, e?.message);
+      if (attempt < attempts) {
+        await new Promise((r) => setTimeout(r, 400 * attempt));
+        continue;
+      }
+      throw new Error(`${p.provider} network: ${e?.message ?? "fetch failed"}`);
+    }
+    if (res.ok) {
+      const data = (await res.json()) as any;
+      if (isApinetNativeGemini) {
+        const parts = data?.candidates?.[0]?.content?.parts;
+        const text = Array.isArray(parts) ? parts.map((x: any) => x?.text ?? "").join("") : "";
+        if (!text) throw new Error("empty_ai_response");
+        return text;
+      }
+      const content = data?.choices?.[0]?.message?.content;
+      if (typeof content !== "string" || !content) throw new Error("empty_ai_response");
+      return content;
+    }
+    if (res.status < 500 && res.status !== 429) {
+      // Nicht wiederholbar (z.B. 401/400) — weitergeben, damit der Fallback-Anbieter greift.
+      throw new Error(`${p.provider} ${res.status}: ${(await res.text()).slice(0, 300)}`);
+    }
+    const errTxt = (await res.text()).slice(0, 200);
+    console.warn(`[interview] ${p.provider} ${res.status} Versuch ${attempt}: ${errTxt}`);
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 400 * attempt));
+    else throw new Error(`upstream_unavailable:${res.status}`);
+  }
+  throw new Error("upstream_unreachable");
+}
+
+/**
+ * Ruft das KI-Modell auf. Fällt apinet.cloud automatisch auf den direkten
+ * Gemini-Zugang zurück, wenn der erste Anbieter dauerhaft nicht antwortet.
+ */
+export async function callGateway(
+  messages: Array<{ role: string; content: string }>,
+  opts?: { jsonMode?: boolean },
+): Promise<string> {
+  const providers = await loadAiProviders();
+  let lastErr: unknown;
+  for (const p of providers) {
+    try {
+      // Solange ein Ersatzanbieter verfügbar ist, nicht alle 3 Versuche am
+      // ersten Anbieter hängen — sonst läuft die Gesamtzeit ins 100-Sekunden-Limit.
+      const attempts = providers.length > 1 && p !== providers[providers.length - 1] ? 2 : 3;
+      return await callOneProvider(p, messages, opts, attempts);
+    } catch (e) {
+      lastErr = e;
+      console.error(
+        `[interview] Anbieter ${p.provider} (${p.model}) fehlgeschlagen` +
+          `${providers.length > 1 ? " — nächster Anbieter wird versucht" : ""}:`,
+        (e as any)?.message,
+      );
+      if (providers.length > 1) await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error(String(lastErr));
 }
 
 /** Holt das JSON-Objekt aus einer Modellantwort (Codeblöcke/Vortext tolerant). */
