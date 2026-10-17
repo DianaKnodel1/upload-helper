@@ -1,5 +1,10 @@
 # Roadmap
 
+## Bewerbungsgespräch: technische Fehler
+- [x] Verständlicher deutscher Hinweis statt roher Anbieter-Fehler, letzter Antworttext bleibt sichtbar, expliziter Wiederholungsbutton für Start/Nachricht/Abschluss.
+- [x] Start- und Nachrichtenfehler mit simuliertem Ausfall im Browser geprüft: Wiederholung erfolgreich, letzte Antwort nur einmal sichtbar, Hinweis verschwindet nach Erfolg; Build OK. Live-Anbieter nicht geprüft.
+- [ ] Live-Übernahme durch Server-Deploy des Users.
+
 ## Aktiv: Landing-Generator Theme-Überarbeitung (Plan genehmigt 2026-09-29)
 - [x] Deckblatt „Login & Status" im Chat an Kollegen senden
 - [x] 6 neue Themes anlegen (corporate-consulting, modern-business, minimal-professional, executive-premium, human-business, digital-professional) — je eigenes Layout/Hero/Typo/Bilder/CTA + eigener Formular-Abschnitt (nur Optik) + meta.json-Slots
