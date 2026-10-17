@@ -145,6 +145,7 @@ async function callOneProvider(
   p: AiProvider,
   messages: Array<{ role: string; content: string }>,
   opts?: { jsonMode?: boolean },
+  attempts = 3,
 ): Promise<string> {
   const isApinetNativeGemini = p.provider === "apinet" && /^gemini-/i.test(p.model);
 
@@ -173,7 +174,7 @@ async function callOneProvider(
   }
 
   // Retry bei transienten 5xx / 429 / Netzwerkproblemen (z.B. apinet upstream_timeout).
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
     let res: Response;
     try {
       res = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
