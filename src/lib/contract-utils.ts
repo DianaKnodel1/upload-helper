@@ -11,13 +11,13 @@ const EMPLOYMENT_LABELS: Record<string, string> = {
 // damit Platzhalter wie {{weekly_hours}} / {{monthly_salary}} nicht leer bleiben.
 const DEFAULT_WEEKLY_HOURS: Record<string, string> = {
   minijob: "10",
-  teilzeit: "20",
+  teilzeit: "25",
   vollzeit: "40",
 };
 const DEFAULT_MONTHLY_SALARY: Record<string, string> = {
-  minijob: "556,00 €",
-  teilzeit: "1.200,00 €",
-  vollzeit: "2.400,00 €",
+  minijob: "603,00 €",
+  teilzeit: "2.042,00 €",
+  vollzeit: "3.051,00 €",
 };
 
 interface ContractData {

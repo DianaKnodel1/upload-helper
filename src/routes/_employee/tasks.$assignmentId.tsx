@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_employee/tasks/$assignmentId")({
+  head: () => ({ meta: [
+    { title: "Auftrag bearbeiten | Mitarbeiter Portal" },
+    { name: "description", content: "Auftrag bearbeiten, Ergebnisse dokumentieren und zur Prüfung einreichen." },
+    { property: "og:title", content: "Auftrag bearbeiten | Mitarbeiter Portal" },
+    { property: "og:description", content: "Auftragsbearbeitung und Einreichung im Mitarbeiterportal." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: TaskWizardPage,
 });
 
@@ -28,6 +36,7 @@ import { TaskSmsMessages } from "@/components/TaskSmsMessages";
 import { AssignmentIndividualDataView } from "@/components/AssignmentIndividualDataView";
 import { WebIdTaskCard, type WebIdStatus } from "@/components/WebIdTaskCard";
 import { useWebIdEnabled } from "@/lib/webid";
+import { TaskSubmitButton } from "@/components/TaskSubmitButton";
 
 interface TaskTemplate {
   id: string; title: string; description: string;
@@ -452,7 +461,7 @@ function TaskWizardPage() {
   const stepHasFeedback = (stepNum: number) => feedbackForStep(stepNum).length > 0;
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)]">
+    <div className="flex min-h-[calc(100vh-3.5rem)]" translate="no">
       {/* Main content (left) */}
       <div className="flex-1 flex flex-col overflow-auto min-w-0 order-1">
         {/* Mobile header */}
@@ -706,17 +715,7 @@ function TaskWizardPage() {
                 </CardContent>
               </Card>
 
-              <Button
-                onClick={submitTask}
-                disabled={submitting}
-                className="w-full h-12 gap-2 text-sm font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]"
-              >
-                {submitting ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Wird eingereicht…</>
-                ) : (
-                  <><Send className="h-4 w-4" /> Auftrag einreichen</>
-                )}
-              </Button>
+              <TaskSubmitButton submitting={submitting} onSubmit={submitTask} />
             </div>
           )}
 

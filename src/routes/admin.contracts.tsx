@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/contracts")({
+  head: () => ({ meta: [
+    { title: "Vertragsvorlagen | Mitarbeiter Portal" },
+    { name: "description", content: "Arbeitsvertragsvorlagen für Minijob, Teilzeit und Vollzeit verwalten." },
+    { property: "og:title", content: "Vertragsvorlagen | Mitarbeiter Portal" },
+    { property: "og:description", content: "Arbeitsverträge und Firmenvorlagen verwalten." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: AdminContractsPage,
 });
 
@@ -550,12 +558,12 @@ function AdminContractsPage() {
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="standard">Standardvertrag (Home-Office / auftragsbezogen)</SelectItem>
+                    <SelectItem value="standard">Standardvertrag (Stand Oktober 2026)</SelectItem>
                     <SelectItem value="kurz">Kurzfassung (alt)</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-[11px] text-muted-foreground mt-1">
-                  Der Standardtext passt sich der gewählten Beschäftigungsart an (§ 3 / § 4) und kann anschließend frei angepasst werden.
+                  Die jeweilige Vorlage für Minijob, Teilzeit oder Vollzeit kann anschließend frei angepasst werden.
                 </p>
               </div>
             )}
