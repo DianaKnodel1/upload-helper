@@ -1,5 +1,10 @@
 # Roadmap
 
+## Auftragsabgabe und Vertragsvorlagen (2026-10-19)
+- [ ] DOM-Absturz beim Einreichen von Aufträgen untersuchen und gezielt absichern.
+- [ ] Angefügte Minijob-, Teilzeit- und Vollzeitverträge als gemeinsame Standardvorlagen übernehmen; Firmen- und Mitarbeiterdaten dynamisch einsetzen.
+- [ ] Vertragsregeln und Auftragsabgabe prüfen; Live-Prüfung und Übernahme bestehender Firmenvorlagen klar abgrenzen.
+
 ## Theme-Hinweis zur Bewerbungsdauer
 - [x] Gemeinsamen Hinweis aus der Button-Reihe entfernen und ohne weiße Kapsel in der Theme-Schrift darunter anzeigen.
 - [x] Alle 15 Website-Themes bei 1280/390 px im Browser geprüft: Hinweis unter Button-Gruppe, kein Überlauf, Bewerbungsmodal öffnet; 16 Inhaltstests erfolgreich, Build OK.
