@@ -92,8 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Mitarbeiter Portal" },
       { name: "twitter:description", content: "Mitarbeiter Portal – Onboarding, Verträge und Aufgaben." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/93683cac-4228-4811-ae37-053923953794/id-preview-d827c772--fa88f943-4c6c-4bcd-879c-8da8715a8a38.lovable.app-1780170908926.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/93683cac-4228-4811-ae37-053923953794/id-preview-d827c772--fa88f943-4c6c-4bcd-879c-8da8715a8a38.lovable.app-1780170908926.png" },
+      { name: "google", content: "notranslate" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -117,7 +116,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="de" translate="no">
       <head>
         <HeadContent />
       </head>

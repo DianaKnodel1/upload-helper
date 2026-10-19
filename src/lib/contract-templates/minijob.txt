@@ -1,0 +1,80 @@
+ARBEITSVERTRAG für geringfügige Beschäftigung (Minijob) im Homeoffice
+zwischen
+
+{{company_name}}
+{{company_address}}
+
+vertreten durch den Geschäftsführer {{company_ceo_name}}
+– nachfolgend „Arbeitgeber“ –
+
+und
+
+{{first_name}} {{last_name}}
+{{address}}
+– nachfolgend „Arbeitnehmer“ –
+
+wird folgender Arbeitsvertrag geschlossen:
+§ 1 Beginn des Arbeitsverhältnisses
+Das Arbeitsverhältnis beginnt am {{start_date}} und wird auf unbestimmte Zeit geschlossen.
+Die ersten drei Monate gelten als Probezeit im Sinne von § 622 Abs. 3 BGB.
+Die Beschäftigung erfolgt als geringfügige Beschäftigung (Minijob) gemäß § 8 Abs. 1 Nr. 1 SGB IV.
+§ 2 Tätigkeit
+Der Arbeitnehmer wird als Mitarbeiter im Homeoffice (m/w/d) im Bereich digitale Studien und Prozessanalysen beschäftigt.
+Zu seinen Aufgaben gehören insbesondere die Durchführung und Bearbeitung digitaler Studien im Auftrag von Kunden und Geschäftspartnern, die Analyse und Dokumentation von Registrierungs-, Identifikations- und Verifizierungsprozessen, das Testen digitaler Abläufe, Anwendungen, Plattformen und Benutzerprozesse, die Bewertung von Sicherheits-, Verifikations- und Qualitätsmaßnahmen, die Erfassung, Auswertung und Dokumentation von Testergebnissen, die Erstellung strukturierter Berichte, Fragebögen und Feedbackdokumentationen sowie die Identifikation von Optimierungspotenzialen hinsichtlich Benutzerfreundlichkeit, Sicherheit und Prozessqualität. Der Arbeitnehmer unterstützt zudem bei internen Qualitäts- und Verbesserungsmaßnahmen sowie bei sonstigen dem Tätigkeitsbereich entsprechenden und zumutbaren Aufgaben.
+Sämtliche Studien, Tests und Analysen gemäß Abs. 2 erfolgen ausschließlich in Test-, Demo- oder Sandbox-Umgebungen der jeweiligen Kunden und Geschäftspartner bzw. unter Verwendung hierfür vom Arbeitgeber bereitgestellter Zugänge. Die Verwendung eigener oder fremder personenbezogener Konten, Ausweisdokumente oder Zahlungsmittel im Rahmen der Tätigkeit ist nicht gestattet und nicht Gegenstand dieses Vertrages.
+Der Arbeitnehmer verpflichtet sich, die übertragenen Aufgaben sorgfältig, gewissenhaft und entsprechend den Vorgaben des Arbeitgebers auszuführen.
+Der Arbeitgeber ist berechtigt, dem Arbeitnehmer andere gleichwertige und zumutbare Tätigkeiten zuzuweisen, die seinen Kenntnissen und Fähigkeiten entsprechen.
+§ 3 Arbeitsort
+Die Tätigkeit wird grundsätzlich im Homeoffice ausgeübt.
+Der Arbeitnehmer stellt sicher, dass die Arbeitsumgebung den Anforderungen an Vertraulichkeit, Datenschutz und störungsfreies Arbeiten entspricht.
+Ein Anspruch auf einen Arbeitsplatz in den Geschäftsräumen des Arbeitgebers besteht nicht.
+§ 4 Arbeitszeit
+Die regelmäßige Arbeitszeit wird so bemessen, dass die in § 5 vereinbarte Vergütung die jeweils geltende monatliche Verdienstgrenze für geringfügige Beschäftigungen nicht überschreitet. Auf Basis des aktuellen Standes (Stand 2026: gesetzlicher Mindestlohn 13,90 €, Verdienstgrenze 603,00 €) entspricht dies einer durchschnittlichen Arbeitszeit von ca. 10 Stunden pro Woche (ca. 43 Stunden pro Monat).
+Die Arbeitszeit wird flexibel nach betrieblichem Bedarf und in Abstimmung mit dem Arbeitgeber innerhalb der Werktage Montag bis Samstag erbracht. Ändert sich der gesetzliche Mindestlohn oder die Verdienstgrenze für geringfügige Beschäftigungen, passt sich die zulässige Arbeitszeit entsprechend automatisch an, ohne dass es einer Vertragsänderung bedarf.
+Die tatsächliche monatliche Arbeitszeit kann schwanken, darf jedoch im Durchschnitt nicht dazu führen, dass die jeweils geltende monatliche oder jährliche Verdienstgrenze überschritten wird, soweit dies nicht ausnahmsweise gesetzlich zulässig ist.
+Beginn, Ende und Dauer der täglichen Arbeitszeit sind vollständig und wahrheitsgemäß zu erfassen und dem Arbeitgeber monatlich zu übermitteln.
+Überstunden dürfen nur nach vorheriger Zustimmung des Arbeitgebers geleistet werden und sind durch Freizeitausgleich innerhalb desselben oder des folgenden Kalendermonats auszugleichen, soweit eine gesonderte Vergütung nicht vereinbart wird.
+§ 5 Vergütung
+Der Arbeitnehmer erhält für seine Tätigkeit eine Vergütung in Höhe des jeweils geltenden gesetzlichen Mindestlohns pro Stunde nach dem Mindestlohngesetz (MiLoG). Auf Basis des aktuellen Standes (Stand 2026: 13,90 € brutto pro Stunde) entspricht dies bei der in § 4 genannten Arbeitszeit einer monatlichen Vergütung von durchschnittlich ca. 603,00 € brutto. Erhöht sich der gesetzliche Mindestlohn, erhöht sich die Vergütung automatisch entsprechend, ohne dass es einer Vertragsänderung bedarf.
+Die Auszahlung erfolgt jeweils zum letzten Bankarbeitstag des Monats auf das vom Arbeitnehmer benannte Konto.
+Mit der Vergütung sind nur solche Mehrarbeiten abgegolten, die im Rahmen der geringfügigen Beschäftigung zulässig und vom Arbeitgeber genehmigt sind.
+Sonderzahlungen, Prämien oder Weihnachtsgeld werden nur aufgrund einer gesonderten schriftlichen Vereinbarung gewährt; dabei ist die jährliche Verdienstgrenze für geringfügige Beschäftigungen zu berücksichtigen.
+§ 6 Urlaub
+Der Arbeitnehmer hat bei einer Verteilung der Arbeitszeit auf 5 Arbeitstage pro Woche Anspruch auf 20 Arbeitstage Erholungsurlaub pro Kalenderjahr (gesetzlicher Mindesturlaub gemäß Bundesurlaubsgesetz). Bei einer abweichenden Anzahl wöchentlicher Arbeitstage wird der Urlaubsanspruch entsprechend umgerechnet.
+Urlaub ist unter Berücksichtigung der betrieblichen Erfordernisse rechtzeitig mit dem Arbeitgeber abzustimmen.
+§ 7 Arbeitsunfähigkeit
+Jede Arbeitsunfähigkeit und deren voraussichtliche Dauer sind dem Arbeitgeber unverzüglich mitzuteilen.
+Spätestens am vierten Kalendertag der Arbeitsunfähigkeit ist eine ärztliche Bescheinigung vorzulegen. Der Arbeitgeber ist berechtigt, die Vorlage früher zu verlangen. Im Übrigen gelten die gesetzlichen Bestimmungen, insbesondere des Entgeltfortzahlungsgesetzes (EFZG).
+§ 8 Datenschutz und Verschwiegenheit
+Der Arbeitnehmer verpflichtet sich zur Einhaltung aller geltenden Datenschutzvorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO) und des Bundesdatenschutzgesetzes (BDSG).
+Alle betrieblichen, geschäftlichen und personenbezogenen Informationen sind streng vertraulich zu behandeln.
+Diese Verpflichtung gilt auch nach Beendigung des Arbeitsverhältnisses fort.
+§ 9 Arbeitsmittel
+Soweit erforderlich, stellt der Arbeitgeber die für die Tätigkeit notwendigen Arbeitsmittel zur Verfügung. Alle überlassenen Arbeitsmittel bleiben Eigentum des Arbeitgebers.
+Der Arbeitnehmer verpflichtet sich zu sorgfältigem Umgang, zur sicheren Verwahrung und zum Schutz vor unbefugtem Zugriff Dritter. Eine private Nutzung der Arbeitsmittel ist nur mit ausdrücklicher Zustimmung des Arbeitgebers erlaubt.
+Bei Beendigung des Arbeitsverhältnisses sind sämtliche überlassenen Arbeitsmittel sowie alle Zugangsdaten unverzüglich, spätestens zum letzten Arbeitstag, zurückzugeben.
+§ 10 Nebentätigkeit
+Jede entgeltliche Nebentätigkeit ist dem Arbeitgeber vor Aufnahme schriftlich anzuzeigen.
+Nebentätigkeiten sind zulässig, soweit berechtigte Interessen des Arbeitgebers nicht beeinträchtigt werden, gesetzliche Vorschriften eingehalten werden und die für geringfügige Beschäftigungen geltenden Verdienst- und Zeitgrenzen unter Einbeziehung etwaiger weiterer Beschäftigungen nicht überschritten werden.
+§ 11 Krankheit, Arbeitsverhinderung und Erreichbarkeit
+Arbeitsverhinderungen sind dem Arbeitgeber unverzüglich mitzuteilen.
+Der Arbeitnehmer ist während der vereinbarten Arbeitszeiten in angemessener Weise erreichbar.
+§ 12 Sozialversicherung
+Der Arbeitgeber meldet den Arbeitnehmer entsprechend den gesetzlichen Vorschriften zur geringfügigen Beschäftigung bei der Minijob-Zentrale an und entrichtet die hierfür vorgesehenen Pauschalabgaben.
+Der Arbeitnehmer unterliegt grundsätzlich der Rentenversicherungspflicht mit einem Eigenanteil in gesetzlicher Höhe. Er kann sich hiervon auf schriftlichen Antrag gegenüber dem Arbeitgeber befreien lassen; in diesem Fall entfällt der Eigenanteil.
+§ 13 Probezeit und Kündigung
+Während der Probezeit (§ 1) kann das Arbeitsverhältnis von beiden Seiten mit einer Frist von zwei Wochen ohne Angabe von Gründen gekündigt werden (§ 622 Abs. 3 BGB).
+Nach Ablauf der Probezeit gelten die gesetzlichen Kündigungsfristen gemäß § 622 BGB.
+Jede Kündigung bedarf zu ihrer Wirksamkeit der Schriftform (§ 623 BGB); die elektronische Form ist ausgeschlossen.
+§ 14 Haftung
+Der Arbeitnehmer haftet für Schäden, die er in Ausübung seiner Tätigkeit verursacht, nur im Rahmen der von der Rechtsprechung entwickelten Grundsätze zur Arbeitnehmerhaftung.
+Bei leichter Fahrlässigkeit ist die Haftung des Arbeitnehmers ausgeschlossen. Bei mittlerer Fahrlässigkeit erfolgt eine Schadensteilung entsprechend den Umständen des Einzelfalls. Bei grober Fahrlässigkeit und Vorsatz haftet der Arbeitnehmer grundsätzlich in vollem Umfang.
+§ 15 Schlussbestimmungen
+Änderungen und Ergänzungen dieses Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Dies gilt auch für eine Änderung oder Aufhebung dieses Schriftformerfordernisses selbst.
+Sollten einzelne Bestimmungen dieses Vertrages unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen hiervon unberührt. Die Parteien verpflichten sich, die unwirksame Bestimmung durch eine wirksame Regelung zu ersetzen, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung möglichst nahekommt.
+Es gilt das Recht der Bundesrepublik Deutschland. Ein gesonderter Gerichtsstand wird nicht vereinbart, soweit gesetzlich unzulässig.
+Ort, Datum: {{city}}, {{date}}
+____________________________
+Arbeitgeber: {{company_ceo_name}}
+____________________________
+Arbeitnehmer: {{first_name}} {{last_name}}

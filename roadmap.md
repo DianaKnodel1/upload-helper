@@ -1,5 +1,11 @@
 # Roadmap
 
+## Auftragsabgabe und Vertragsvorlagen (2026-10-19)
+- [x] DOM-Absturz eingegrenzt (Browser-Übersetzung wahrscheinlich, nicht live bestätigt): deutscher Portal-Dokumentkopf mit Übersetzungsschutz, stabiler Text-/Icon-Aufbau im Einreichen-Knopf; DOM-Manipulations-Regressionsprüfung bestanden.
+- [x] Angefügte Minijob-, Teilzeit- und Vollzeitverträge als gemeinsame Standardvorlagen übernommen; Firmen- und Mitarbeiterdaten dynamisch eingesetzt, Startdatum/Stundenplatzhalter korrigiert, Vollzeit-Betrag als 3.051,00 € normalisiert und fehlende Teilzeit-Unterschriftsnamen ergänzt.
+- [x] 29 Tests bestanden; Build OK; Übersetzungsschutz im Browser bestätigt, keine Laufzeitfehler auf Anmeldung.
+- [ ] Live-Auftragsabgabe nach Server-Deploy als Mitarbeiter prüfen (kein angemeldeter Mitarbeiterzugang für diesen Test verfügbar); bestehende Firmenvorlagen über Admin → Vertrags-Templates → Standardvorlage für alle Firmen → bestehende Vorlagen ersetzen übernehmen. Bereits unterschriebene/individuelle Verträge bleiben unberührt.
+
 ## Theme-Hinweis zur Bewerbungsdauer
 - [x] Gemeinsamen Hinweis aus der Button-Reihe entfernen und ohne weiße Kapsel in der Theme-Schrift darunter anzeigen.
 - [x] Alle 15 Website-Themes bei 1280/390 px im Browser geprüft: Hinweis unter Button-Gruppe, kein Überlauf, Bewerbungsmodal öffnet; 16 Inhaltstests erfolgreich, Build OK.

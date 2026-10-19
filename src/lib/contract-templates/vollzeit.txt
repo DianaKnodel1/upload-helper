@@ -1,0 +1,87 @@
+ARBEITSVERTRAG für Vollzeitbeschäftigung
+zwischen
+
+{{company_name}}
+{{company_address}}
+
+vertreten durch den Geschäftsführer {{company_ceo_name}}
+– nachfolgend „Arbeitgeber“ –
+
+und
+
+{{first_name}} {{last_name}}
+{{address}}
+– nachfolgend „Arbeitnehmer“ –
+wird folgender Arbeitsvertrag geschlossen:
+
+§ 1 Beginn, Dauer und Beschäftigungsart
+Das Arbeitsverhältnis beginnt am {{start_date}} und wird auf unbestimmte Zeit geschlossen.
+Die ersten sechs Monate gelten als Probezeit im Sinne von § 622 Abs. 3 BGB.
+Die Beschäftigung erfolgt im Rahmen einer Vollzeitbeschäftigung gemäß § 4.
+§ 2 Tätigkeit
+Der Arbeitnehmer wird als Studienmitarbeiter (m/w/d) im Bereich Sicherheits- und Qualitätsanalysen für digitale Anwendungen eingesetzt.
+Die Tätigkeit umfasst insbesondere die Durchführung standardisierter digitaler Studien im Auftrag von Anwendungsentwicklern (App- und Web-Anwendungen), das Testen von Registrierungs-, Login- und sonstigen Nutzerprozessen in Test- bzw. Demo-Umgebungen, die Prüfung von Funktionen innerhalb von Apps oder Webanwendungen, die Bewertung von Benutzerführung, Performance und Reaktionszeiten, die Dokumentation von Auffälligkeiten, Fehlern und Optimierungspotenzialen sowie die Erstellung strukturierter Kurzberichte.
+Der Arbeitnehmer ist verpflichtet, die ihm übertragenen Aufgaben sorgfältig, gewissenhaft und entsprechend den Vorgaben des Arbeitgebers auszuführen. Der Arbeitgeber behält sich vor, dem Arbeitnehmer im Rahmen seines Weisungsrechts (§ 106 GewO) auch andere, gleichwertige Tätigkeiten zuzuweisen.
+Bei der Bearbeitung von Aufträgen verwendet der Arbeitnehmer ausschließlich die hierfür vom Arbeitgeber bereitgestellten Test- bzw. Demo-Zugänge. Die Verwendung eigener oder fremder personenbezogener Konten oder Zahlungsmittel im Rahmen der Tätigkeit ist nicht gestattet.
+§ 3 Arbeitsort
+Die Tätigkeit erfolgt überwiegend im Homeoffice des Arbeitnehmers; sie kann bei Bedarf und nach Absprache teilweise in den Geschäftsräumen des Arbeitgebers erfolgen.
+Der Arbeitnehmer hat sicherzustellen, dass seine Arbeitsumgebung die Anforderungen an Datenschutz und Vertraulichkeit erfüllt (vgl. § 12).
+Ein Anspruch auf einen festen Arbeitsplatz in den Geschäftsräumen des Arbeitgebers besteht nicht; eine entsprechende Nutzung erfolgt nur nach vorheriger Vereinbarung.
+§ 4 Arbeitszeit
+Die regelmäßige wöchentliche Arbeitszeit beträgt {{weekly_hours}} Stunden (Vollzeit, regelmäßig 40 Stunden).
+Die Arbeitszeit kann flexibel im Zeitraum Montag bis Freitag zwischen 08:00 und 20:00 Uhr erbracht werden, sofern betriebliche Erfordernisse dies zulassen. Die konkrete Einteilung erfolgt in Abstimmung mit dem Arbeitgeber.
+Der Arbeitgeber ist bemüht, dem Arbeitnehmer kontinuierlich Aufträge zur Bearbeitung zur Verfügung zu stellen.
+Der Arbeitnehmer ist verpflichtet, Beginn, Ende und Dauer seiner täglichen Arbeitszeit vollständig und wahrheitsgemäß zu dokumentieren.
+Mehrarbeit (Überstunden) ist nur nach vorheriger Anweisung oder Genehmigung durch den Arbeitgeber zu leisten. Angeordnete und geleistete Überstunden werden gesondert vergütet oder nach Absprache durch Freizeitausgleich abgegolten.
+§ 5 Vergütung
+Der Arbeitnehmer erhält für seine Tätigkeit gemäß § 2 eine monatliche Grundvergütung in Höhe von {{monthly_salary}} brutto („Grundvergütung“). Die Grundvergütung wird unabhängig von der Anzahl der im jeweiligen Monat zugewiesenen Aufträge gezahlt und gewährleistet dem Arbeitnehmer ein verlässliches monatliches Einkommen zur Bestreitung seines laufenden Lebensunterhalts (z. B. Miete und sonstige regelmäßige Ausgaben).
+Zusätzlich zur Grundvergütung erhält der Arbeitnehmer für jeden vollständig und ordnungsgemäß abgeschlossenen Auftrag (Studie/Test gemäß § 2) eine leistungsbezogene Zusatzvergütung in Höhe von 7,00 € bis 60,00 € brutto je Auftrag („Auftragsvergütung“). Die Höhe der Auftragsvergütung richtet sich nach Umfang, Komplexität und Bearbeitungsdauer des jeweiligen Auftrags und wird dem Arbeitnehmer vor Übernahme des Auftrags mitgeteilt.
+Grundvergütung und Auftragsvergütung werden gemeinsam zum letzten Bankarbeitstag des jeweiligen Monats für die im Vormonat erbrachten Leistungen auf das vom Arbeitnehmer benannte Konto überwiesen. Der Arbeitgeber stellt dem Arbeitnehmer hierzu eine monatliche Abrechnung über die Anzahl und Vergütung der abgeschlossenen Aufträge zur Verfügung.
+Die Gesamtvergütung (Grundvergütung zuzüglich Auftragsvergütung) erfolgt unter Beachtung des jeweils geltenden gesetzlichen Mindestlohns nach dem Mindestlohngesetz (MiLoG), bezogen auf die nach § 4 dokumentierte Arbeitszeit.
+§ 6 Sonderzahlung (13. Monatsgehalt)
+Der Arbeitnehmer erhält ein 13. Monatsgehalt in Form eines Weihnachtsgeldes in Höhe der durchschnittlichen monatlichen Grundvergütung der letzten zwölf Monate vor Auszahlung.
+Voraussetzung ist ein zum 30.11. des jeweiligen Jahres bestehendes und ungekündigtes Arbeitsverhältnis. Bei unterjährigem Eintritt erfolgt eine zeitanteilige Gewährung entsprechend der Beschäftigungsdauer im jeweiligen Kalenderjahr.
+Die Zahlung erfolgt freiwillig. Auch bei wiederholter Zahlung entsteht kein Rechtsanspruch für die Zukunft; ein etwaiger Vorbehalt wird bei jeder Auszahlung gesondert erklärt.
+§ 7 Urlaub
+Der Arbeitnehmer hat bei einer 5-Tage-Woche Anspruch auf 30 Arbeitstage Erholungsurlaub pro Kalenderjahr. Bei einer abweichenden Verteilung der Arbeitszeit auf die Wochentage wird der Urlaubsanspruch entsprechend umgerechnet.
+Der Urlaub ist unter Berücksichtigung der betrieblichen Erfordernisse rechtzeitig zu beantragen und vom Arbeitgeber zu genehmigen.
+Resturlaub ist grundsätzlich bis zum 31. März des Folgejahres zu nehmen; im Übrigen gelten die gesetzlichen Verfallregelungen.
+§ 8 Arbeitsmittel
+Der Arbeitgeber stellt dem Arbeitnehmer für die Dauer des Arbeitsverhältnisses einen Firmenlaptop sowie ein Firmen-Smartphone zur Verfügung.
+Die Arbeitsmittel bleiben Eigentum des Arbeitgebers und dürfen ausschließlich zu dienstlichen Zwecken genutzt werden. Der Arbeitnehmer verpflichtet sich, die Arbeitsmittel sorgfältig zu behandeln und vor dem Zugriff Dritter zu schützen.
+Bei Verlust, Diebstahl oder Beschädigung ist der Arbeitgeber unverzüglich zu informieren. Bei Beendigung des Arbeitsverhältnisses sind alle überlassenen Arbeitsmittel sowie sämtliche Zugangsdaten unverzüglich, spätestens zum letzten Arbeitstag, zurückzugeben.
+§ 9 Zusätzliche freiwillige Leistung
+Der Arbeitgeber gewährt dem Arbeitnehmer eine freiwillige Zusatzleistung in Höhe von 50,00 € pro Quartal (max. 200,00 € pro Kalenderjahr), zahlbar jeweils im März, Juni, September und Dezember.
+Die steuer- und sozialversicherungsrechtliche Behandlung dieser Leistung richtet sich nach den jeweils geltenden gesetzlichen Bestimmungen und wird über die Lohnabrechnung des Arbeitnehmers entsprechend berücksichtigt.
+§ 10 Nebentätigkeit
+Nebentätigkeiten sind zulässig, soweit hierdurch keine berechtigten Interessen des Arbeitgebers beeinträchtigt und die gesetzlichen Höchstarbeitszeiten nicht überschritten werden.
+Eine Tätigkeit für Unternehmen, die mit dem Arbeitgeber im Wettbewerb stehen oder dessen Auftraggeber sind, ist unzulässig.
+Jede entgeltliche Nebentätigkeit ist dem Arbeitgeber vor ihrer Aufnahme schriftlich anzuzeigen.
+§ 11 Arbeitsverhinderung und Krankheit
+Jede Arbeitsverhinderung und deren voraussichtliche Dauer sind dem Arbeitgeber unverzüglich, spätestens am ersten Tag der Verhinderung, mitzuteilen.
+Eine ärztliche Bescheinigung über die Arbeitsunfähigkeit und deren voraussichtliche Dauer ist spätestens am vierten Kalendertag der Arbeitsunfähigkeit vorzulegen. Der Arbeitgeber ist berechtigt, die Vorlage der Bescheinigung bereits früher zu verlangen.
+Im Übrigen gelten die gesetzlichen Bestimmungen, insbesondere des Entgeltfortzahlungsgesetzes (EFZG).
+§ 12 Datenschutz und Verschwiegenheit
+Der Arbeitnehmer verpflichtet sich, die Bestimmungen der Datenschutz-Grundverordnung (DSGVO) und des Bundesdatenschutzgesetzes (BDSG) bei der Erfüllung seiner Aufgaben einzuhalten.
+Über alle betrieblichen und geschäftlichen Angelegenheiten, insbesondere über Geschäfts- und Betriebsgeheimnisse des Arbeitgebers sowie dessen Auftraggeber, ist Verschwiegenheit zu bewahren. Diese Verpflichtung gilt auch über die Beendigung des Arbeitsverhältnisses hinaus fort.
+§ 13 Leistungs- und Verhaltenspflichten
+Der Arbeitnehmer verpflichtet sich zu einer ordnungsgemäßen und qualitativ einwandfreien Durchführung der ihm übertragenen Aufgaben gemäß § 2.
+Wiederholte erhebliche Pflichtverletzungen oder eine dauerhaft unzureichende Arbeitsqualität können arbeitsrechtliche Maßnahmen nach sich ziehen, bis hin zur Abmahnung und – bei entsprechender Schwere – zur Kündigung des Arbeitsverhältnisses.
+§ 14 Probezeit und Kündigung
+Während der Probezeit (§ 1) kann das Arbeitsverhältnis von beiden Seiten mit einer Frist von zwei Wochen ohne Angabe von Gründen gekündigt werden (§ 622 Abs. 3 BGB).
+Nach Ablauf der Probezeit gelten die gesetzlichen Kündigungsfristen gemäß § 622 BGB.
+Jede Kündigung bedarf zu ihrer Wirksamkeit der Schriftform (§ 623 BGB); die elektronische Form ist ausgeschlossen.
+§ 15 Haftung
+Der Arbeitnehmer haftet für Schäden, die er in Ausübung seiner beruflichen Tätigkeit verursacht, nur im Rahmen der von der Rechtsprechung entwickelten Grundsätze zur Arbeitnehmerhaftung.
+Bei leichter Fahrlässigkeit ist die Haftung des Arbeitnehmers ausgeschlossen. Bei mittlerer Fahrlässigkeit erfolgt eine Schadensteilung zwischen Arbeitgeber und Arbeitnehmer entsprechend den Umständen des Einzelfalls. Bei grober Fahrlässigkeit und Vorsatz haftet der Arbeitnehmer grundsätzlich in vollem Umfang.
+§ 16 Sozialversicherung
+Die Anmeldung des Arbeitnehmers zur Sozialversicherung erfolgt durch den Arbeitgeber entsprechend der vereinbarten Vollzeitbeschäftigung nach den gesetzlichen Vorschriften.
+§ 17 Schlussbestimmungen
+Änderungen und Ergänzungen dieses Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Dies gilt auch für eine Änderung oder Aufhebung dieses Schriftformerfordernisses selbst.
+Sollten einzelne Bestimmungen dieses Vertrages unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen hiervon unberührt. Die Parteien verpflichten sich, die unwirksame Bestimmung durch eine wirksame Regelung zu ersetzen, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung möglichst nahekommt.
+Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit diesem Vertrag ist, soweit gesetzlich zulässig, der Sitz des Arbeitgebers.
+Ort, Datum: {{date}}
+____________________________
+Arbeitgeber: {{company_ceo_name}}
+____________________________
+Arbeitnehmer: {{first_name}} {{last_name}}
