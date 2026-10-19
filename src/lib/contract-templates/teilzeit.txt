@@ -1,0 +1,130 @@
+ARBEITSVERTRAG
+für Teilzeitbeschäftigung im Homeoffice
+
+zwischen
+
+{{company_name}}
+{{company_address}}
+
+vertreten durch den Geschäftsführer {{company_ceo_name}}
+– nachfolgend Arbeitgeber –
+
+und
+
+{{first_name}} {{last_name}}
+{{address}}
+– nachfolgend Arbeitnehmer –
+
+wird folgender Arbeitsvertrag geschlossen:
+
+
+§1 Beginn des Arbeitsverhältnisses
+
+Das Arbeitsverhältnis beginnt am {{start_date}} und wird auf unbestimmte Zeit geschlossen.
+
+Die ersten 3 Monate gelten als Probezeit, in der beiderseits eine Kündigungsfrist von zwei Wochen gilt (§ 622 Abs. 3 BGB).
+
+Die Beschäftigung erfolgt als Teilzeitbeschäftigung im Umfang von ca. 25 Stunden pro Woche (im Monatsdurchschnitt ca. 108 Stunden).
+
+
+§2 Tätigkeit
+
+Der Arbeitnehmer wird als Mitarbeiter im Homeoffice (m/w/d) im Bereich digitale Studien und Prozessanalysen beschäftigt.
+
+Die Tätigkeit umfasst die Durchführung und Bearbeitung digitaler Studien im Auftrag von Kunden und Geschäftspartnern sowie die Analyse, Dokumentation und Bewertung von Registrierungs-, Identifikations- und Verifizierungsprozessen auf den jeweiligen Plattformen der Auftraggeber. Der Arbeitnehmer testet digitale Abläufe, Anwendungen und Benutzerprozesse, bewertet Sicherheits-, Verifikations- und Qualitätsmaßnahmen und dokumentiert die Ergebnisse in strukturierten Berichten, Fragebögen und Feedbackdokumentationen. Zur Gewährleistung realitätsnaher Testergebnisse kann der Arbeitnehmer im Rahmen einzelner Studien verpflichtet sein, sich unter Verwendung eigener personenbezogener Daten auf den zu testenden Plattformen der Auftraggeber zu registrieren; die Nutzung personenbezogener Daten Dritter, fremder Konten oder Zahlungsmittel ist ausdrücklich untersagt. Darüber hinaus identifiziert der Arbeitnehmer Optimierungspotenziale hinsichtlich Benutzerfreundlichkeit, Sicherheit und Prozessqualität und unterstützt bei internen Qualitäts- und Verbesserungsmaßnahmen. Weitere gleichwertige und zumutbare Aufgaben können vom Arbeitgeber zugewiesen werden.
+
+Der Arbeitnehmer verpflichtet sich, die übertragenen Aufgaben sorgfältig und gewissenhaft auszuführen.
+
+
+§3 Arbeitsort
+
+Die Tätigkeit wird grundsätzlich im Homeoffice ausgeübt. Der Arbeitnehmer stellt sicher, dass die Arbeitsumgebung den Anforderungen an Datenschutz, Vertraulichkeit und störungsfreies Arbeiten entspricht. Ein Anspruch auf einen Arbeitsplatz in den Geschäftsräumen des Arbeitgebers besteht nicht.
+
+
+§4 Arbeitszeit
+
+Die regelmäßige Arbeitszeit beträgt ca. 25 Stunden pro Woche (im Monatsdurchschnitt ca. 108 Stunden). Maßgeblich für die Vergütungsberechnung und die Prüfung des Mindestlohns ist die monatliche Durchschnittsstundenzahl von 108 Stunden.
+
+Die Arbeitszeit wird flexibel nach betrieblichem Bedarf und in Abstimmung mit dem Arbeitgeber festgelegt. Beginn, Ende und Dauer der täglichen Arbeitszeit sind vollständig und wahrheitsgemäß zu erfassen. Überstunden dürfen nur nach vorheriger schriftlicher Zustimmung des Arbeitgebers geleistet werden.
+
+
+§5 Vergütung
+
+Der Arbeitnehmer erhält eine monatliche Bruttovergütung in Höhe von {{monthly_salary}} bei einer vereinbarten monatlichen Arbeitszeit von ca. 108 Stunden.
+
+Die Vergütung wird jeweils zum vereinbarten Auszahlungstermin auf das vom Arbeitnehmer benannte Konto überwiesen.
+
+Zusätzlich können auftragsbezogene Vergütungen gemäß den jeweils geltenden betrieblichen Regelungen gewährt werden.
+
+Zusätzlich zur monatlichen Grundvergütung wird jeder abgeschlossene Auftrag gesondert vergütet. Die Vergütung je Auftrag beträgt je nach Umfang und Komplexität zwischen 7,00 € und 60,00 € brutto. Die konkrete Höhe der Auftragsvergütung wird dem Arbeitnehmer vor Annahme des jeweiligen Auftrags mitgeteilt. Die Auszahlung der Auftragsvergütungen erfolgt zusammen mit der monatlichen Grundvergütung zum letzten Bankarbeitstag des Monats.
+
+Das Arbeitsverhältnis ist sozialversicherungspflichtig. Der Arbeitgeber meldet den Arbeitnehmer entsprechend der vereinbarten Teilzeitbeschäftigung bei den zuständigen Sozialversicherungsträgern an und führt die Arbeitgeberbeiträge zur Renten-, Kranken-, Pflege- und Arbeitslosenversicherung ab.
+
+Die Auszahlung erfolgt jeweils zum letzten Bankarbeitstag des Monats auf das vom Arbeitnehmer benannte Konto. Sonderzahlungen, Prämien oder Weihnachtsgeld werden nur aufgrund einer gesonderten schriftlichen Vereinbarung gewährt.
+
+
+§6 Urlaub
+
+Der Arbeitnehmer hat bei einer Fünf-Tage-Woche Anspruch auf 28 Arbeitstage bezahlten Erholungsurlaub pro Kalenderjahr. Bei einer abweichenden Verteilung der Arbeitszeit auf mehr oder weniger Wochentage wird die Anzahl der Urlaubstage anteilig angepasst (Berechnungsformel: Urlaubsanspruch = 28 × vereinbarte Arbeitstage pro Woche ÷ 5). Im Jahr des Ein- oder Austritts entsteht der Urlaubsanspruch anteilig.
+
+Urlaub ist rechtzeitig mit dem Arbeitgeber abzustimmen. Urlaub, der bis zum 31. März des Folgejahres nicht genommen wurde, verfällt, sofern der Arbeitgeber den Arbeitnehmer rechtzeitig auf den drohenden Verfall hingewiesen hat.
+
+
+§7 Arbeitsunfähigkeit
+
+Jede Arbeitsunfähigkeit ist unverzüglich, spätestens zu Beginn der Arbeitszeit am ersten Krankheitstag, dem Arbeitgeber mitzuteilen. Ab dem vierten Kalendertag ist eine ärztliche Bescheinigung vorzulegen; der Arbeitgeber kann die Vorlage bereits ab dem ersten Krankheitstag verlangen.
+
+Dauert die Arbeitsunfähigkeit länger als in der Bescheinigung angegeben, ist eine Folgebescheinigung umgehend nachzureichen.
+
+
+§8 Datenschutz und Verschwiegenheit
+
+Der Arbeitnehmer verpflichtet sich zur strikten Einhaltung aller geltenden Datenschutzvorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO) und des Bundesdatenschutzgesetzes (BDSG). Alle betrieblichen, geschäftlichen und personenbezogenen Informationen – einschließlich Kundendaten, Studieninhalte, Auftraggeber-Informationen und interne Prozessabläufe – sind als vertraulich zu behandeln und dürfen weder während noch nach Beendigung des Arbeitsverhältnisses an Dritte weitergegeben werden.
+
+Verstöße gegen Datenschutz- oder Vertraulichkeitspflichten können zur fristlosen Kündigung und zu Schadensersatzansprüchen führen.
+
+
+§9 Arbeitsmittel
+
+Der Arbeitgeber stellt dem Arbeitnehmer die zur Ausübung der Tätigkeit erforderlichen Arbeitsmittel bereit. Alle bereitgestellten Arbeitsmittel bleiben Eigentum des Arbeitgebers. Der Arbeitnehmer ist zu sorgfältigem Umgang verpflichtet und hat die Arbeitsmittel vor unbefugtem Zugriff Dritter zu schützen. Eine private Nutzung ist nur mit ausdrücklicher schriftlicher Zustimmung des Arbeitgebers gestattet. Bei Beendigung des Arbeitsverhältnisses sind alle Arbeitsmittel unverzüglich und vollständig an den Arbeitgeber zurückzugeben.
+
+
+§10 Nebentätigkeit
+
+Entgeltliche Nebentätigkeiten sind vor Aufnahme dem Arbeitgeber schriftlich anzuzeigen. Sie sind zulässig, sofern sie berechtigte Interessen des Arbeitgebers nicht beeinträchtigen, insbesondere keine Konkurrenztätigkeit darstellen, und gesetzliche Vorschriften eingehalten werden.
+
+
+§11 Erreichbarkeit und Arbeitsverhinderung
+
+Der Arbeitnehmer ist während der vereinbarten Arbeitszeiten für den Arbeitgeber erreichbar. Arbeitsverhinderungen aus sonstigen Gründen sind unverzüglich mitzuteilen, sobald der Arbeitnehmer davon Kenntnis erlangt.
+
+
+§12 Probezeit und Kündigung
+
+Während der Probezeit (§ 1) beträgt die Kündigungsfrist für beide Seiten zwei Wochen (§ 622 Abs. 3 BGB).
+
+Nach Ablauf der Probezeit gelten die gesetzlichen Kündigungsfristen gemäß § 622 BGB. Die Kündigung des Arbeitsverhältnisses bedarf zu ihrer Wirksamkeit der Schriftform (§ 623 BGB); eine Kündigung per E-Mail oder SMS ist ausgeschlossen.
+
+Das Recht zur außerordentlichen fristlosen Kündigung aus wichtigem Grund (§ 626 BGB) bleibt unberührt.
+
+
+§13 Haftung
+
+Der Arbeitnehmer haftet für Schäden, die er dem Arbeitgeber im Rahmen seiner Tätigkeit zufügt, nur im Rahmen der gesetzlichen Vorschriften und nach folgendem abgestuften Maßstab: Bei leichter Fahrlässigkeit haftet der Arbeitnehmer nicht; bei mittlerer Fahrlässigkeit wird die Haftung zwischen Arbeitgeber und Arbeitnehmer anteilig geteilt, wobei insbesondere das Verhältnis von Vergütung und Schadensrisiko zu berücksichtigen ist; bei grober Fahrlässigkeit und Vorsatz haftet der Arbeitnehmer in vollem Umfang.
+
+Für Schäden, die dem Arbeitnehmer bei der Arbeit entstehen, haftet der Arbeitgeber nach den allgemeinen gesetzlichen Bestimmungen.
+
+
+§14 Schlussbestimmungen
+
+Änderungen und Ergänzungen dieses Vertrages bedürfen der Schriftform; dies gilt auch für die Aufhebung des Schriftformerfordernisses selbst.
+
+Sollten einzelne Bestimmungen dieses Vertrages ganz oder teilweise unwirksam oder undurchführbar sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen hiervon unberührt. Anstelle der unwirksamen Bestimmung gilt diejenige wirksame Regelung als vereinbart, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung am nächsten kommt.
+
+Es gilt ausschließlich deutsches Recht. Erfüllungsort und Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz des Arbeitgebers.
+
+
+____________________________
+Arbeitgeber: {{company_ceo_name}}
+____________________________
+Arbeitnehmer: {{first_name}} {{last_name}}
