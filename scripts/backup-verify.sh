@@ -27,7 +27,8 @@ check_dump() {
   fi
   if [ -n "$toc" ]; then
     for t in "public applications" "public profiles" "auth users" "storage objects"; do
-      echo "$toc" | grep -q "TABLE DATA ${t% *} ${t#* }" || { echo "✗ Tabelle ${t/ /.} fehlt im Dump" >&2; return 1; }
+      # here-string statt Pipe: mit pipefail würde "echo | grep -q" bei großem Inhalt per SIGPIPE scheitern
+      grep -q "TABLE DATA ${t% *} ${t#* }" <<<"$toc" || { echo "✗ Tabelle ${t/ /.} fehlt im Dump" >&2; return 1; }
     done
   else
     echo "  · pg_restore nicht verfügbar — nur Kopf geprüft" >&2
