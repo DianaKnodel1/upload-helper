@@ -129,7 +129,7 @@ pull_server() {
   fi
 }
 pull_server frontend "${SERVER_PORTAL_HOST:-}"  /opt/apps/portal
-pull_server landing  "${SERVER_LANDING_HOST:-}" /opt/apps/landing
+pull_server landing  "${SERVER_LANDING_HOST:-}" "${SERVER_LANDING_DIR:-/opt/landing-server}"
 pull_server bot      "${SERVER_BOT_HOST:-}"     /opt/apps
 pull_server webid    "${SERVER_WEBID_HOST:-}"   /opt/apps/webid-sim
 # Einheitlicher Pfad für restore.sh
