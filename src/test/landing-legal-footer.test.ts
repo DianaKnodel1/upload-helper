@@ -16,8 +16,8 @@ expect(footerStart).toBeGreaterThan(stripStart);
 expect(footerEnd).toBeGreaterThan(footerStart);
 const code = serverSrc.slice(stripStart, footerEnd);
 const sandbox: Record<string, unknown> = {};
-vm.runInNewContext(code + "\nmodule = { exports: {} }; module.exports = { injectTrustFooter, themeFooterHasLegalLinks, stripThemeLegalLinks };", sandbox);
-const { injectTrustFooter } = sandbox.module as { injectTrustFooter: (html: string, b: Record<string, string>) => string };
+vm.runInNewContext(code + "\nglobalThis.__out = { injectTrustFooter, themeFooterHasLegalLinks, stripThemeLegalLinks };", sandbox);
+const { injectTrustFooter } = sandbox.__out as { injectTrustFooter: (html: string, b: Record<string, string>) => string };
 
 const dir = join(__dirname, "..", "landing-themes");
 const themes = readdirSync(dir).filter((d) => !d.startsWith("_"));
