@@ -6,8 +6,6 @@ if (typeof window !== "undefined") {
     writable: true,
     value: () => {},
   });
-}
-
 
   Object.defineProperty(window, "matchMedia", {
     writable: true,
@@ -23,4 +21,3 @@ if (typeof window !== "undefined") {
     }),
   });
 }
-
