@@ -267,28 +267,22 @@ function stripThemeLegalLinks(html: string): string {
   });
 }
 
-// Erkennt, ob das Theme bereits einen vollwertigen, mehrspaltigen Footer mit
-// Impressum-/Datenschutz-Links hat. Dann wird KEIN zweiter großer Footer
-// angehängt, sondern nur eine schmale Anbieterkennzeichnungs-Leiste.
-function hasRichThemeFooter(html: string): boolean {
+// Prüft, ob das Theme im eigenen Footer bereits Impressum UND Datenschutz
+// verlinkt. Dann wird gar kein zusätzlicher Footer angehängt — sonst erschien
+// der blaue Standard-Footer doppelt unter dem Theme-Footer.
+function themeFooterHasLegalLinks(html: string): boolean {
   const m = html.match(/<footer[\s\S]*?<\/footer>/i);
-  if (!m) return false;
-  const f = m[0];
-  const hasLegal = /Impressum/i.test(f) && /Datenschutz/i.test(f);
-  const headings = (f.match(/<h[1-4][\s>]/gi) || []).length;
-  return hasLegal && headings >= 3;
+  return Boolean(m && /Impressum/i.test(m[0]) && /Datenschutz/i.test(m[0]));
 }
 
-// Injiziert einen professionellen Trust-Footer (Impressum, Kontakt, Rechtliches)
-// VOR </body> in jedes Theme — überschreibt nichts, ergänzt nur. Wird
-// unterdrückt, wenn das Template bereits {{legal_block}} enthält (dort hat
-// das Theme die Anbieterkennzeichnung schon eingebaut).
+// Themes ohne eigene Rechtslinks erhalten nur eine schmale Rechtsleiste,
+// damit kein zweiter großer Footer unter dem Theme-Footer steht.
 function injectTrustFooter(html: string, b: z.infer<typeof BrandingSchema>): string {
   if (/lv-legal-block/.test(html)) return html; // schon vorhanden
-  const richFooter = hasRichThemeFooter(html);
-  if (!richFooter) html = stripThemeLegalLinks(html);
+  if (themeFooterHasLegalLinks(html)) return html;
+  html = stripThemeLegalLinks(html);
   const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => (
-    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!
+    { "&amp;": "&amp;", "&lt;": "&lt;", "&gt;": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!
   ));
   const plzStadt = [b.plz, b.stadt].filter(Boolean).join(" ");
   const regLine = [
@@ -296,73 +290,25 @@ function injectTrustFooter(html: string, b: z.infer<typeof BrandingSchema>): str
     b.hrb ? `HRB ${esc(b.hrb)}` : "",
   ].filter(Boolean).join(", ");
   const legalItems: string[] = [];
-  if (b.firmenname) legalItems.push(`<strong>${esc(b.firmenname)}</strong>`);
+  if (b.firmenname) legalItems.push(esc(b.firmenname));
   if (b.strasse) legalItems.push(esc(b.strasse));
   if (plzStadt) legalItems.push(esc(plzStadt));
   if (b.geschaeftsfuehrer) legalItems.push(`Geschäftsführung: ${esc(b.geschaeftsfuehrer)}`);
   if (regLine) legalItems.push(regLine);
   if (b.ust_id) legalItems.push(`USt-IdNr.: ${esc(b.ust_id)}`);
   else if (b.steuernummer) legalItems.push(`Steuernummer: ${esc(b.steuernummer)}`);
-  const contactItems: string[] = [];
-  if (b.telefon) contactItems.push(`<a href="tel:${esc(b.telefon)}" style="color:inherit;text-decoration:none;font-weight:600;">${esc(b.telefon)}</a>`);
-  if (b.email) contactItems.push(`<a href="mailto:${esc(b.email)}" style="color:inherit;text-decoration:none;">${esc(b.email)}</a>`);
-  const addrHtml = [b.strasse, plzStadt].filter(Boolean).map(esc).join("<br/>");
-  const year = new Date().getFullYear();
-  const linkStyle = "color:#e2e8f0;text-decoration:none;";
-  const headStyle = "font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:16px;";
-  const claim = b.flow_type === "fast"
-    ? "Schnell, digital und persönlich begleitet — von der Bewerbung bis zum Start."
-    : "Ihre Personalvermittlung — wir bringen Sie mit passenden Partnerunternehmen zusammen.";
-  // Theme hat bereits einen vollständigen Footer → nur schmale Rechtsleiste,
-  // damit nicht zwei Footer untereinander stehen.
-  if (richFooter) {
-    const slim = `
+  const slim = `
 <section class="lv-legal-bar lv-legal-block" style="background:#0b1220;color:#94a3b8;padding:18px 24px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:12.5px;line-height:1.8;">
   <div style="max-width:1180px;margin:0 auto;text-align:center;">
-    <div style="color:#cbd5e1;">${legalItems.join(" &middot; ").replace(/<strong>|<\/strong>/g, "")}</div>
+    <div style="color:#cbd5e1;">${legalItems.join(" &middot; ")}</div>
     <div style="margin-top:6px;">Die Übertragung Ihrer Bewerbungsdaten erfolgt TLS-verschlüsselt. &middot; <a href="impressum.html" style="color:inherit;">Impressum</a> &middot; <a href="datenschutz.html" style="color:inherit;">Datenschutzerklärung</a></div>
   </div>
 </section>`;
-    if (/<\/footer>/i.test(html)) return html.replace(/<\/footer>/i, "</footer>" + slim);
-    if (/<\/body>/i.test(html)) return html.replace(/<\/body>/i, slim + "\n</body>");
-    return html + slim;
-  }
-  const block = `
-<section class="lv-trust-footer lv-legal-block" style="background:#0f172a;color:#e2e8f0;padding:64px 24px 32px;margin-top:64px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
-  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;">
-    <div>
-      <div style="font-size:20px;font-weight:800;color:#f8fafc;margin-bottom:12px;">${esc(b.firmenname)}</div>
-      <div style="font-size:14.5px;line-height:1.75;color:#cbd5e1;max-width:280px;">${esc(claim)}</div>
-    </div>
-    <div>
-      <div style="${headStyle}">Kontakt</div>
-      ${addrHtml ? `<div style="font-size:14px;line-height:1.7;color:#cbd5e1;margin-bottom:12px;">${addrHtml}</div>` : ""}
-      ${contactItems.length ? `<div style="font-size:15px;line-height:1.9;color:#f8fafc;">${contactItems.join("<br/>")}</div>` : ""}
-    </div>
-    <div>
-      <div style="${headStyle}">Nützliche Links</div>
-      <ul style="list-style:none;padding:0;margin:0;font-size:14.5px;line-height:2;">
-        <li><a href="#top" style="${linkStyle}">Startseite</a></li>
-        <li><a href="#bewerbung-form" style="${linkStyle}">Jetzt bewerben</a></li>
-        <li><a href="impressum.html" style="${linkStyle}">Impressum</a></li>
-        <li><a href="datenschutz.html" style="${linkStyle}">Datenschutzerklärung</a></li>
-      </ul>
-    </div>
-    <div>
-      <div style="${headStyle}">Anbieterkennzeichnung</div>
-      <div style="font-size:14.5px;line-height:1.8;color:#e2e8f0;">${legalItems.join("<br/>")}</div>
-      <div style="margin-top:18px;font-size:13px;line-height:1.7;color:#94a3b8;">
-        Die Übertragung Ihrer Bewerbungsdaten erfolgt TLS-verschlüsselt. Die Verarbeitung richtet sich nach unserer Datenschutzerklärung.
-      </div>
-    </div>
-  </div>
-  <div style="max-width:1180px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(226,232,240,.1);font-size:12.5px;color:#94a3b8;text-align:center;">
-    © ${year} ${esc(b.firmenname)}. Alle Rechte vorbehalten.
-  </div>
-</section>`;
-  if (/<\/body>/i.test(html)) return html.replace(/<\/body>/i, block + "\n</body>");
-  return html + block;
+  if (/<\/body>/i.test(html)) return html.replace(/<\/body>/i, slim + "\n</body>");
+  return html + slim;
 }
+
+
 
 
 // Fügt einen HTML-Block vor dem ersten "sinnvollen" Anker ein: bewerbung-form-
