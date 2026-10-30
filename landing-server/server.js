@@ -574,64 +574,40 @@ function stripThemeLegalLinks(html) {
   });
 }
 
-// Vollwertiger Rechts-/Kontakt-Footer f\u00fcr Themes ohne {{legal_block}}.
+// Themes, die im eigenen Footer bereits Impressum + Datenschutz verlinken,
+// bekommen keinen zweiten Footer mehr angehängt — sonst erschien der blaue
+// Standard-Footer doppelt unter dem Theme-Footer. Nur Themes ohne Rechtslinks
+// im Footer erhalten eine schmale Rechtsleiste.
+function themeFooterHasLegalLinks(html) {
+  const m = html.match(/<footer[\s\S]*?<\/footer>/i);
+  return Boolean(m && /Impressum/i.test(m[0]) && /Datenschutz/i.test(m[0]));
+}
+
 function injectTrustFooter(html, b) {
   if (/lv-legal-block/.test(html)) return html;
+  if (themeFooterHasLegalLinks(html)) return html;
   html = stripThemeLegalLinks(html);
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&amp;": "&amp;", "&lt;": "&lt;", "&gt;": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const plzStadt = [b.plz, b.stadt].filter(Boolean).join(" ");
   const regLine = [b.registergericht ? `Registergericht ${esc(b.registergericht)}` : "", b.hrb ? `HRB ${esc(b.hrb)}` : ""].filter(Boolean).join(", ");
   const legalItems = [
-    b.firmenname ? `<strong>${esc(b.firmenname)}</strong>` : "",
+    b.firmenname ? esc(b.firmenname) : "",
     b.strasse ? esc(b.strasse) : "",
     plzStadt ? esc(plzStadt) : "",
-    b.geschaeftsfuehrer ? `Gesch\u00e4ftsf\u00fchrung: ${esc(b.geschaeftsfuehrer)}` : "",
+    b.geschaeftsfuehrer ? `Geschäftsführung: ${esc(b.geschaeftsfuehrer)}` : "",
     regLine,
     b.ust_id ? `USt-IdNr.: ${esc(b.ust_id)}` : (b.steuernummer ? `Steuernummer: ${esc(b.steuernummer)}` : "")
   ].filter(Boolean);
-  const contactItems = [
-    b.telefon ? `<a href="tel:${esc(b.telefon)}" style="color:inherit;text-decoration:none;font-weight:600;">${esc(b.telefon)}</a>` : "",
-    b.email ? `<a href="mailto:${esc(b.email)}" style="color:inherit;text-decoration:none;">${esc(b.email)}</a>` : ""
-  ].filter(Boolean);
-  const addrHtml = [b.strasse, plzStadt].filter(Boolean).map(esc).join("<br/>");
-  const headStyle = "font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:16px;";
-  const linkStyle = "color:#e2e8f0;text-decoration:none;";
-  const claim = String(b.flow_type || "") === "fast"
-    ? "Schnell, digital und pers\u00f6nlich begleitet \u2014 von der Bewerbung bis zum Start."
-    : "Ihre Personalvermittlung \u2014 wir bringen Sie mit passenden Partnerunternehmen zusammen.";
-  const block = `
-<section class="lv-trust-footer lv-legal-block" style="background:#0f172a;color:#e2e8f0;padding:64px 24px 32px;margin-top:64px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
-  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;">
-    <div>
-      <div style="font-size:20px;font-weight:800;color:#f8fafc;margin-bottom:12px;">${esc(b.firmenname)}</div>
-      <div style="font-size:14.5px;line-height:1.75;color:#cbd5e1;max-width:280px;">${esc(claim)}</div>
-    </div>
-    <div>
-      <div style="${headStyle}">Kontakt</div>
-      ${addrHtml ? `<div style="font-size:14px;line-height:1.7;color:#cbd5e1;margin-bottom:12px;">${addrHtml}</div>` : ""}
-      ${contactItems.length ? `<div style="font-size:15px;line-height:1.9;color:#f8fafc;">${contactItems.join("<br/>")}</div>` : ""}
-    </div>
-    <div>
-      <div style="${headStyle}">N\u00fctzliche Links</div>
-      <ul style="list-style:none;padding:0;margin:0;font-size:14.5px;line-height:2;">
-        <li><a href="#top" style="${linkStyle}">Startseite</a></li>
-        <li><a href="#bewerbung-form" style="${linkStyle}">Jetzt bewerben</a></li>
-        <li><a href="/impressum.html" style="${linkStyle}">Impressum</a></li>
-        <li><a href="/datenschutz.html" style="${linkStyle}">Datenschutzerkl\u00e4rung</a></li>
-      </ul>
-    </div>
-    <div>
-      <div style="${headStyle}">Anbieterkennzeichnung</div>
-      <div style="font-size:14.5px;line-height:1.8;color:#e2e8f0;">${legalItems.join("<br/>")}</div>
-      <div style="margin-top:18px;font-size:13px;line-height:1.7;color:#94a3b8;">Die \u00dcbertragung Ihrer Bewerbungsdaten erfolgt TLS-verschl\u00fcsselt.</div>
-    </div>
-  </div>
-  <div style="max-width:1180px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(226,232,240,.1);font-size:12.5px;color:#94a3b8;text-align:center;">
-    \u00a9 ${new Date().getFullYear()} ${esc(b.firmenname)}. Alle Rechte vorbehalten.
+  const slim = `
+<section class="lv-legal-bar lv-legal-block" style="background:#0b1220;color:#94a3b8;padding:18px 24px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:12.5px;line-height:1.8;">
+  <div style="max-width:1180px;margin:0 auto;text-align:center;">
+    <div style="color:#cbd5e1;">${legalItems.join(" &middot; ")}</div>
+    <div style="margin-top:6px;">Die Übertragung Ihrer Bewerbungsdaten erfolgt TLS-verschlüsselt. &middot; <a href="/impressum.html" style="color:inherit;">Impressum</a> &middot; <a href="/datenschutz.html" style="color:inherit;">Datenschutzerklärung</a></div>
   </div>
 </section>`;
-  return /<\/body>/i.test(html) ? html.replace(/<\/body>/i, block + "\n</body>") : html + block;
+  return /<\/body>/i.test(html) ? html.replace(/<\/body>/i, slim + "\n</body>") : html + slim;
 }
+
 
 function cleanEmptyMeta(html, branding, domain) {
   let out = html;
