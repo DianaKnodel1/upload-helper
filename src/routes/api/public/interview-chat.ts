@@ -189,7 +189,7 @@ export const Route = createFileRoute("/api/public/interview-chat")({
           // Admin → KI-Einstellungen: Standard-Prompt / feste Anweisungen.
           const { data: ss } = await supabaseAdmin.from("system_settings").select("default_system_prompt").eq("id", 1).maybeSingle();
           const adminPrompt = (ss as any)?.default_system_prompt?.trim?.();
-          if (adminPrompt) systemPrompt = adminPrompt;
+          if (adminPrompt) teamNotes = adminPrompt;
         }
         let companyName = "unserem Unternehmen";
         let recruiterName = "Ihr HR-Team";

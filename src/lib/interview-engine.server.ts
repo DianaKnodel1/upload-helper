@@ -336,7 +336,7 @@ export async function loadInterviewContext(app: ApplicationRow): Promise<Intervi
   {
     const { data: ss } = await supabaseAdmin.from("system_settings").select("default_system_prompt").eq("id", 1).maybeSingle();
     const adminPrompt = (ss as any)?.default_system_prompt?.trim?.();
-    if (adminPrompt) systemPrompt = adminPrompt;
+    if (adminPrompt) teamNotes = adminPrompt;
   }
   let companyName = "unserem Unternehmen";
   // Universeller HR-Leiter, der die Gespräche führt.
