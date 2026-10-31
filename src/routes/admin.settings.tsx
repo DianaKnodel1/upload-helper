@@ -147,7 +147,6 @@ const SECTIONS: { value: string; hint: string; tiles: TileDef[] }[] = [
     tiles: [
       { to: "/admin/tenants", title: "Domains / Tenants", desc: "Rebranding, Hero, Logo, Unternehmensdaten", icon: Globe },
       { to: "/admin/landing-generator", title: "Landing Pages", desc: "Themes, WhatsApp-Button, Generator", icon: Globe },
-      { to: "/admin/domains", title: "Domains (Cloudflare)", desc: "DNS, SSL, Health-Checks", icon: Globe },
       { to: "/admin/infrastructure", title: "Infrastruktur", desc: "Landing-Server, Heartbeat, Deploys", icon: Server },
     ],
   },
@@ -173,7 +172,6 @@ const SECTIONS: { value: string; hint: string; tiles: TileDef[] }[] = [
     value: "konto",
     hint: "Eigenes Konto, Team und Protokoll.",
     tiles: [
-      { to: "/admin/team-leader-settings", title: "Teamleiter", desc: "Profil, Avatar, Online-Status", icon: UsersIcon },
       { to: "/admin/chat-faq", title: "Chat-Wissensbasis", desc: "Antworten, die der Chat-Vorschlag nutzen darf", icon: FileText },
       { to: "/admin/activity", title: "Protokoll", desc: "Aktivitäts-Log aller Admin-Aktionen", icon: History },
     ],

@@ -68,10 +68,10 @@ export function DomainAlertBanner() {
           </ul>
         </div>
         <button
-          onClick={() => navigate("/admin/domains")}
+          onClick={() => navigate("/admin/tenants")}
           className="shrink-0 inline-flex items-center gap-1 text-xs font-medium text-destructive hover:underline"
         >
-          Domain-Übersicht <ArrowRight className="h-3 w-3" />
+          Domains / Tenants <ArrowRight className="h-3 w-3" />
         </button>
       </div>
     </div>
