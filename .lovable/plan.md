@@ -1,52 +1,65 @@
-# Plan: Indeed-Leads per E-Mail anschreiben und KI-Interview überarbeiten
+# Plan: Indeed-Lead-Mailing, KI-Interview, Vertrags-Unterschrift und Aufräumen
 
 ## Teil 1 – Bewerber-Mails an Indeed-Leads (400–500 pro Tag, möglichst im Posteingang)
 
-### Was am meisten bringt (wichtiger als die Anbieterwahl)
-1. **Eigene Versand-Subdomain**, z. B. `bewerbung.eurefirma.de`. Die Hauptdomain bleibt geschützt, falls etwas im Spam landet.
-2. **Saubere Einrichtung:** SPF, DKIM und DMARC. Ich führe Schritt für Schritt durch die Einträge bei Cloudflare.
-3. **Langsam hochfahren:** In Woche 1 etwa 50 Mails pro Tag, dann verdoppeln, bis 500 pro Tag. Neue Domains mit 1.000 Mails am ersten Tag landen fast immer im Spam.
-4. **Persönliche, nüchterne Mail:** mit Namen, reinem Text oder schlichtem Layout, höchstens 1–2 Links, keine Wörter wie „Herzlichen Glückwunsch!!!“ im Betreff und eine echte Antwortadresse.
-5. **Abmeldelink und Bounce-Prüfung:** Ungültige Adressen fliegen automatisch raus. Zu viele Bounces ruinieren den Ruf der Domain.
+### Grundlagen für gute Zustellung
+1. **Eigene Versand-Subdomain:** `bewerbung.it-agentur.solutions`. Die Hauptdomain bleibt geschützt.
+2. **Saubere Einrichtung:** SPF, DKIM und DMARC bei Cloudflare. Ich führe Schritt für Schritt durch die Einträge.
+3. **Langsam hochfahren:** Woche 1 etwa 50 Mails pro Tag, danach wöchentlich verdoppeln bis 500 pro Tag.
+4. **Persönliche, nüchterne Mail:** mit Namen, 1–2 Links, kein reißerischer Betreff und eine echte Antwortadresse.
+5. **Abmeldelink und Bounce-Prüfung:** Ungültige Adressen werden automatisch ausgeschlossen.
 
-### Anbieter
-Empfehlung: **Brevo** (EU-Server, DSGVO-freundlich, günstig bei 15.000 Mails pro Monat, eingebaute Versandsteuerung). Alternative: **Resend**. Normales SMTP mit eigenen Postfächern bleibt außen vor; daran lag euer Spam-Problem.
+### Anbieter: Resend
+Resend bietet keine klassischen Postfächer zum Einloggen. Es kann aber Antworten an `bewerbung.it-agentur.solutions` empfangen und ans Portal weiterreichen. Ihr seht sie dann im Admin-Portal (siehe unten).
 
-### Funktion im Portal: „Lead-Mailing“ (Admin)
-- Ihr exportiert die Kandidaten als CSV aus dem Indeed-Dashboard und ladet die Datei im Portal hoch.
-- Das Portal prüft Namen und E-Mail, entfernt Dubletten und zeigt Leads, die schon angeschrieben wurden.
-- Bearbeitbare Vorlage mit Platzhaltern: `{Vorname} {Nachname}`, Homepage-Link, Calendly-Link, Kontakt.
-- Ein Tageslimit (z. B. 50 → 500) wird automatisch über den Tag verteilt verschickt, nicht alles auf einmal.
-- Status je Lead: wartend, gesendet, unzustellbar, abgemeldet. So schreibt ihr niemanden doppelt an.
+### Funktion „Lead-Mailing“ (Admin)
+- CSV-Export aus dem Indeed-Dashboard im Portal hochladen.
+- Das Portal prüft Namen und E-Mail-Adressen, entfernt Dubletten und markiert Leads, die schon angeschrieben wurden.
+- Bearbeitbare Vorlage mit `{Vorname} {Nachname}`, Homepage-Link, Calendly-Link und Kontakt.
+- Mit Tageslimit (50 → 500) wird automatisch über den Tag verteilt verschickt.
+- Jeder Lead hat einen Status: wartend, gesendet, unzustellbar, abgemeldet oder hat geantwortet.
+
+### Lead-Postfach im Admin-Portal
+- Antworten der Bewerber erscheinen beim jeweiligen Lead (Name, Betreff, Text, Datum).
+- Ihr könnt direkt aus dem Portal antworten und jede Antwort als offen oder beantwortet markieren.
 
 ### Entwurf der Mail-Vorlage
 Betreff: „Ihre Bewerbung bei {Firma} – nächster Schritt“
 > Guten Tag {Vorname} {Nachname},
-> vielen Dank für Ihre Bewerbung über Indeed. Wir freuen uns, Ihnen mitzuteilen, dass Sie in die engere Auswahl gekommen sind.
-> Bitte registrieren Sie sich auf unserer Website {Link} und wählen Sie anschließend über Calendly einen Termin für Ihr Interview: {Calendly-Link}.
+> vielen Dank für Ihre Bewerbung über Indeed. Sie wurden in die engere Auswahl aufgenommen.
+> Bitte registrieren Sie sich auf unserer Website {Link} und wählen Sie anschließend über Calendly einen Interviewtermin: {Calendly-Link}.
 > Bei Fragen antworten Sie einfach auf diese E-Mail.
 > Freundliche Grüße, {Name}, {Firma}
 
 ## Teil 2 – KI-Interview seriöser und ausfallsicher machen
-
-### Probleme
-Ausfälle (503), alte Angaben (Datum 2024, falscher Minijob-Betrag), zu lockerer Ton, oberflächliche Fragen und kein klares Ende.
-
-### Lösung
-1. **Verlässliche Anbieter:** Hauptmodell über einen offiziellen Schlüssel (OpenAI oder Google, nicht der Zwischenhändler apinet.cloud), dazu ein zweiter Anbieter als automatischer Ersatz. Höhere Kosten sind laut euch in Ordnung.
-2. **Aktuelle Fakten statt Modellwissen:** Bei jedem Gespräch bekommt der Bot das heutige Datum, die aktuelle Minijob-Grenze, die Firmendaten und die Stellendaten aus den Admin-Einstellungen. Der Bot erfindet keine Zahlen mehr; was er nicht weiß, verweist er an das Team.
-3. **Fester Ablauf in Phasen:** Begrüßung → Motivation → Erfahrung → Verfügbarkeit und Beschäftigungsart → 2–3 Fachfragen → Rückfragen des Bewerbers → klarer Abschluss mit den nächsten Schritten. Danach endet das Interview sichtbar.
+1. **Offizielle Anbieter direkt nutzen:** ein Hauptmodell und ein zweiter Anbieter als automatischer Ersatz.
+2. **Aktuelle Fakten:** Der Bot bekommt das heutige Datum, die aktuelle Minijob-Grenze, die Firmendaten und die Stellendaten aus dem Portal. Er erfindet keine Zahlen; bei offenen Fragen verweist er auf das Team.
+3. **Fester Ablauf:** Begrüßung → Motivation → Erfahrung → Verfügbarkeit und Beschäftigungsart → Fachfragen → Rückfragen des Bewerbers → klarer Abschluss mit den nächsten Schritten.
 4. **Professioneller Ton:** Sie-Form, sachlich, keine Emojis, eine Frage pro Nachricht, Nachfragen bei sehr kurzen Antworten.
-5. **Auswertung für Admins:** Nach dem Interview gibt es eine Zusammenfassung mit Bewertung (Motivation, Eignung, Verfügbarkeit), damit ihr ernsthafte Bewerber schneller erkennt.
+5. **Auswertung für Admins:** Zusammenfassung mit Bewertung (Motivation, Eignung, Verfügbarkeit).
 
-## Was ihr beitragen müsst
-- Eine Domain bzw. Subdomain für den Versand und ein Brevo-Konto (ich helfe bei der Einrichtung).
-- Homepage- und Calendly-Link, Firmenname und Absendername.
-- Einen offiziellen OpenAI- oder Google-Schlüssel für den Bot.
-- Aktuelle Minijob- und Stellendaten (ich trage die bekannten Werte vor und ihr prüft sie).
+### Anbieter für den Bot (eure Frage)
+- **OpenAI direkt:** Konto auf platform.openai.com anlegen, Guthaben aufladen und einen API-Schlüssel erzeugen.
+- **Google Gemini direkt:** In Google AI Studio (aistudio.google.com) die Abrechnung aktivieren und einen API-Schlüssel erzeugen.
+- Empfehlung: Legt beide an, einer wird Hauptmodell, der andere Ersatz. Die Schlüssel tragt ihr unter Admin → AI-Einstellungen ein.
+
+## Teil 3 – Geschäftsführer-Unterschrift im AV-Export (vor der nächsten Ads-Welle)
+- Beim Export unter Mitarbeiter → Dokumente wird bisher nur die Unterschrift des Mitarbeiters eingesetzt.
+- Künftig kommt die Geschäftsführer-Unterschrift aus dem Tenant (Admin → Domains/Tenants), genauso wie im Vertrags-PDF. Fehlt sie im Tenant, sehen Admins einen Hinweis.
+
+## Teil 4 – Aufräumen
+- Einstellungen → Konto & Team: Die Kachel und die Seite „Teamleiter“ werden entfernt, weil das im Tenant gepflegt wird.
+- Die Seite „Domain-Übersicht“ und ihr Menüeintrag werden entfernt. Die Tenant-Verwaltung bleibt.
+
+## Was ihr liefern müsst
+- Ein Resend-Konto und den Zugang zu Cloudflare für `bewerbung.it-agentur.solutions`.
+- Homepage-Link, Calendly-Link, Firmenname und Absendername.
+- API-Schlüssel von OpenAI und/oder Google.
+- Aktuelle Minijob- und Stellendaten zum Prüfen.
 
 ## Technische Details
-- Neue Tabellen `lead_imports` und `lead_contacts` (Status, Zeitpunkt, Fehler) im selbst gehosteten Backend, per Migration.
-- Ein Versand-Job auf dem Frontend-Server (systemd-Timer) verschickt wartende Leads mit Tageslimit und Drosselung über die Brevo-API. Webhooks für Bounces und Abmeldungen setzen den Status.
-- Der Interview-Prompt wird serverseitig aus Vorlage plus Live-Daten (Datum, Einstellungen) gebaut; die Phase wird pro Sitzung gespeichert. Die bestehende Fallback-Logik und die sicheren Fehlermeldungen für Bewerber bleiben erhalten.
-- Tests für Tageslimit, Dubletten-Erkennung und Datum bzw. Fakten im Prompt.
+- Neue Tabellen `lead_imports`, `lead_contacts` und `lead_messages` per Migration im selbst gehosteten Backend.
+- Ein Versand-Job (systemd-Timer auf dem Frontend-Server) verschickt mit Tageslimit über die Resend-API. Signierte Resend-Webhooks melden Bounces und Abmeldungen und speichern eingehende Antworten.
+- Der Interview-Prompt wird serverseitig aus der Vorlage und Live-Daten gebaut, die Phase wird pro Sitzung gespeichert. Die bestehende Ersatz-Logik und die sicheren Fehlermeldungen für Bewerber bleiben.
+- Der AV-Export in Mitarbeiter-Dokumente nutzt dieselbe serverseitige Ermittlung der Unterschrift wie das Vertrags-PDF.
+- Tests für Tageslimit, Dubletten-Erkennung, Datum im Prompt und die Unterschrift im Export.
