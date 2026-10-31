@@ -16,7 +16,7 @@ import {
   callGateway,
   DEFAULT_INTERVIEW_PROMPT,
 } from "@/lib/interview-engine.server";
-import { buildInterviewFactsBlock } from "@/lib/interview-facts";
+import { buildInterviewFactsBlock, buildTeamNotesBlock } from "@/lib/interview-facts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -185,6 +185,7 @@ export const Route = createFileRoute("/api/public/interview-chat")({
 
 
         let systemPrompt = DEFAULT_INTERVIEW_PROMPT;
+  let teamNotes = "";
         {
           // Admin → KI-Einstellungen: Standard-Prompt / feste Anweisungen.
           const { data: ss } = await supabaseAdmin.from("system_settings").select("default_system_prompt").eq("id", 1).maybeSingle();
@@ -269,7 +270,7 @@ export const Route = createFileRoute("/api/public/interview-chat")({
           .replace(/\{first_name\}/g, firstNameForPrompt)
           // Alte/custom Landing-Prompts enthielten Sabine teils hartcodiert statt als {recruiter}.
           .replace(/Sabine Schneider/g, recruiterName);
-        systemPrompt += buildInterviewFactsBlock();
+        systemPrompt += buildTeamNotesBlock(teamNotes) + buildInterviewFactsBlock();
 
         const history: Msg[] = Array.isArray(app.interview_messages) ? (app.interview_messages as any) : [];
 

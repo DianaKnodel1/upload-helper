@@ -16,3 +16,13 @@ describe("interview facts", () => {
     expect(statutoryFor(2026).minWage).toBe(13.9);
   });
 });
+
+import { buildTeamNotesBlock } from "@/lib/interview-facts";
+describe("team notes", () => {
+  it("ignoriert die alte Versicherungs-Vorbelegung", () => {
+    expect(buildTeamNotesBlock("Du bist ein professioneller HR-Interviewer und führst …")).toBe("");
+  });
+  it("übernimmt eigene Anweisungen", () => {
+    expect(buildTeamNotesBlock("Start ab 01.12. möglich")).toContain("Start ab 01.12. möglich");
+  });
+});

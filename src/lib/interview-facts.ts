@@ -31,3 +31,13 @@ export function buildInterviewFactsBlock(now: Date = new Date()): string {
 - Gesetzlicher Mindestlohn ${year}: ${euro(s.minWage)} pro Stunde.
 - Nenne nur Beträge, Daten und Konditionen aus diesem Prompt. Wenn du etwas nicht sicher weißt, sage ehrlich, dass das Team die Frage im Portal beantwortet — erfinde nichts.`;
 }
+
+/** Alte Vorbelegung aus Admin → KI-Einstellungen (Vertrieb/Versicherungen) – nicht anwenden. */
+const LEGACY_DEFAULT_PREFIX = "Du bist ein professioneller HR-Interviewer";
+
+/** Feste Anweisungen/„Erinnerungen“ des Teams aus Admin → KI-Einstellungen. */
+export function buildTeamNotesBlock(notes: string | null | undefined): string {
+  const t = (notes ?? "").trim();
+  if (!t || t.startsWith(LEGACY_DEFAULT_PREFIX)) return "";
+  return `\n\nFESTE ANWEISUNGEN DES TEAMS (immer beachten):\n${t.slice(0, 6000)}`;
+}

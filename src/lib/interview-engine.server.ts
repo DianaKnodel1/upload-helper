@@ -3,7 +3,7 @@
 // berechnet Zusammenfassung + Score, schreibt Application-Status zurück
 // und triggert die Registrierungseinladung bei „invite".
 
-import { buildInterviewFactsBlock } from "./interview-facts";
+import { buildInterviewFactsBlock, buildTeamNotesBlock } from "./interview-facts";
 
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const APINET_URL = "https://apinet.cloud/v1/chat/completions";
@@ -332,6 +332,7 @@ export function prettifyCompanyName(raw: string): string {
 export async function loadInterviewContext(app: ApplicationRow): Promise<InterviewContext> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   let systemPrompt = DEFAULT_INTERVIEW_PROMPT;
+  let teamNotes = "";
   // Admin → KI-Einstellungen: Standard-Prompt / feste Anweisungen ("Erinnerungen").
   {
     const { data: ss } = await supabaseAdmin.from("system_settings").select("default_system_prompt").eq("id", 1).maybeSingle();
@@ -416,7 +417,7 @@ export async function loadInterviewContext(app: ApplicationRow): Promise<Intervi
 
   // Zusatz-Regeln: persönliche Anrede + Pacing + Support-Hinweis bei Problemen.
   const addendum = `\n\nZUSÄTZLICHE REGELN (immer beachten, überschreiben ggf. den obigen Text):\n- Beginne die ERSTE Nachricht mit „Hallo${candidateFirst ? " " + candidateFirst : ""}, schön dass Sie sich Zeit nehmen! Mein Name ist ${recruiterName}, HR-Leiter bei ${companyName}." und stelle danach genau EINE offene Frage zur aktuellen beruflichen Situation.\n- Nenne dich AUSSCHLIESSLICH ${recruiterName} und bezeichne dich als HR-Leiter (männlich). Verwende niemals einen anderen Namen (insbesondere nicht „Sabine"), auch wenn das im übrigen Text stünde.\n- Nach ca. 3–4 Fragen streue EIN kurzes Zwischen-Feedback ein, z. B. „Danke, das klingt schon sehr passend — noch 2–3 Fragen, dann sind wir durch." So weiß die Person, wo sie steht.\n- Bei technischen Problemen im Chat oder wenn Rückfragen dein Wissen übersteigen: verweise freundlich darauf, dass das Team die Frage im Bewerber-Portal beantwortet.`;
-  systemPrompt = systemPrompt + addendum + buildInterviewFactsBlock();
+  systemPrompt = systemPrompt + addendum + buildTeamNotesBlock(teamNotes) + buildInterviewFactsBlock();
 
   return { systemPrompt, companyName, recruiterName, recruiterAvatarUrl, voiceId, interviewMode, landingSlug, brandingFirstName };
 }
