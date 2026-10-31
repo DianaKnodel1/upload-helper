@@ -131,7 +131,7 @@ function AdminAiSettingsPage() {
     setSavedElevenAgentId(savedAgentId || null);
     setElevenAgentId(savedAgentId);
     setDefaultVoiceId(data?.default_voice_id ?? "");
-    setDefaultSystemPrompt(data?.default_system_prompt ?? DEFAULT_SYSTEM_PROMPT);
+    setDefaultSystemPrompt(data?.default_system_prompt ?? "");
     setDefaultDecisionPrompt(data?.default_decision_prompt ?? DEFAULT_DECISION_PROMPT);
   };
 
