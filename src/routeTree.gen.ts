@@ -85,6 +85,8 @@ import { Route as ApiPublicInterviewVoiceRouteImport } from './routes/api/public
 import { Route as ApiPublicInvitePrefillRouteImport } from './routes/api/public/invite-prefill'
 import { Route as ApiPublicLandingServerBootstrapRouteImport } from './routes/api/public/landing-server-bootstrap'
 import { Route as ApiPublicLandingServerHeartbeatRouteImport } from './routes/api/public/landing-server-heartbeat'
+import { Route as ApiPublicLeadMailingCronRouteImport } from './routes/api/public/lead-mailing-cron'
+import { Route as ApiPublicResendWebhookRouteImport } from './routes/api/public/resend-webhook'
 import { Route as ApiPublicSmsPollCronRouteImport } from './routes/api/public/sms-poll-cron'
 import { Route as ApiPublicTtsTestRouteImport } from './routes/api/public/tts-test'
 import { Route as InterviewVoiceAppIdRouteImport } from './routes/interview.voice.$appId'
@@ -482,6 +484,17 @@ const ApiPublicLandingServerHeartbeatRoute =
     path: '/api/public/landing-server-heartbeat',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicLeadMailingCronRoute =
+  ApiPublicLeadMailingCronRouteImport.update({
+    id: '/api/public/lead-mailing-cron',
+    path: '/api/public/lead-mailing-cron',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicResendWebhookRoute = ApiPublicResendWebhookRouteImport.update({
+  id: '/api/public/resend-webhook',
+  path: '/api/public/resend-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSmsPollCronRoute = ApiPublicSmsPollCronRouteImport.update({
   id: '/api/public/sms-poll-cron',
   path: '/api/public/sms-poll-cron',
@@ -596,6 +609,8 @@ export interface FileRoutesByFullPath {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -679,6 +694,8 @@ export interface FileRoutesByTo {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -765,6 +782,8 @@ export interface FileRoutesById {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -851,6 +870,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -934,6 +955,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -1019,6 +1042,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -1062,6 +1087,8 @@ export interface RootRouteChildren {
   ApiPublicInvitePrefillRoute: typeof ApiPublicInvitePrefillRoute
   ApiPublicLandingServerBootstrapRoute: typeof ApiPublicLandingServerBootstrapRoute
   ApiPublicLandingServerHeartbeatRoute: typeof ApiPublicLandingServerHeartbeatRoute
+  ApiPublicLeadMailingCronRoute: typeof ApiPublicLeadMailingCronRoute
+  ApiPublicResendWebhookRoute: typeof ApiPublicResendWebhookRoute
   ApiPublicSmsPollCronRoute: typeof ApiPublicSmsPollCronRoute
   ApiPublicTtsTestRoute: typeof ApiPublicTtsTestRoute
   InterviewVoiceAppIdRoute: typeof InterviewVoiceAppIdRoute
@@ -1603,6 +1630,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLandingServerHeartbeatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/lead-mailing-cron': {
+      id: '/api/public/lead-mailing-cron'
+      path: '/api/public/lead-mailing-cron'
+      fullPath: '/api/public/lead-mailing-cron'
+      preLoaderRoute: typeof ApiPublicLeadMailingCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/resend-webhook': {
+      id: '/api/public/resend-webhook'
+      path: '/api/public/resend-webhook'
+      fullPath: '/api/public/resend-webhook'
+      preLoaderRoute: typeof ApiPublicResendWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/sms-poll-cron': {
       id: '/api/public/sms-poll-cron'
       path: '/api/public/sms-poll-cron'
@@ -1818,6 +1859,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInvitePrefillRoute: ApiPublicInvitePrefillRoute,
   ApiPublicLandingServerBootstrapRoute: ApiPublicLandingServerBootstrapRoute,
   ApiPublicLandingServerHeartbeatRoute: ApiPublicLandingServerHeartbeatRoute,
+  ApiPublicLeadMailingCronRoute: ApiPublicLeadMailingCronRoute,
+  ApiPublicResendWebhookRoute: ApiPublicResendWebhookRoute,
   ApiPublicSmsPollCronRoute: ApiPublicSmsPollCronRoute,
   ApiPublicTtsTestRoute: ApiPublicTtsTestRoute,
   InterviewVoiceAppIdRoute: InterviewVoiceAppIdRoute,
