@@ -807,16 +807,6 @@ async function renderSiteHtml(row, host, mode, slug) {
   return { body: html, status };
 }
 
-async function injectClientLogos(html, row) {
-  if (String(row.flow_type || "") !== "fast") return html;
-  if (/lv-client-logos/.test(html)) return html;
-  const block = await loadClientLogosBlock();
-  if (!block) return html;
-  const anchor = /<section[^>]*id=["']bewerbung["']/i.exec(html) || /<footer[\s>]/i.exec(html);
-  if (anchor) return html.slice(0, anchor.index) + block + "\n" + html.slice(anchor.index);
-  return html.replace(/<\/body>/i, `${block}\n</body>`);
-}
-
 
 // ── Danke-Seite (/danke): echte Unterseite nach erfolgreicher Bewerbung ──
 function renderThanks(row, params) {
