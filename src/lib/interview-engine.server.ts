@@ -3,6 +3,8 @@
 // berechnet Zusammenfassung + Score, schreibt Application-Status zurück
 // und triggert die Registrierungseinladung bei „invite".
 
+import { buildInterviewFactsBlock } from "./interview-facts";
+
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const APINET_URL = "https://apinet.cloud/v1/chat/completions";
 const DEFAULT_MODEL = "gemini-2.5-flash";
