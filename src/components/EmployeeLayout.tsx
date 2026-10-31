@@ -1,7 +1,7 @@
 import { Outlet, useNavigate, useLocation } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTenant } from "@/contexts/TenantContext";
-import { GuidedOnboarding, HelpButton, HeaderHelpButton } from "@/components/GuidedOnboarding";
+import { GuidedOnboarding, HeaderHelpButton } from "@/components/GuidedOnboarding";
 import { OnboardingPopup } from "@/components/OnboardingPopup";
 import {
   LayoutDashboard,
@@ -11,24 +11,21 @@ import {
   CalendarDays,
   ClipboardList,
   UploadCloud,
-  Wallet,
   MessageSquare,
   Settings,
   LogOut,
-  Lock,
 } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import FloatingChat from "@/components/FloatingChat";
 import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 import { MissingPayrollDataBanner } from "@/components/MissingPayrollDataBanner";
-import { GlassDock, type DockEntry } from "@/components/GlassDock";
-import glassBg from "@/assets/glass-office-bg.jpg";
+import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { EmployeeStatus } from "@/lib/status";
 import { hasFullAccess } from "@/lib/employee-utils";
 import { isLocalOrPreview } from "@/lib/domain-utils";
-import { cn } from "@/lib/utils";
 
 const ALWAYS_ALLOWED_PATHS = ["/dashboard", "/verification", "/contract", "/onboarding", "/chat", "/personal-data", "/payroll-data", "/settings", "/documents"];
 
@@ -210,31 +207,42 @@ export default function EmployeeLayout() {
 
   const items = buildNavItems({ kycPending, kycRejected, contractPending, smsVisible });
   const isActive = hasFullAccess(employeeStatus);
-  const dockEntries: DockEntry[] = items.map((i) => ({
-    kind: "link",
-    title: i.title,
-    url: i.url,
-    icon: i.icon,
-    end: i.url === "/dashboard",
-    locked: i.requiresActive && !isActive,
-    dot: !!i.dot,
-    tour: `nav-${i.url.replace("/", "")}`,
-  }));
+  const groups: GlassNavGroup[] = [
+    {
+      items: items.map((i) => ({
+        title: i.title,
+        url: i.url,
+        icon: i.icon,
+        end: i.url === "/dashboard",
+        locked: i.requiresActive && !isActive,
+        dot: !!i.dot,
+        tour: `nav-${i.url.replace("/", "")}`,
+      })),
+    },
+  ];
+
+  const brand = (
+    <>
+      {tenant?.logo_url ? (
+        <img src={tenant.logo_url} alt="Logo" className="h-8 w-8 rounded-full object-contain bg-muted shrink-0" />
+      ) : (
+        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">M</div>
+      )}
+      <span className="text-sm font-semibold truncate min-w-0">Mitarbeiter-Portal</span>
+    </>
+  );
 
   return (
-    <div className="glass-shell min-h-screen flex flex-col">
-      <div className="glass-bg" style={{ backgroundImage: `url(${glassBg})` }} aria-hidden />
+    <div className="glass-shell min-h-screen flex flex-col lg:pl-72">
+      <GlassSidebar brand={brand} groups={groups} tour="sidebar" />
       <header className="sticky top-0 z-30 px-3 sm:px-6 pt-3">
         <div className="glass-panel rounded-full h-14 flex items-center gap-3 px-3 sm:px-4">
-          {tenant?.logo_url ? (
-            <img src={tenant.logo_url} alt="Logo" className="h-8 w-8 rounded-full object-contain bg-muted shrink-0" />
-          ) : (
-            <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">M</div>
-          )}
+          <GlassMobileMenuButton />
           <span className="text-sm font-medium truncate min-w-0">Mitarbeiter-Portal</span>
           <div className="ml-auto flex items-center gap-1 shrink-0">
             <HeaderHelpButton />
             <div data-tour="notifications"><NotificationBell /></div>
+            <ThemeToggle />
             <button onClick={signOut} title="Abmelden" className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground">
               <LogOut className="h-4 w-4" />
             </button>
@@ -242,13 +250,12 @@ export default function EmployeeLayout() {
         </div>
       </header>
       <MissingPayrollDataBanner />
-      <main className="flex-1 min-w-0 pb-28">
+      <main className="flex-1 min-w-0 pb-10">
         {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
         <Outlet />
       </main>
       <FloatingChat />
       <WhatsAppSupportButton />
-      <GlassDock entries={dockEntries} tour="sidebar" />
     </div>
   );
 }

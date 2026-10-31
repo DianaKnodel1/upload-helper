@@ -1,8 +1,8 @@
 import { Outlet, useLocation, useNavigate } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
-import { LayoutGrid, Users, ClipboardList, CheckSquare, CalendarDays, Wallet, LogOut, MessageCircle, RotateCcw, History, Settings, Phone, Search, ShieldCheck, LayoutDashboard, Upload, Server, Handshake, BarChart3 } from "lucide-react";
-import { GlassDock, type DockEntry } from "@/components/GlassDock";
-import glassBg from "@/assets/glass-office-bg.jpg";
+import { LayoutGrid, Users, ClipboardList, CheckSquare, CalendarDays, Wallet, LogOut, MessageCircle, Settings, Phone, Search, ShieldCheck, LayoutDashboard, Upload, BarChart3 } from "lucide-react";
+import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { AdminCommandPalette } from "@/components/AdminCommandPalette";
 import { useAdminBadges } from "@/hooks/use-admin-badges";
 import { useEffect } from "react";
@@ -56,7 +56,7 @@ const navGroups: NavGroup[] = [
   },
 ];
 
-// Einstellungen liegen fest am unteren Rand – nicht in den aufklappbaren Gruppen.
+// Einstellungen liegen fest am unteren Rand der Sidebar.
 const settingsItem: NavItem = { title: "Einstellungen", url: "/admin/settings", icon: Settings, end: true };
 
 export default function AdminLayout() {
@@ -85,23 +85,36 @@ export default function AdminLayout() {
 
   if (!user || !canAccessAdmin || !isAdmin) return null;
 
-  const dockEntries: DockEntry[] = [
-    { kind: "link", ...dashboardItem },
-    ...navGroups.map((g): DockEntry => ({
-      kind: "group",
-      title: g.label,
-      icon: g.items[0].icon,
+  const groups: GlassNavGroup[] = [
+    { items: [{ ...dashboardItem }] },
+    ...navGroups.map((g): GlassNavGroup => ({
+      label: g.label,
       items: g.items.map((i) => ({ ...i, badge: i.badgeKey ? badges[i.badgeKey] : 0 })),
     })),
-    { kind: "link", ...settingsItem, end: false },
   ];
 
+  const brand = (
+    <>
+      <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">A</div>
+      <span className="text-sm font-semibold truncate">Admin-Portal</span>
+    </>
+  );
+
   return (
-    <div className="glass-shell min-h-screen flex flex-col admin-layout">
-      <div className="glass-bg" style={{ backgroundImage: `url(${glassBg})` }} aria-hidden />
+    <div className="glass-shell min-h-screen flex flex-col admin-layout lg:pl-72">
+      <GlassSidebar
+        brand={brand}
+        groups={groups}
+        footer={
+          <a href="/admin/settings" className="glass-nav-link">
+            <Settings className="h-4 w-4 shrink-0" />
+            <span className="truncate">{settingsItem.title}</span>
+          </a>
+        }
+      />
       <header className="sticky top-0 z-30 px-3 sm:px-6 pt-3">
         <div className="glass-panel rounded-full h-14 flex items-center gap-3 px-3 sm:px-4">
-          <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">A</div>
+          <GlassMobileMenuButton />
           <span className="hidden sm:inline text-sm font-medium truncate">Willkommen, Admin</span>
           <button
             onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
@@ -112,19 +125,19 @@ export default function AdminLayout() {
             <span className="truncate">Suchen…</span>
             <kbd className="ml-auto hidden sm:inline text-[10px] border border-border rounded px-1.5 py-0.5 shrink-0">⌘K</kbd>
           </button>
+          <ThemeToggle />
           <button
             onClick={signOut}
             title="Abmelden"
-            className="sm:ml-auto h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground shrink-0"
+            className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground shrink-0"
           >
             <LogOut className="h-4 w-4" />
           </button>
         </div>
       </header>
-      <main className="flex-1 min-w-0 pb-28">
+      <main className="flex-1 min-w-0 pb-10">
         <Outlet />
       </main>
-      <GlassDock entries={dockEntries} />
       <AdminCommandPalette />
     </div>
   );
