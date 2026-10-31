@@ -49,3 +49,12 @@
 - [x] Orchestrator neu (DB+Rollen+Struktur, Storage, Schlüssel, Server-Einstellungen, Verschlüsselung, Prüfung, lokaler Status, Alarm, Außer-Haus optional)
 - [x] restore.sh pro Rolle (backend/frontend/landing/bot/webid/inspect), Anleitung docs/DISASTER-RECOVERY.md
 - [ ] Einrichtung auf dem Backup-Server durch den User + Probe-Wiederherstellung
+
+## Indeed-Lead-Mailing, KI-Interview, AV-Unterschrift, Aufräumen (Plan 2026-10-31)
+- [x] Teamleiter-Seite und Domain-Übersicht entfernt
+- [x] AV-Export (Mitarbeiter → Dokumente) mit Geschäftsführer-Unterschrift aus Tenant
+- [x] KI-Interview: fester Ablauf, Sie-Form ohne Emojis, ehrliche KI-Auskunft, aktuelle Fakten (Datum, Mindestlohn, Minijob 603 €), feste Team-Anweisungen, Anbieter OpenAI → Gemini → apinet
+- [x] Lead-Mailing (CSV-Import, Vorlage je Firma, Tageslimit 08–20 Uhr, Resend) + Lead-Postfach + Resend-Webhook
+- [ ] Migration 20261031000000_lead_mailing.sql beim Deploy einspielen; Cron für /api/public/lead-mailing-cron alle 10 Min anlegen (User)
+- [ ] Resend: Domain bewerbung.it-agentur.solutions verifizieren, Empfang (Inbound) + Webhook einrichten, Schlüssel im Portal hinterlegen (User)
+- [ ] Gemini-/OpenAI-Schlüssel in Admin → KI-Einstellungen (User)
