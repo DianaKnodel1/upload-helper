@@ -46,6 +46,8 @@ import { Route as AdminContractsRouteImport } from './routes/admin.contracts'
 import { Route as AdminInfrastructureRouteImport } from './routes/admin.infrastructure'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminLandingGeneratorRouteImport } from './routes/admin.landing-generator'
+import { Route as AdminLeadMailingRouteImport } from './routes/admin.lead-mailing'
+import { Route as AdminLeadPostfachRouteImport } from './routes/admin.lead-postfach'
 import { Route as AdminMitarbeiterRouteImport } from './routes/admin.mitarbeiter'
 import { Route as AdminPartnerCompaniesRouteImport } from './routes/admin.partner-companies'
 import { Route as AdminPersonenRouteImport } from './routes/admin.personen'
@@ -277,6 +279,16 @@ const AdminKycRoute = AdminKycRouteImport.update({
 const AdminLandingGeneratorRoute = AdminLandingGeneratorRouteImport.update({
   id: '/landing-generator',
   path: '/landing-generator',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadMailingRoute = AdminLeadMailingRouteImport.update({
+  id: '/lead-mailing',
+  path: '/lead-mailing',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadPostfachRoute = AdminLeadPostfachRouteImport.update({
+  id: '/lead-postfach',
+  path: '/lead-postfach',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMitarbeiterRoute = AdminMitarbeiterRouteImport.update({
@@ -570,6 +582,8 @@ export interface FileRoutesByFullPath {
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -655,6 +669,8 @@ export interface FileRoutesByTo {
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -743,6 +759,8 @@ export interface FileRoutesById {
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -831,6 +849,8 @@ export interface FileRouteTypes {
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -916,6 +936,8 @@ export interface FileRouteTypes {
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -1003,6 +1025,8 @@ export interface FileRouteTypes {
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -1355,6 +1379,20 @@ declare module '@tanstack/react-router' {
       path: '/landing-generator'
       fullPath: '/admin/landing-generator'
       preLoaderRoute: typeof AdminLandingGeneratorRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lead-mailing': {
+      id: '/admin/lead-mailing'
+      path: '/lead-mailing'
+      fullPath: '/admin/lead-mailing'
+      preLoaderRoute: typeof AdminLeadMailingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lead-postfach': {
+      id: '/admin/lead-postfach'
+      path: '/lead-postfach'
+      fullPath: '/admin/lead-postfach'
+      preLoaderRoute: typeof AdminLeadPostfachRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/mitarbeiter': {
@@ -1771,6 +1809,8 @@ interface AdminRouteChildren {
   AdminInfrastructureRoute: typeof AdminInfrastructureRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminLandingGeneratorRoute: typeof AdminLandingGeneratorRoute
+  AdminLeadMailingRoute: typeof AdminLeadMailingRoute
+  AdminLeadPostfachRoute: typeof AdminLeadPostfachRoute
   AdminMitarbeiterRoute: typeof AdminMitarbeiterRoute
   AdminPartnerCompaniesRoute: typeof AdminPartnerCompaniesRoute
   AdminPersonenRoute: typeof AdminPersonenRouteWithChildren
@@ -1804,6 +1844,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminInfrastructureRoute: AdminInfrastructureRoute,
   AdminKycRoute: AdminKycRoute,
   AdminLandingGeneratorRoute: AdminLandingGeneratorRoute,
+  AdminLeadMailingRoute: AdminLeadMailingRoute,
+  AdminLeadPostfachRoute: AdminLeadPostfachRoute,
   AdminMitarbeiterRoute: AdminMitarbeiterRoute,
   AdminPartnerCompaniesRoute: AdminPartnerCompaniesRoute,
   AdminPersonenRoute: AdminPersonenRouteWithChildren,
