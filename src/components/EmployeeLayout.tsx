@@ -1,21 +1,8 @@
 import { Outlet, useNavigate, useLocation } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTenant } from "@/contexts/TenantContext";
-import { NavLink } from "@/components/NavLink";
 import { GuidedOnboarding, HelpButton, HeaderHelpButton } from "@/components/GuidedOnboarding";
 import { OnboardingPopup } from "@/components/OnboardingPopup";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   Bell,
@@ -29,14 +16,13 @@ import {
   Settings,
   LogOut,
   Lock,
-  ChevronsLeft,
-  ChevronsRight,
 } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import FloatingChat from "@/components/FloatingChat";
 import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 import { MissingPayrollDataBanner } from "@/components/MissingPayrollDataBanner";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { GlassDock, type DockEntry } from "@/components/GlassDock";
+import glassBg from "@/assets/glass-office-bg.jpg";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { EmployeeStatus } from "@/lib/status";
@@ -103,135 +89,8 @@ function buildNavItems(opts: {
   return items;
 }
 
-function EmployeeSidebar({
-  employeeStatus,
-  kycPending,
-  kycRejected,
-  contractPending,
-  smsVisible,
-}: {
-  employeeStatus: EmployeeStatus | null;
-  kycPending: boolean;
-  kycRejected: boolean;
-  contractPending: boolean;
-  smsVisible: boolean;
-}) {
-  const { state, toggleSidebar } = useSidebar();
-  const collapsed = state === "collapsed";
-  const { signOut } = useAuth();
-  const { tenant } = useTenant();
-  const isActive = hasFullAccess(employeeStatus);
-  const items = buildNavItems({ kycPending, kycRejected, contractPending, smsVisible });
-
-  const brandName = "Mitarbeiter-Portal";
-  const brandInitial = "M";
-
-  return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar" data-tour="sidebar">
-      <SidebarContent className="flex flex-col h-full">
-        {/* Brand */}
-        <div className="px-4 py-5">
-          {!collapsed ? (
-            <div className="flex items-center gap-2.5">
-              {tenant?.logo_url ? (
-                <img src={tenant.logo_url} alt={brandName} className="h-7 w-7 rounded-md object-contain" />
-              ) : (
-                <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-                  <span className="text-xs font-bold text-primary-foreground">{brandInitial}</span>
-                </div>
-              )}
-              <div className="flex flex-col leading-tight min-w-0">
-                <span className="text-sm font-heading font-bold text-sidebar-foreground tracking-tight truncate">{brandName}</span>
-              </div>
-            </div>
-          ) : (
-            tenant?.logo_url ? (
-              <img src={tenant.logo_url} alt={brandName} className="h-7 w-7 rounded-md object-contain mx-auto" />
-            ) : (
-              <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center mx-auto">
-                <span className="text-xs font-bold text-primary-foreground">{brandInitial}</span>
-              </div>
-            )
-          )}
-        </div>
-
-        {/* Navigation */}
-        <SidebarGroup className="flex-1 px-2">
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-0.5">
-              {items.map((item) => {
-                const locked = item.requiresActive && !isActive;
-                return (
-                  <SidebarMenuItem key={item.title} data-tour={`nav-${item.url.replace("/", "")}`}>
-                    <SidebarMenuButton asChild className="h-auto py-0">
-                      <NavLink
-                        to={locked ? "#" : item.url}
-                        end
-                        className={cn(
-                          "sidebar-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium",
-                          locked && "text-sidebar-foreground/30 pointer-events-none cursor-not-allowed"
-                        )}
-                        activeClassName={locked ? "" : "active"}
-                        onClick={(e: React.MouseEvent) => { if (locked) e.preventDefault(); }}
-                      >
-                        {locked ? (
-                          <Lock className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-                        ) : (
-                          <item.icon className="h-[18px] w-[18px] shrink-0 text-sidebar-foreground/70" strokeWidth={1.5} />
-                        )}
-                        {!collapsed && <span className="flex-1">{item.title}</span>}
-                        {!collapsed && item.dot && (
-                          <span
-                            className={cn(
-                              "h-2 w-2 rounded-full shrink-0",
-                              item.dot === "orange" && "bg-orange-500",
-                              item.dot === "blue" && "bg-primary"
-                            )}
-                          />
-                        )}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Footer: Logout + Einklappen */}
-        <div className="border-t border-sidebar-border p-2 space-y-0.5">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={signOut}
-                className="text-sidebar-foreground/55 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-              >
-                <LogOut className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-                {!collapsed && <span className="text-sm">Abmelden</span>}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={toggleSidebar}
-                className="text-sidebar-foreground/55 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-              >
-                {collapsed ? (
-                  <ChevronsRight className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-                ) : (
-                  <ChevronsLeft className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-                )}
-                {!collapsed && <span className="text-sm">Einklappen</span>}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </div>
-      </SidebarContent>
-    </Sidebar>
-  );
-}
-
 export default function EmployeeLayout() {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, signOut } = useAuth();
   const { tenant } = useTenant();
   const navigate = useNavigate();
   const location = useLocation();
@@ -351,79 +210,45 @@ export default function EmployeeLayout() {
 
   const items = buildNavItems({ kycPending, kycRejected, contractPending, smsVisible });
   const isActive = hasFullAccess(employeeStatus);
-  // Bottom-Nav: Top-5 wichtigste Punkte, Rest landet im Sidebar-Sheet via Trigger
-  const bottomNavOrder = ["/dashboard", "/tasks", "/appointments", "/notifications", "/documents"];
-  const bottomItems = bottomNavOrder
-    .map((url) => items.find((i) => i.url === url))
-    .filter((i): i is NavItem => !!i);
+  const dockEntries: DockEntry[] = items.map((i) => ({
+    kind: "link",
+    title: i.title,
+    url: i.url,
+    icon: i.icon,
+    end: i.url === "/dashboard",
+    locked: i.requiresActive && !isActive,
+    dot: !!i.dot,
+    tour: `nav-${i.url.replace("/", "")}`,
+  }));
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <EmployeeSidebar
-          employeeStatus={employeeStatus}
-          kycPending={kycPending}
-          kycRejected={kycRejected}
-          contractPending={contractPending}
-          smsVisible={smsVisible}
-        />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-between border-b border-border bg-card px-3 sm:px-5 shrink-0">
-            <SidebarTrigger className="md:hidden" />
-            <div className="flex-1" />
-            <div className="flex items-center gap-1">
-              <ThemeToggle />
-              <HeaderHelpButton />
-              <div data-tour="notifications"><NotificationBell /></div>
-            </div>
-          </header>
-          <MissingPayrollDataBanner />
-          <main className="flex-1 overflow-auto pb-20 md:pb-0">
-            {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
-            <Outlet />
-          </main>
-          <FloatingChat />
-          <WhatsAppSupportButton />
-          {/* Mobile Bottom-Navigation */}
-          <nav
-            className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-card border-t border-border shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.1)]"
-            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-          >
-            <div className="grid grid-cols-5">
-              {bottomItems.map((item) => {
-                const locked = item.requiresActive && !isActive;
-                const isCurrent = location.pathname.startsWith(item.url);
-                return (
-                  <NavLink
-                    key={item.url}
-                    to={locked ? "#" : item.url}
-                    end
-                    onClick={(e: React.MouseEvent) => { if (locked) e.preventDefault(); }}
-                    className={cn(
-                      "flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium min-h-[56px] relative transition-colors",
-                      locked
-                        ? "text-muted-foreground/40"
-                        : isCurrent
-                        ? "text-primary font-semibold"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {locked ? <Lock className="h-5 w-5" strokeWidth={1.5} /> : <item.icon className="h-5 w-5" strokeWidth={1.5} />}
-                    <span className="leading-none truncate max-w-full px-1">{item.title}</span>
-                    {item.dot && !locked && (
-                      <span className={cn(
-                        "absolute top-1.5 right-[calc(50%-14px)] h-2 w-2 rounded-full",
-                        item.dot === "orange" && "bg-orange-500",
-                        item.dot === "blue" && "bg-primary"
-                      )} />
-                    )}
-                  </NavLink>
-                );
-              })}
-            </div>
-          </nav>
+    <div className="glass-shell min-h-screen flex flex-col">
+      <div className="glass-bg" style={{ backgroundImage: `url(${glassBg})` }} aria-hidden />
+      <header className="sticky top-0 z-30 px-3 sm:px-6 pt-3">
+        <div className="glass-panel rounded-full h-14 flex items-center gap-3 px-3 sm:px-4">
+          {tenant?.logo_url ? (
+            <img src={tenant.logo_url} alt="Logo" className="h-8 w-8 rounded-full object-contain bg-muted shrink-0" />
+          ) : (
+            <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">M</div>
+          )}
+          <span className="text-sm font-medium truncate min-w-0">Mitarbeiter-Portal</span>
+          <div className="ml-auto flex items-center gap-1 shrink-0">
+            <HeaderHelpButton />
+            <div data-tour="notifications"><NotificationBell /></div>
+            <button onClick={signOut} title="Abmelden" className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground">
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </header>
+      <MissingPayrollDataBanner />
+      <main className="flex-1 min-w-0 pb-28">
+        {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
+        <Outlet />
+      </main>
+      <FloatingChat />
+      <WhatsAppSupportButton />
+      <GlassDock entries={dockEntries} tour="sidebar" />
+    </div>
   );
 }
