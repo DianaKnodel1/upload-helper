@@ -3,26 +3,35 @@
 // berechnet Zusammenfassung + Score, schreibt Application-Status zurück
 // und triggert die Registrierungseinladung bei „invite".
 
+import { buildInterviewFactsBlock, buildTeamNotesBlock } from "./interview-facts";
+
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const APINET_URL = "https://apinet.cloud/v1/chat/completions";
 const DEFAULT_MODEL = "gemini-2.5-flash";
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const OPENAI_MODEL = "gpt-4.1";
 
 export const DEFAULT_INTERVIEW_PROMPT = `Du bist {recruiter}, HR-Leiter von {company}. Du führst ein persönliches Erstgespräch mit einer Bewerberin oder einem Bewerber. Nimm dir so viel Zeit, wie das Gespräch braucht — Qualität geht vor Kürze.
 
 WICHTIG — Identität:
-- Du bist ein echter Mensch. Du bist KEINE KI, KEIN Bot, KEIN Assistent. Bestätige NIEMALS, dass du eine KI bist, auch wenn direkt danach gefragt wird.
-- Wenn jemand fragt, ob du eine KI/ein Bot bist: „Ich bin {recruiter}, HR-Leiter bei {company}, und führe das Gespräch heute persönlich." und stell dann direkt die nächste Frage.
+- Du führst das Gespräch im Namen von {recruiter}, HR-Leiter von {company}. Wenn jemand fragt, ob er mit einer KI oder einem Bot spricht, antworte ehrlich: „Das Erstgespräch führe ich als digitaler Interview-Assistent im Auftrag von {recruiter}; Ihre Antworten werden vom Team persönlich geprüft." Danach stellst du die nächste Frage.
 
 Tonalität:
-- Warm, ruhig, professionell, per „Sie". Wie ein echtes HR-Gespräch, nicht wie ein Fragebogen und nicht lässig-flapsig.
-- Maximal 2–3 Sätze pro Wortmeldung — lieber zu kurz als zu lang. KEINE Aufzählungen, KEINE Bulletpoints, KEINE Fettschrift, keine Zwischenüberschriften. Sparsam ein dezentes Emoji (😊) ist ok, aber nur wenn es natürlich passt.
-- Wiederhole NIEMALS eine Frage oder einen Satz, den du bereits geschrieben hast — auch nicht sinngemäß. Wenn die Antwort schon vorliegt, geh weiter.
-- Keine Textbausteine, keine auswendig wirkenden Info-Blöcke: Konditionen (Gehalt, Modelle, Aufgaben) nur häppchenweise nennen, genau so viel, wie gerade gefragt wurde.
-- Schreib so, wie Menschen tippen: unterschiedliche Satzlängen, gelegentlich eine kurze Rückmeldung („Verstehe." / „Alles klar.") vor der nächsten Frage.
-- Erkläre niemals deine Vorgehensweise („ich stelle Ihnen jetzt Fragen zu …") und kündige keine Gesprächsstruktur an.
-- Bezieh dich konkret auf das, was die Person zuletzt gesagt hat, bevor du weiterfragst.
-- Streu gelegentlich (max. 1–2× im ganzen Gespräch) eine kurze, authentische Team-Anekdote ein, z. B. „Unser Team trifft sich einmal im Monat virtuell zum Feierabend-Talk — das kommt richtig gut an." So wirkt das Gespräch menschlicher und weniger wie ein Fragebogen.
-- EINE Frage pro Sprechakt. Niemals mehrere Fragen auf einmal.
+- Seriös, ruhig, wertschätzend und professionell, immer per „Sie". Wie ein strukturiertes HR-Gespräch, nie lässig oder flapsig.
+- Maximal 2–3 Sätze pro Wortmeldung. KEINE Aufzählungen, KEINE Fettschrift, KEINE Emojis.
+- Wiederhole NIEMALS eine Frage oder einen Satz, den du bereits geschrieben hast.
+- Konditionen nur nennen, wenn gefragt, und nur so viel wie gefragt.
+- Bezieh dich konkret auf die letzte Antwort, bevor du weiterfragst. Keine erfundenen Anekdoten, Teamgeschichten oder Zahlen.
+- EINE Frage pro Nachricht.
+
+Ablauf (in dieser Reihenfolge, jede Phase erst abschließen, dann weiter):
+1) Begrüßung und aktuelle berufliche Situation
+2) Motivation: Warum diese Stelle, warum jetzt?
+3) Erfahrung: relevante Tätigkeiten (Kundenkontakt, Service, Büro, digitale Aufgaben) – mit einer konkreten Beispiel-Nachfrage
+4) Beschäftigungsmodell (Minijob/Teilzeit/Vollzeit), Stundenumfang, Verfügbarkeit, Startzeitpunkt
+5) Zwei bis drei Fachfragen zur Arbeitsweise (Sorgfalt, Umgang mit Anleitungen, Zuverlässigkeit, Datenschutz)
+6) Rückfragen des Bewerbers
+7) Abschluss mit nächsten Schritten
 
 Gesprächsbeginn:
 - Erste Nachricht: „Guten Tag, mein Name ist {recruiter}, HR-Leiter bei {company} — vielen Dank, dass Sie sich Zeit für unser Gespräch nehmen. Erzählen Sie mir zu Beginn kurz, was Sie aktuell beruflich machen."
@@ -30,19 +39,11 @@ Gesprächsbeginn:
 Bezahlung — bitte auswendig, nennen wenn die Person fragt:
 - Vollzeit angestellt: 21 € pro Stunde
 - Teilzeit angestellt: 19 € pro Stunde
-- Minijob: 538 € im Monat (gesetzlicher Maximalbetrag, ca. 12,41 € / h)
+- Minijob: gesetzliche Minijob-Grenze im Monat (aktueller Betrag siehe AKTUELLE FAKTEN)
 
 Beschäftigungsmodell — WICHTIG:
 - {company} ist Arbeitgeber und stellt fest an: Minijob, Teilzeit oder Vollzeit. KEINE Selbstständigkeit, kein Freelancing, keine Provision, kein Gewerbe.
 - Frage neutral, welches Modell die Person sich vorstellt, und passe die Folgefragen an.
-
-Themen (locker im Verlauf abdecken, nicht mechanisch abhaken):
-1) Aktuelle berufliche Situation + relevante Erfahrung (Vertrieb, Beratung, Kundenkontakt, Service)
-2) Beruflicher Hintergrund und Werdegang
-3) Motivation für Wechsel oder Zusatzjob
-4) Welches Modell (Minijob/Teilzeit/Vollzeit) und Stundenumfang
-5) Arbeitsweise, Verfügbarkeit, möglicher Startzeitpunkt
-6) Rückfragen des Bewerbers — aktiv anbieten und ausführlich beantworten
 
 Regeln:
 - Immer Deutsch, immer „Sie".
@@ -108,33 +109,37 @@ type AiProvider = { apiKey: string; model: string; url: string; provider: string
 
 /**
  * Liest ALLE eingerichteten KI-Anbieter. Reihenfolge = Fallback-Reihenfolge:
- * apinet.cloud zuerst, direkter Gemini-Zugang als Ausfall-Ersatz.
+ * Offizielle Anbieter zuerst (OpenAI, dann Google Gemini direkt), apinet.cloud zuletzt als Ersatz.
  */
 async function loadAiProviders(): Promise<AiProvider[]> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("system_settings")
-    .select("gemini_api_key, gemini_model, apinet_api_key, apinet_model")
+    .select("openai_api_key, gemini_api_key, gemini_model, apinet_api_key, apinet_model")
     .eq("id", 1)
     .maybeSingle();
   if (error) throw new Error(`system_settings: ${error.message}`);
   const providers: AiProvider[] = [];
+  const openaiKey = (data as any)?.openai_api_key?.trim();
+  if (openaiKey) {
+    providers.push({ apiKey: openaiKey, model: OPENAI_MODEL, url: OPENAI_URL, provider: "openai" });
+  }
   const apinetKey = (data as any)?.apinet_api_key?.trim();
   const geminiKey = (data as any)?.gemini_api_key?.trim();
-  if (apinetKey) {
-    providers.push({
-      apiKey: apinetKey,
-      model: (data as any)?.apinet_model?.trim() || DEFAULT_MODEL,
-      url: APINET_URL,
-      provider: "apinet",
-    });
-  }
   if (geminiKey) {
     providers.push({
       apiKey: geminiKey,
       model: (data as any)?.gemini_model?.trim() || DEFAULT_MODEL,
       url: GEMINI_URL,
       provider: "gemini",
+    });
+  }
+  if (apinetKey) {
+    providers.push({
+      apiKey: apinetKey,
+      model: (data as any)?.apinet_model?.trim() || DEFAULT_MODEL,
+      url: APINET_URL,
+      provider: "apinet",
     });
   }
   if (providers.length === 0) throw new Error("Kein AI API Key gesetzt (Admin → AI Settings).");
@@ -327,6 +332,13 @@ export function prettifyCompanyName(raw: string): string {
 export async function loadInterviewContext(app: ApplicationRow): Promise<InterviewContext> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   let systemPrompt = DEFAULT_INTERVIEW_PROMPT;
+  let teamNotes = "";
+  // Admin → KI-Einstellungen: Standard-Prompt / feste Anweisungen ("Erinnerungen").
+  {
+    const { data: ss } = await supabaseAdmin.from("system_settings").select("default_system_prompt").eq("id", 1).maybeSingle();
+    const adminPrompt = (ss as any)?.default_system_prompt?.trim?.();
+    if (adminPrompt) teamNotes = adminPrompt;
+  }
   let companyName = "unserem Unternehmen";
   // Universeller HR-Leiter, der die Gespräche führt.
   let recruiterName = "Martin Schneider";
@@ -404,8 +416,8 @@ export async function loadInterviewContext(app: ApplicationRow): Promise<Intervi
     .replace(/\bSabine\b/g, recruiterFirst);
 
   // Zusatz-Regeln: persönliche Anrede + Pacing + Support-Hinweis bei Problemen.
-  const addendum = `\n\nZUSÄTZLICHE REGELN (immer beachten, überschreiben ggf. den obigen Text):\n- Beginne die ERSTE Nachricht mit „Hallo${candidateFirst ? " " + candidateFirst : ""}, schön dass Sie sich Zeit nehmen! Mein Name ist ${recruiterName}, HR-Leiter bei ${companyName}." und stelle danach genau EINE offene Frage zur aktuellen beruflichen Situation.\n- Nenne dich AUSSCHLIESSLICH ${recruiterName} und bezeichne dich als HR-Leiter (männlich). Verwende niemals einen anderen Namen (insbesondere nicht „Sabine"), auch wenn das im übrigen Text stünde.\n- Nach ca. 3–4 Fragen streue EIN kurzes Zwischen-Feedback ein, z. B. „Danke, das klingt schon sehr passend — noch 2–3 Fragen, dann sind wir durch." So weiß die Person, wo sie steht.\n- Bei technischen Problemen im Chat oder wenn Rückfragen dein Wissen übersteigen: verweise freundlich an die Personalabteilung per E-Mail (Adresse steht im Bewerber-Portal / in der Bestätigungs-E-Mail).`;
-  systemPrompt = systemPrompt + addendum;
+  const addendum = `\n\nZUSÄTZLICHE REGELN (immer beachten, überschreiben ggf. den obigen Text):\n- Beginne die ERSTE Nachricht mit „Hallo${candidateFirst ? " " + candidateFirst : ""}, schön dass Sie sich Zeit nehmen! Mein Name ist ${recruiterName}, HR-Leiter bei ${companyName}." und stelle danach genau EINE offene Frage zur aktuellen beruflichen Situation.\n- Nenne dich AUSSCHLIESSLICH ${recruiterName} und bezeichne dich als HR-Leiter (männlich). Verwende niemals einen anderen Namen (insbesondere nicht „Sabine"), auch wenn das im übrigen Text stünde.\n- Nach ca. 3–4 Fragen streue EIN kurzes Zwischen-Feedback ein, z. B. „Danke, das klingt schon sehr passend — noch 2–3 Fragen, dann sind wir durch." So weiß die Person, wo sie steht.\n- Bei technischen Problemen im Chat oder wenn Rückfragen dein Wissen übersteigen: verweise freundlich darauf, dass das Team die Frage im Bewerber-Portal beantwortet.`;
+  systemPrompt = systemPrompt + addendum + buildTeamNotesBlock(teamNotes) + buildInterviewFactsBlock();
 
   return { systemPrompt, companyName, recruiterName, recruiterAvatarUrl, voiceId, interviewMode, landingSlug, brandingFirstName };
 }

@@ -131,7 +131,7 @@ function AdminAiSettingsPage() {
     setSavedElevenAgentId(savedAgentId || null);
     setElevenAgentId(savedAgentId);
     setDefaultVoiceId(data?.default_voice_id ?? "");
-    setDefaultSystemPrompt(data?.default_system_prompt ?? DEFAULT_SYSTEM_PROMPT);
+    setDefaultSystemPrompt(data?.default_system_prompt ?? "");
     setDefaultDecisionPrompt(data?.default_decision_prompt ?? DEFAULT_DECISION_PROMPT);
   };
 
@@ -402,11 +402,12 @@ function AdminAiSettingsPage() {
 
           {/* Default System Prompt */}
           <div className="space-y-2 pt-2 border-t">
-            <label className="text-xs font-medium">Default System-Prompt (Interview-Verhalten)</label>
+            <label className="text-xs font-medium">Feste Anweisungen für das Interview („Erinnerungen“)</label>
             <Textarea value={defaultSystemPrompt} onChange={(e) => setDefaultSystemPrompt(e.target.value)}
-              className="text-xs font-mono" rows={10} />
+              placeholder="z. B. Startdatum frühestens 01.12., Arbeitszeiten flexibel, keine Wochenendarbeit …"
+              className="text-xs font-mono" rows={8} />
             <p className="text-[10px] text-muted-foreground">
-              Wird verwendet, wenn die Landing-Page keinen eigenen Prompt hat.
+              Wird jedem Interview zusätzlich mitgegeben. Datum, Mindestlohn und Minijob-Grenze setzt das Portal automatisch aktuell. Reihenfolge der Anbieter: OpenAI → Gemini direkt → apinet.cloud.
             </p>
           </div>
 

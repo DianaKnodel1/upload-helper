@@ -43,10 +43,11 @@ import { Route as AdminCalendlyRouteImport } from './routes/admin.calendly'
 import { Route as AdminChatRouteImport } from './routes/admin.chat'
 import { Route as AdminChatFaqRouteImport } from './routes/admin.chat-faq'
 import { Route as AdminContractsRouteImport } from './routes/admin.contracts'
-import { Route as AdminDomainsRouteImport } from './routes/admin.domains'
 import { Route as AdminInfrastructureRouteImport } from './routes/admin.infrastructure'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminLandingGeneratorRouteImport } from './routes/admin.landing-generator'
+import { Route as AdminLeadMailingRouteImport } from './routes/admin.lead-mailing'
+import { Route as AdminLeadPostfachRouteImport } from './routes/admin.lead-postfach'
 import { Route as AdminMitarbeiterRouteImport } from './routes/admin.mitarbeiter'
 import { Route as AdminPartnerCompaniesRouteImport } from './routes/admin.partner-companies'
 import { Route as AdminPersonenRouteImport } from './routes/admin.personen'
@@ -56,7 +57,6 @@ import { Route as AdminRevisionsRouteImport } from './routes/admin.revisions'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSmsRouteImport } from './routes/admin.sms'
 import { Route as AdminStatistikenRouteImport } from './routes/admin.statistiken'
-import { Route as AdminTeamLeaderSettingsRouteImport } from './routes/admin.team-leader-settings'
 import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
 import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
 import { Route as AdminUploadsRouteImport } from './routes/admin.uploads'
@@ -87,6 +87,8 @@ import { Route as ApiPublicInterviewVoiceRouteImport } from './routes/api/public
 import { Route as ApiPublicInvitePrefillRouteImport } from './routes/api/public/invite-prefill'
 import { Route as ApiPublicLandingServerBootstrapRouteImport } from './routes/api/public/landing-server-bootstrap'
 import { Route as ApiPublicLandingServerHeartbeatRouteImport } from './routes/api/public/landing-server-heartbeat'
+import { Route as ApiPublicLeadMailingCronRouteImport } from './routes/api/public/lead-mailing-cron'
+import { Route as ApiPublicResendWebhookRouteImport } from './routes/api/public/resend-webhook'
 import { Route as ApiPublicSmsPollCronRouteImport } from './routes/api/public/sms-poll-cron'
 import { Route as ApiPublicTtsTestRouteImport } from './routes/api/public/tts-test'
 import { Route as InterviewVoiceAppIdRouteImport } from './routes/interview.voice.$appId'
@@ -264,11 +266,6 @@ const AdminContractsRoute = AdminContractsRouteImport.update({
   path: '/contracts',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDomainsRoute = AdminDomainsRouteImport.update({
-  id: '/domains',
-  path: '/domains',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminInfrastructureRoute = AdminInfrastructureRouteImport.update({
   id: '/infrastructure',
   path: '/infrastructure',
@@ -282,6 +279,16 @@ const AdminKycRoute = AdminKycRouteImport.update({
 const AdminLandingGeneratorRoute = AdminLandingGeneratorRouteImport.update({
   id: '/landing-generator',
   path: '/landing-generator',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadMailingRoute = AdminLeadMailingRouteImport.update({
+  id: '/lead-mailing',
+  path: '/lead-mailing',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadPostfachRoute = AdminLeadPostfachRouteImport.update({
+  id: '/lead-postfach',
+  path: '/lead-postfach',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMitarbeiterRoute = AdminMitarbeiterRouteImport.update({
@@ -327,11 +334,6 @@ const AdminSmsRoute = AdminSmsRouteImport.update({
 const AdminStatistikenRoute = AdminStatistikenRouteImport.update({
   id: '/statistiken',
   path: '/statistiken',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTeamLeaderSettingsRoute = AdminTeamLeaderSettingsRouteImport.update({
-  id: '/team-leader-settings',
-  path: '/team-leader-settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTenantsRoute = AdminTenantsRouteImport.update({
@@ -494,6 +496,17 @@ const ApiPublicLandingServerHeartbeatRoute =
     path: '/api/public/landing-server-heartbeat',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicLeadMailingCronRoute =
+  ApiPublicLeadMailingCronRouteImport.update({
+    id: '/api/public/lead-mailing-cron',
+    path: '/api/public/lead-mailing-cron',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicResendWebhookRoute = ApiPublicResendWebhookRouteImport.update({
+  id: '/api/public/resend-webhook',
+  path: '/api/public/resend-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSmsPollCronRoute = ApiPublicSmsPollCronRouteImport.update({
   id: '/api/public/sms-poll-cron',
   path: '/api/public/sms-poll-cron',
@@ -566,10 +579,11 @@ export interface FileRoutesByFullPath {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -579,7 +593,6 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -610,6 +623,8 @@ export interface FileRoutesByFullPath {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -651,10 +666,11 @@ export interface FileRoutesByTo {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -664,7 +680,6 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -695,6 +710,8 @@ export interface FileRoutesByTo {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -739,10 +756,11 @@ export interface FileRoutesById {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
+  '/admin/lead-mailing': typeof AdminLeadMailingRoute
+  '/admin/lead-postfach': typeof AdminLeadPostfachRoute
   '/admin/mitarbeiter': typeof AdminMitarbeiterRoute
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
@@ -752,7 +770,6 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -783,6 +800,8 @@ export interface FileRoutesById {
   '/api/public/invite-prefill': typeof ApiPublicInvitePrefillRoute
   '/api/public/landing-server-bootstrap': typeof ApiPublicLandingServerBootstrapRoute
   '/api/public/landing-server-heartbeat': typeof ApiPublicLandingServerHeartbeatRoute
+  '/api/public/lead-mailing-cron': typeof ApiPublicLeadMailingCronRoute
+  '/api/public/resend-webhook': typeof ApiPublicResendWebhookRoute
   '/api/public/sms-poll-cron': typeof ApiPublicSmsPollCronRoute
   '/api/public/tts-test': typeof ApiPublicTtsTestRoute
   '/interview/voice/$appId': typeof InterviewVoiceAppIdRoute
@@ -827,10 +846,11 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -840,7 +860,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -871,6 +890,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -912,10 +933,11 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -925,7 +947,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -956,6 +977,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -999,10 +1022,11 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
+    | '/admin/lead-mailing'
+    | '/admin/lead-postfach'
     | '/admin/mitarbeiter'
     | '/admin/partner-companies'
     | '/admin/personen'
@@ -1012,7 +1036,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -1043,6 +1066,8 @@ export interface FileRouteTypes {
     | '/api/public/invite-prefill'
     | '/api/public/landing-server-bootstrap'
     | '/api/public/landing-server-heartbeat'
+    | '/api/public/lead-mailing-cron'
+    | '/api/public/resend-webhook'
     | '/api/public/sms-poll-cron'
     | '/api/public/tts-test'
     | '/interview/voice/$appId'
@@ -1086,6 +1111,8 @@ export interface RootRouteChildren {
   ApiPublicInvitePrefillRoute: typeof ApiPublicInvitePrefillRoute
   ApiPublicLandingServerBootstrapRoute: typeof ApiPublicLandingServerBootstrapRoute
   ApiPublicLandingServerHeartbeatRoute: typeof ApiPublicLandingServerHeartbeatRoute
+  ApiPublicLeadMailingCronRoute: typeof ApiPublicLeadMailingCronRoute
+  ApiPublicResendWebhookRoute: typeof ApiPublicResendWebhookRoute
   ApiPublicSmsPollCronRoute: typeof ApiPublicSmsPollCronRoute
   ApiPublicTtsTestRoute: typeof ApiPublicTtsTestRoute
   InterviewVoiceAppIdRoute: typeof InterviewVoiceAppIdRoute
@@ -1333,13 +1360,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContractsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/domains': {
-      id: '/admin/domains'
-      path: '/domains'
-      fullPath: '/admin/domains'
-      preLoaderRoute: typeof AdminDomainsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/infrastructure': {
       id: '/admin/infrastructure'
       path: '/infrastructure'
@@ -1359,6 +1379,20 @@ declare module '@tanstack/react-router' {
       path: '/landing-generator'
       fullPath: '/admin/landing-generator'
       preLoaderRoute: typeof AdminLandingGeneratorRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lead-mailing': {
+      id: '/admin/lead-mailing'
+      path: '/lead-mailing'
+      fullPath: '/admin/lead-mailing'
+      preLoaderRoute: typeof AdminLeadMailingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lead-postfach': {
+      id: '/admin/lead-postfach'
+      path: '/lead-postfach'
+      fullPath: '/admin/lead-postfach'
+      preLoaderRoute: typeof AdminLeadPostfachRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/mitarbeiter': {
@@ -1422,13 +1456,6 @@ declare module '@tanstack/react-router' {
       path: '/statistiken'
       fullPath: '/admin/statistiken'
       preLoaderRoute: typeof AdminStatistikenRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/team-leader-settings': {
-      id: '/admin/team-leader-settings'
-      path: '/team-leader-settings'
-      fullPath: '/admin/team-leader-settings'
-      preLoaderRoute: typeof AdminTeamLeaderSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tenants': {
@@ -1641,6 +1668,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLandingServerHeartbeatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/lead-mailing-cron': {
+      id: '/api/public/lead-mailing-cron'
+      path: '/api/public/lead-mailing-cron'
+      fullPath: '/api/public/lead-mailing-cron'
+      preLoaderRoute: typeof ApiPublicLeadMailingCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/resend-webhook': {
+      id: '/api/public/resend-webhook'
+      path: '/api/public/resend-webhook'
+      fullPath: '/api/public/resend-webhook'
+      preLoaderRoute: typeof ApiPublicResendWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/sms-poll-cron': {
       id: '/api/public/sms-poll-cron'
       path: '/api/public/sms-poll-cron'
@@ -1765,10 +1806,11 @@ interface AdminRouteChildren {
   AdminChatRoute: typeof AdminChatRoute
   AdminChatFaqRoute: typeof AdminChatFaqRoute
   AdminContractsRoute: typeof AdminContractsRoute
-  AdminDomainsRoute: typeof AdminDomainsRoute
   AdminInfrastructureRoute: typeof AdminInfrastructureRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminLandingGeneratorRoute: typeof AdminLandingGeneratorRoute
+  AdminLeadMailingRoute: typeof AdminLeadMailingRoute
+  AdminLeadPostfachRoute: typeof AdminLeadPostfachRoute
   AdminMitarbeiterRoute: typeof AdminMitarbeiterRoute
   AdminPartnerCompaniesRoute: typeof AdminPartnerCompaniesRoute
   AdminPersonenRoute: typeof AdminPersonenRouteWithChildren
@@ -1778,7 +1820,6 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSmsRoute: typeof AdminSmsRoute
   AdminStatistikenRoute: typeof AdminStatistikenRoute
-  AdminTeamLeaderSettingsRoute: typeof AdminTeamLeaderSettingsRoute
   AdminTenantsRoute: typeof AdminTenantsRoute
   AdminTransactionsRoute: typeof AdminTransactionsRoute
   AdminUploadsRoute: typeof AdminUploadsRoute
@@ -1800,10 +1841,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminChatRoute: AdminChatRoute,
   AdminChatFaqRoute: AdminChatFaqRoute,
   AdminContractsRoute: AdminContractsRoute,
-  AdminDomainsRoute: AdminDomainsRoute,
   AdminInfrastructureRoute: AdminInfrastructureRoute,
   AdminKycRoute: AdminKycRoute,
   AdminLandingGeneratorRoute: AdminLandingGeneratorRoute,
+  AdminLeadMailingRoute: AdminLeadMailingRoute,
+  AdminLeadPostfachRoute: AdminLeadPostfachRoute,
   AdminMitarbeiterRoute: AdminMitarbeiterRoute,
   AdminPartnerCompaniesRoute: AdminPartnerCompaniesRoute,
   AdminPersonenRoute: AdminPersonenRouteWithChildren,
@@ -1813,7 +1855,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSmsRoute: AdminSmsRoute,
   AdminStatistikenRoute: AdminStatistikenRoute,
-  AdminTeamLeaderSettingsRoute: AdminTeamLeaderSettingsRoute,
   AdminTenantsRoute: AdminTenantsRoute,
   AdminTransactionsRoute: AdminTransactionsRoute,
   AdminUploadsRoute: AdminUploadsRoute,
@@ -1860,6 +1901,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInvitePrefillRoute: ApiPublicInvitePrefillRoute,
   ApiPublicLandingServerBootstrapRoute: ApiPublicLandingServerBootstrapRoute,
   ApiPublicLandingServerHeartbeatRoute: ApiPublicLandingServerHeartbeatRoute,
+  ApiPublicLeadMailingCronRoute: ApiPublicLeadMailingCronRoute,
+  ApiPublicResendWebhookRoute: ApiPublicResendWebhookRoute,
   ApiPublicSmsPollCronRoute: ApiPublicSmsPollCronRoute,
   ApiPublicTtsTestRoute: ApiPublicTtsTestRoute,
   InterviewVoiceAppIdRoute: InterviewVoiceAppIdRoute,

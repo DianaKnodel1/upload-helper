@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { translateAuthError } from "@/lib/auth-errors";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Lock, Save, Palette, Bot, ArrowRight, Globe, Users as UsersIcon, Mail, History, Handshake, CalendarClock, Server, FileText, AlertTriangle } from "lucide-react";
+import { Lock, Save, Palette, Bot, ArrowRight, Globe, Mail, History, Handshake, CalendarClock, Server, FileText, AlertTriangle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookingLimitsCard } from "@/components/admin/BookingLimitsCard";
 import { WhatsAppSupportCard } from "@/components/admin/WhatsAppSupportCard";
@@ -147,7 +147,6 @@ const SECTIONS: { value: string; hint: string; tiles: TileDef[] }[] = [
     tiles: [
       { to: "/admin/tenants", title: "Domains / Tenants", desc: "Rebranding, Hero, Logo, Unternehmensdaten", icon: Globe },
       { to: "/admin/landing-generator", title: "Landing Pages", desc: "Themes, WhatsApp-Button, Generator", icon: Globe },
-      { to: "/admin/domains", title: "Domains (Cloudflare)", desc: "DNS, SSL, Health-Checks", icon: Globe },
       { to: "/admin/infrastructure", title: "Infrastruktur", desc: "Landing-Server, Heartbeat, Deploys", icon: Server },
     ],
   },
@@ -173,7 +172,6 @@ const SECTIONS: { value: string; hint: string; tiles: TileDef[] }[] = [
     value: "konto",
     hint: "Eigenes Konto, Team und Protokoll.",
     tiles: [
-      { to: "/admin/team-leader-settings", title: "Teamleiter", desc: "Profil, Avatar, Online-Status", icon: UsersIcon },
       { to: "/admin/chat-faq", title: "Chat-Wissensbasis", desc: "Antworten, die der Chat-Vorschlag nutzen darf", icon: FileText },
       { to: "/admin/activity", title: "Protokoll", desc: "Aktivitäts-Log aller Admin-Aktionen", icon: History },
     ],
