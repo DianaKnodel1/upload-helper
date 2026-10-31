@@ -12,16 +12,20 @@
 ### Anbieter: Resend
 Resend bietet keine klassischen Postfächer zum Einloggen. Es kann aber Antworten an `bewerbung.it-agentur.solutions` empfangen und ans Portal weiterreichen. Ihr seht sie dann im Admin-Portal (siehe unten).
 
+### Mehrere Firmen
+Jeder Tenant bekommt eine eigene Versand-Subdomain seiner Domain, z. B. `bewerbung.firma-a.de`. Ihr müsst dafür nichts kaufen, sie wird nur in Resend hinzugefügt. Für mehrere Domains ist der Resend-Pro-Tarif nötig. Das Portal verschickt Mails immer über die Domain der Firma, zu der der Lead gehört.
+
 ### Funktion „Lead-Mailing“ (Admin)
-- CSV-Export aus dem Indeed-Dashboard im Portal hochladen.
-- Das Portal prüft Namen und E-Mail-Adressen, entfernt Dubletten und markiert Leads, die schon angeschrieben wurden.
-- Bearbeitbare Vorlage mit `{Vorname} {Nachname}`, Homepage-Link, Calendly-Link und Kontakt.
-- Mit Tageslimit (50 → 500) wird automatisch über den Tag verteilt verschickt.
-- Jeder Lead hat einen Status: wartend, gesendet, unzustellbar, abgemeldet oder hat geantwortet.
+- Den CSV-Export aus dem Indeed-Dashboard hochladen und eine Firma (Tenant) auswählen.
+- Die Leads erscheinen in „Bewerbungen“ mit der Quelle „Indeed“ und ihrem Mail-Status. Dubletten werden erkannt.
+- Bearbeitbare Vorlage je Firma mit `{Vorname} {Nachname}`, Homepage-Link, Calendly-Link und Kontakt.
+- Der Versand läuft automatisch, mit Tageslimit (50 → 500) und über den Tag verteilt.
+- Status je Lead: wartend, gesendet, unzustellbar, abgemeldet oder geantwortet.
 
 ### Lead-Postfach im Admin-Portal
-- Antworten der Bewerber erscheinen beim jeweiligen Lead (Name, Betreff, Text, Datum).
-- Ihr könnt direkt aus dem Portal antworten und jede Antwort als offen oder beantwortet markieren.
+- Ein neuer Menüpunkt „Lead-Postfach“ zeigt alle gesendeten Mails und die Antworten darauf als Verlauf je Bewerber.
+- Derselbe Verlauf ist auch in der jeweiligen Bewerbung zu sehen.
+- Ihr könnt direkt aus dem Portal antworten und Antworten als offen oder beantwortet markieren.
 
 ### Entwurf der Mail-Vorlage
 Betreff: „Ihre Bewerbung bei {Firma} – nächster Schritt“
@@ -42,6 +46,8 @@ Betreff: „Ihre Bewerbung bei {Firma} – nächster Schritt“
 - **OpenAI direkt:** Konto auf platform.openai.com anlegen, Guthaben aufladen und einen API-Schlüssel erzeugen.
 - **Google Gemini direkt:** In Google AI Studio (aistudio.google.com) die Abrechnung aktivieren und einen API-Schlüssel erzeugen.
 - Empfehlung: Legt beide an, einer wird Hauptmodell, der andere Ersatz. Die Schlüssel tragt ihr unter Admin → AI-Einstellungen ein.
+- Ein normales Gemini- oder ChatGPT-Abo lässt sich nicht nutzen, das Portal braucht einen API-Schlüssel.
+- „Erinnerungen“: Unter AI-Einstellungen gibt es ein Feld für feste Anweisungen und Fakten. Der Bot bekommt es bei jedem Interview mit.
 
 ## Teil 3 – Geschäftsführer-Unterschrift im AV-Export (vor der nächsten Ads-Welle)
 - Beim Export unter Mitarbeiter → Dokumente wird bisher nur die Unterschrift des Mitarbeiters eingesetzt.
