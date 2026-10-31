@@ -62,7 +62,7 @@ export function GlassDock({ entries, tour }: { entries: DockEntry[]; tour?: stri
             return (
               <Link
                 key={e.url}
-                to={e.locked ? "." : e.url}
+                to={e.url as any}
                 data-tour={e.tour}
                 data-active={active}
                 aria-current={active ? "page" : undefined}
@@ -92,7 +92,7 @@ export function GlassDock({ entries, tour }: { entries: DockEntry[]; tour?: stri
                     return (
                       <Link
                         key={i.url}
-                        to={i.url}
+                        to={i.url as any}
                         onClick={() => setOpenGroup(null)}
                         className={cn(
                           "flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors",
