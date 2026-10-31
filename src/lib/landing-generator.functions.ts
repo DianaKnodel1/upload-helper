@@ -5,7 +5,6 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getTheme } from "./landing-themes";
 import { THEME_ASSETS } from "./theme-assets.generated";
 import { buildLegalPage, renderImpressum, renderDatenschutz, isPlaceholderValue } from "./legal-content";
-import { buildClientLogosBlock } from "./client-logos-block";
 
 
 const HexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Ungültige Hex-Farbe");
@@ -393,12 +392,6 @@ function escH(s: unknown): string {
   ));
 }
 
-// ── Auftraggeber-Logoleiste (Standard auf allen Fast-Track-Landings) ──
-function injectClientLogos(html: string, accent: string): string {
-  if (/lv-client-logos/.test(html)) return html;
-  return insertBeforeAnchor(html, buildClientLogosBlock(accent));
-}
-
 function injectSocialProofBar(html: string, slots: Record<string, string>): string {
   if (/lv-social-proof/.test(html)) return html;
   const rating = (slots.google_rating || "").trim();
@@ -711,9 +704,6 @@ export const generateLandingZip = createServerFn({ method: "POST" })
 
     html = cleanEmptyMetaTags(html, cleanedBranding);
     html = injectTrustStrip(html, cleanedBranding.flow_type);
-    if (cleanedBranding.flow_type === "fast") {
-      html = injectClientLogos(html, cleanedBranding.primary_color || "#2563eb");
-    }
     html = injectSocialProofBar(html, slots);
     html = injectContactCard(html, cleanedBranding, slots);
     html = injectBenefits(html, slots);
