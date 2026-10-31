@@ -19,6 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, FileText, CheckCircle2, XCircle, Clock, Plus, Image as ImageIcon, Download, ClipboardList, FolderOpen } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
+import { useServerFn } from "@tanstack/react-start";
+import { getContractSignatureUrls } from "@/lib/contract-pdf.functions";
 import { applyEmploymentStartDate, replacePlaceholders, generateFallbackContract, formatGermanDate } from "@/lib/contract-utils";
 
 function extractSignatureStoragePath(value: string | null): string | null {
@@ -62,6 +64,7 @@ interface SubmissionFile {
 const isImage = (name: string) => /\.(jpe?g|png|webp|gif|heic|bmp)$/i.test(name);
 
 function DocumentsPage() {
+  const getSigUrlsFn = useServerFn(getContractSignatureUrls);
   const { user } = useAuth();
   const { toast } = useToast();
   const [docs, setDocs] = useState<Doc[]>([]);
@@ -176,19 +179,25 @@ function DocumentsPage() {
       }
       body = applyEmploymentStartDate(body, data.startDate);
 
-      // Unterschrift auflösen (Pfad oder URL)
+      // Unterschriften serverseitig auflösen (Mitarbeiter + Geschäftsführer aus Tenant)
       let sigSrc: string | null = null;
-      if (contract.signature_image_url) {
-        const signaturePath = extractSignatureStoragePath(contract.signature_image_url);
-        if (signaturePath) {
-          const { data: sig } = await supabase.storage
-            .from("signatures")
-            .createSignedUrl(signaturePath, 300);
-          sigSrc = sig?.signedUrl ?? null;
-        } else if (/^https?:\/\//i.test(contract.signature_image_url)) {
-          sigSrc = contract.signature_image_url;
+      let companySigSrc: string | null = null;
+      try {
+        const sigs = await getSigUrlsFn({ data: { contractId: contract.id } });
+        sigSrc = sigs?.employeeUrl ?? null;
+        companySigSrc = sigs?.companyUrl ?? null;
+      } catch {
+        if (contract.signature_image_url) {
+          const signaturePath = extractSignatureStoragePath(contract.signature_image_url);
+          if (signaturePath) {
+            const { data: sig } = await supabase.storage.from("signatures").createSignedUrl(signaturePath, 300);
+            sigSrc = sig?.signedUrl ?? null;
+          } else if (/^https?:\/\//i.test(contract.signature_image_url)) {
+            sigSrc = contract.signature_image_url;
+          }
         }
       }
+      const ceoName = (data.companyCeoName || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
 
       const escaped = body.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
       const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Arbeitsvertrag</title>
@@ -206,7 +215,10 @@ pre{white-space:pre-wrap;font-family:Georgia,serif;font-size:11pt;margin:0}
 <pre>${escaped}</pre>
 <div class="sig">
   <p><strong>Datum:</strong> ${new Date(contract.signed_at).toLocaleDateString("de-DE")}</p>
-  ${sigSrc ? `<p><strong>Unterschrift Arbeitnehmer:</strong></p><img src="${sigSrc}" alt="Unterschrift"/>` : ""}
+  <div style="display:flex;gap:32px;flex-wrap:wrap">
+    <div style="flex:1;min-width:220px">${companySigSrc ? `<p><strong>Unterschrift Arbeitgeber${ceoName ? ` (${ceoName})` : ""}:</strong></p><img src="${companySigSrc}" alt="Unterschrift Arbeitgeber"/>` : ""}</div>
+    <div style="flex:1;min-width:220px">${sigSrc ? `<p><strong>Unterschrift Arbeitnehmer:</strong></p><img src="${sigSrc}" alt="Unterschrift"/>` : ""}</div>
+  </div>
 </div>
 <div class="footer">Dieses Dokument wurde digital unterzeichnet und ist rechtsgültig.</div>
 <script>window.onload=function(){setTimeout(function(){window.print();},500);};</script>

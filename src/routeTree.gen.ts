@@ -43,7 +43,6 @@ import { Route as AdminCalendlyRouteImport } from './routes/admin.calendly'
 import { Route as AdminChatRouteImport } from './routes/admin.chat'
 import { Route as AdminChatFaqRouteImport } from './routes/admin.chat-faq'
 import { Route as AdminContractsRouteImport } from './routes/admin.contracts'
-import { Route as AdminDomainsRouteImport } from './routes/admin.domains'
 import { Route as AdminInfrastructureRouteImport } from './routes/admin.infrastructure'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminLandingGeneratorRouteImport } from './routes/admin.landing-generator'
@@ -56,7 +55,6 @@ import { Route as AdminRevisionsRouteImport } from './routes/admin.revisions'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSmsRouteImport } from './routes/admin.sms'
 import { Route as AdminStatistikenRouteImport } from './routes/admin.statistiken'
-import { Route as AdminTeamLeaderSettingsRouteImport } from './routes/admin.team-leader-settings'
 import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
 import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
 import { Route as AdminUploadsRouteImport } from './routes/admin.uploads'
@@ -264,11 +262,6 @@ const AdminContractsRoute = AdminContractsRouteImport.update({
   path: '/contracts',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDomainsRoute = AdminDomainsRouteImport.update({
-  id: '/domains',
-  path: '/domains',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminInfrastructureRoute = AdminInfrastructureRouteImport.update({
   id: '/infrastructure',
   path: '/infrastructure',
@@ -327,11 +320,6 @@ const AdminSmsRoute = AdminSmsRouteImport.update({
 const AdminStatistikenRoute = AdminStatistikenRouteImport.update({
   id: '/statistiken',
   path: '/statistiken',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTeamLeaderSettingsRoute = AdminTeamLeaderSettingsRouteImport.update({
-  id: '/team-leader-settings',
-  path: '/team-leader-settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTenantsRoute = AdminTenantsRouteImport.update({
@@ -566,7 +554,6 @@ export interface FileRoutesByFullPath {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
@@ -579,7 +566,6 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -651,7 +637,6 @@ export interface FileRoutesByTo {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
@@ -664,7 +649,6 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -739,7 +723,6 @@ export interface FileRoutesById {
   '/admin/chat': typeof AdminChatRoute
   '/admin/chat-faq': typeof AdminChatFaqRoute
   '/admin/contracts': typeof AdminContractsRoute
-  '/admin/domains': typeof AdminDomainsRoute
   '/admin/infrastructure': typeof AdminInfrastructureRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/landing-generator': typeof AdminLandingGeneratorRoute
@@ -752,7 +735,6 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/sms': typeof AdminSmsRoute
   '/admin/statistiken': typeof AdminStatistikenRoute
-  '/admin/team-leader-settings': typeof AdminTeamLeaderSettingsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/transactions': typeof AdminTransactionsRoute
   '/admin/uploads': typeof AdminUploadsRoute
@@ -827,7 +809,6 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
@@ -840,7 +821,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -912,7 +892,6 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
@@ -925,7 +904,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -999,7 +977,6 @@ export interface FileRouteTypes {
     | '/admin/chat'
     | '/admin/chat-faq'
     | '/admin/contracts'
-    | '/admin/domains'
     | '/admin/infrastructure'
     | '/admin/kyc'
     | '/admin/landing-generator'
@@ -1012,7 +989,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sms'
     | '/admin/statistiken'
-    | '/admin/team-leader-settings'
     | '/admin/tenants'
     | '/admin/transactions'
     | '/admin/uploads'
@@ -1333,13 +1309,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContractsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/domains': {
-      id: '/admin/domains'
-      path: '/domains'
-      fullPath: '/admin/domains'
-      preLoaderRoute: typeof AdminDomainsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/infrastructure': {
       id: '/admin/infrastructure'
       path: '/infrastructure'
@@ -1422,13 +1391,6 @@ declare module '@tanstack/react-router' {
       path: '/statistiken'
       fullPath: '/admin/statistiken'
       preLoaderRoute: typeof AdminStatistikenRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/team-leader-settings': {
-      id: '/admin/team-leader-settings'
-      path: '/team-leader-settings'
-      fullPath: '/admin/team-leader-settings'
-      preLoaderRoute: typeof AdminTeamLeaderSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tenants': {
@@ -1765,7 +1727,6 @@ interface AdminRouteChildren {
   AdminChatRoute: typeof AdminChatRoute
   AdminChatFaqRoute: typeof AdminChatFaqRoute
   AdminContractsRoute: typeof AdminContractsRoute
-  AdminDomainsRoute: typeof AdminDomainsRoute
   AdminInfrastructureRoute: typeof AdminInfrastructureRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminLandingGeneratorRoute: typeof AdminLandingGeneratorRoute
@@ -1778,7 +1739,6 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSmsRoute: typeof AdminSmsRoute
   AdminStatistikenRoute: typeof AdminStatistikenRoute
-  AdminTeamLeaderSettingsRoute: typeof AdminTeamLeaderSettingsRoute
   AdminTenantsRoute: typeof AdminTenantsRoute
   AdminTransactionsRoute: typeof AdminTransactionsRoute
   AdminUploadsRoute: typeof AdminUploadsRoute
@@ -1800,7 +1760,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminChatRoute: AdminChatRoute,
   AdminChatFaqRoute: AdminChatFaqRoute,
   AdminContractsRoute: AdminContractsRoute,
-  AdminDomainsRoute: AdminDomainsRoute,
   AdminInfrastructureRoute: AdminInfrastructureRoute,
   AdminKycRoute: AdminKycRoute,
   AdminLandingGeneratorRoute: AdminLandingGeneratorRoute,
@@ -1813,7 +1772,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSmsRoute: AdminSmsRoute,
   AdminStatistikenRoute: AdminStatistikenRoute,
-  AdminTeamLeaderSettingsRoute: AdminTeamLeaderSettingsRoute,
   AdminTenantsRoute: AdminTenantsRoute,
   AdminTransactionsRoute: AdminTransactionsRoute,
   AdminUploadsRoute: AdminUploadsRoute,
