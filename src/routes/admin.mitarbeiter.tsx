@@ -413,6 +413,7 @@ function AdminMitarbeiterPage() {
           </>
         )}
       </Card>
+      <ComposeMailDialog open={!!mailUserId} onOpenChange={(v) => { if (!v) setMailUserId(null); }} userId={mailUserId ?? undefined} />
     </div>
   );
 }
