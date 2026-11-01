@@ -1,0 +1,48 @@
+{
+  "id": "site-16",
+  "kind": "site",
+  "standard": "premium-theme-v1",
+  "name": "Website-Theme 16 (Test-Theme Premium-Standard)",
+  "description": "Technisches Referenz-Theme für extern entwickelte Premium-Themes: Header, Hero, Vorteile, FAQ, Bewerbungs-CTA und Footer.",
+  "colors": { "primary": "#1f4e5f", "secondary": "#e0a458" },
+  "pages": [
+    { "id": "home", "slug": "", "title": "Startseite" },
+    { "id": "faq", "slug": "faq", "title": "FAQ" }
+  ],
+  "slots": [
+    { "key": "logo_image", "label": "Logo", "type": "image", "group": "Kopfbereich", "default": "assets/img/logo-mark.svg" },
+    { "key": "brand_name", "label": "Firmenname", "type": "text", "group": "Kopfbereich", "default": "Muster Digital Services" },
+    { "key": "nav_home_label", "label": "Navigation: Start", "type": "text", "group": "Kopfbereich", "default": "Start" },
+    { "key": "nav_faq_label", "label": "Navigation: FAQ", "type": "text", "group": "Kopfbereich", "default": "FAQ" },
+    { "key": "cta_label", "label": "Bewerbungs-Button", "type": "text", "group": "Kopfbereich", "default": "Jetzt bewerben" },
+
+    { "key": "hero_eyebrow", "label": "Hero: Kleine Zeile", "type": "text", "group": "Hero", "default": "Fast-Track Bewerbung · Homeoffice" },
+    { "key": "hero_title", "label": "Hero: Überschrift", "type": "text", "group": "Hero", "default": "App-Tester im Homeoffice – fest angestellt und flexibel" },
+    { "key": "hero_description", "label": "Hero: Text", "type": "longtext", "group": "Hero", "default": "Sie prüfen Apps und Webseiten auf Verständlichkeit und Fehler. Die Einarbeitung erfolgt digital, die Bewerbung dauert nur wenige Minuten." },
+    { "key": "hero_image", "label": "Hero: Bild", "type": "image", "group": "Hero", "default": "assets/img/hero.jpg" },
+    { "key": "hero_image_alt", "label": "Hero: Bildbeschreibung", "type": "text", "group": "Hero", "default": "Person arbeitet im Homeoffice am Laptop" },
+    { "key": "hero_secondary_label", "label": "Hero: Zweiter Button", "type": "text", "group": "Hero", "default": "Häufige Fragen" },
+    { "key": "hero_secondary_link", "label": "Hero: Ziel zweiter Button", "type": "link", "group": "Hero", "default": "/faq" },
+
+    { "key": "benefits_title", "label": "Vorteile: Überschrift", "type": "text", "group": "Vorteile", "default": "Was Sie bei uns erwartet" },
+    { "key": "benefit_1_title", "label": "Vorteil 1: Titel", "type": "text", "group": "Vorteile", "default": "Feste Anstellung" },
+    { "key": "benefit_1_text", "label": "Vorteil 1: Text", "type": "textarea", "group": "Vorteile", "default": "Sozialversicherungspflichtig oder als Minijob – mit klaren Vereinbarungen." },
+    { "key": "benefit_2_title", "label": "Vorteil 2: Titel", "type": "text", "group": "Vorteile", "default": "Freie Zeiteinteilung" },
+    { "key": "benefit_2_text", "label": "Vorteil 2: Text", "type": "textarea", "group": "Vorteile", "default": "Aufträge erledigen Sie flexibel von zu Hause aus." },
+    { "key": "benefit_3_title", "label": "Vorteil 3: Titel", "type": "text", "group": "Vorteile", "default": "Digitale Einarbeitung" },
+    { "key": "benefit_3_text", "label": "Vorteil 3: Text", "type": "textarea", "group": "Vorteile", "default": "Schritt-für-Schritt-Anleitungen und ein fester Ansprechpartner." },
+
+    { "key": "faq_title", "label": "FAQ: Überschrift", "type": "text", "group": "FAQ", "default": "Häufige Fragen" },
+    { "key": "faq_question_1", "label": "FAQ 1: Frage", "type": "text", "group": "FAQ", "default": "Brauche ich Vorkenntnisse?" },
+    { "key": "faq_answer_1", "label": "FAQ 1: Antwort", "type": "longtext", "group": "FAQ", "default": "Nein. Sorgfalt und ein Smartphone oder Computer reichen aus." },
+    { "key": "faq_question_2", "label": "FAQ 2: Frage", "type": "text", "group": "FAQ", "default": "Wie läuft die Bewerbung ab?" },
+    { "key": "faq_answer_2", "label": "FAQ 2: Antwort", "type": "longtext", "group": "FAQ", "default": "Sie füllen das kurze Formular aus und erhalten anschließend die nächsten Schritte per E-Mail." },
+    { "key": "faq_question_3", "label": "FAQ 3: Frage", "type": "text", "group": "FAQ", "default": "Wann kann ich starten?" },
+    { "key": "faq_answer_3", "label": "FAQ 3: Antwort", "type": "longtext", "group": "FAQ", "default": "In der Regel innerhalb weniger Tage nach Ihrer Registrierung." },
+
+    { "key": "cta_title", "label": "Abschluss-CTA: Überschrift", "type": "text", "group": "Bewerbung", "default": "Bereit für den Start?" },
+    { "key": "cta_text", "label": "Abschluss-CTA: Text", "type": "longtext", "group": "Bewerbung", "default": "Bewerben Sie sich jetzt – unkompliziert und ohne Anschreiben." },
+
+    { "key": "footer_claim", "label": "Footer: Kurztext", "type": "longtext", "group": "Footer", "default": "Qualitätssicherung im Homeoffice – fair, flexibel und transparent." }
+  ]
+}

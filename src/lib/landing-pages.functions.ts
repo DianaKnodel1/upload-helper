@@ -165,6 +165,34 @@ async function uploadAsset(supabaseAdmin: any, slug: string, kind: "logo" | "fav
   return data.publicUrl;
 }
 
+// Bild für einen Theme-Slot (Typ "image") hochladen → öffentliche URL.
+// Nur Rasterbilder; SVG bewusst nicht (Skripte im Storage-Origin vermeiden).
+const SLOT_IMAGE_MIME = new Set(["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif", "image/avif"]);
+export const uploadLandingSlotImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({
+      data_url: z.string().min(20).max(8_000_000),
+      slot_key: z.string().regex(/^[a-z0-9_]{1,64}$/),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const parsed = parseDataUrl(data.data_url);
+    if (!parsed || !SLOT_IMAGE_MIME.has(parsed.mime)) throw new Error("Nur PNG, JPG, WebP, GIF oder AVIF erlaubt.");
+    if (parsed.bytes.length > 5 * 1024 * 1024) throw new Error("Bild ist größer als 5 MB.");
+    const ext = parsed.mime.includes("jpeg") || parsed.mime.includes("jpg") ? "jpg" : parsed.mime.split("/")[1];
+    const path = `slots/${data.slot_key}-${crypto.randomUUID()}.${ext}`;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.storage.from("landing-assets").upload(path, parsed.bytes, {
+      contentType: parsed.mime,
+      upsert: false,
+    });
+    if (error) throw new Error(`Upload fehlgeschlagen: ${error.message}`);
+    const { data: pub } = supabaseAdmin.storage.from("landing-assets").getPublicUrl(path);
+    return { url: pub.publicUrl };
+  });
+
 export const listLandingPages = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

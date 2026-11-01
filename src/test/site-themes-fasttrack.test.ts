@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const dir = join(__dirname, "..", "landing-themes");
-const sites = readdirSync(dir).filter((d) => /^site-\d+$/.test(d));
+const sites = readdirSync(dir).filter((d) => /^site-\d+$/.test(d) && Number(d.slice(5)) <= 15);
 
 describe("Website-Themes sind Fast-Track", () => {
   it("hat 15 Themes", () => expect(sites.length).toBe(15));

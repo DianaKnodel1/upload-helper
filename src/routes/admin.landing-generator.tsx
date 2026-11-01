@@ -14,10 +14,11 @@ import {
   deleteLandingPage,
   checkLandingPageDeletable,
   toggleLandingPublished,
+  uploadLandingSlotImage,
 } from "@/lib/landing-pages.functions";
 import { listPartnerCompanies } from "@/lib/partner-companies.functions";
 import { adminListSchedules } from "@/lib/appointments.functions";
-import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, getTheme, type SitePageDef } from "@/lib/landing-themes";
+import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, getTheme, stripUnresolvedPlaceholders, type SitePageDef } from "@/lib/landing-themes";
 import { renderSitePage } from "@/lib/landing-site";
 import { THEME_ASSETS } from "@/lib/theme-assets.generated";
 import { PORTAL_THEMES, type PortalThemeId } from "@/lib/portal-themes";
@@ -28,6 +29,7 @@ import PortalThemePreview from "@/components/admin/PortalThemePreview";
 const ASSET_MIME: Record<string, string> = {
   png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp",
   gif: "image/gif", svg: "image/svg+xml", ico: "image/x-icon", avif: "image/avif",
+  woff: "font/woff", woff2: "font/woff2", ttf: "font/ttf", otf: "font/otf",
 };
 function assetToDataUrl(filename: string, b64: string): string {
   const ext = (filename.split(".").pop() || "").toLowerCase();
@@ -373,6 +375,32 @@ function LandingGeneratorPage() {
   };
   const setSlot = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setSlotValues((v) => ({ ...v, [key]: e.target.value }));
+  const uploadSlotImageFn = useServerFn(uploadLandingSlotImage);
+  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
+  const onSlotImageFile = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) {
+      toast({ title: "Bild zu groß", description: "Max. 5 MB.", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (typeof reader.result !== "string") return;
+      setUploadingSlot(key);
+      try {
+        const { url } = await uploadSlotImageFn({ data: { data_url: reader.result, slot_key: key } });
+        setSlotValues((v) => ({ ...v, [key]: url }));
+        toast({ title: "Bild hochgeladen", description: "Wird nach dem Speichern live übernommen." });
+      } catch (err) {
+        toast({ title: "Upload fehlgeschlagen", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
+      } finally {
+        setUploadingSlot(null);
+      }
+    };
+    reader.readAsDataURL(f);
+  };
 
   // Standard-Textwelt je Modus (Vermittlung vs. Fast-Track) in die Hero-Slots setzen.
   const applyModeCopy = (flow: string, onlyDefaults = true) => {
@@ -475,12 +503,13 @@ function LandingGeneratorPage() {
     // sonst zeigt der Blob-/srcdoc-Preview „kaputtes Bild" – im ZIP funktioniert es,
     // weil dort die assets/ neben der index.html landen.
     const bundle = THEME_ASSETS[themeId] ?? {};
-    for (const [fname, b64] of Object.entries(bundle)) {
+    // Längste Pfade zuerst (img/hero.jpg vor hero.jpg); führendes ./ oder / mitnehmen.
+    for (const [fname, b64] of Object.entries(bundle).sort((x, y) => y[0].length - x[0].length)) {
       if (/^logo\./i.test(fname)) continue;
       const dataUrl = assetToDataUrl(fname, b64);
       // sowohl in src="assets/x" als auch in url('assets/x') / url("assets/x") ersetzen
       const escaped = fname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      html = html.replace(new RegExp(`assets\\/${escaped}`, "gi"), dataUrl);
+      html = html.replace(new RegExp(`(?:\\.?\\/)?assets\\/${escaped}(?![A-Za-z0-9._/-])`, "gi"), dataUrl);
     }
     // script.js entfernen (Preview ohne Submit) + Mini-Smooth-Scroll injizieren,
     // damit Hash-Links (#angebot etc.) im srcdoc-iframe nicht das Doc neuladen
@@ -641,6 +670,7 @@ document.addEventListener('submit', function(e){
 }, true);
 <\/script>`;
 
+    html = stripUnresolvedPlaceholders(html);
     html = html.replace(/<\/body>/i, previewScript + "</body>");
 
     return html;
@@ -1716,7 +1746,24 @@ document.addEventListener('submit', function(e){
                         <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} />
                       </div>
                     ) : slot.type === "image" ? (
-                      <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://… oder /assets/foo.jpg" />
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://… oder assets/foo.jpg" />
+                          <Button type="button" variant="outline" size="sm" className="h-10 shrink-0" disabled={uploadingSlot === slot.key} asChild>
+                            <label className="cursor-pointer">
+                              {uploadingSlot === slot.key ? <Loader2 className="h-4 w-4 animate-spin" /> : "Bild hochladen"}
+                              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" className="sr-only" onChange={onSlotImageFile(slot.key)} />
+                            </label>
+                          </Button>
+                        </div>
+                        {(slotsForOutput[slot.key] ?? slot.default) !== slot.default && (
+                          <button type="button" className="text-xs text-muted-foreground underline" onClick={() => setSlotValues((v) => ({ ...v, [slot.key]: slot.default }))}>
+                            Standardbild wiederherstellen
+                          </button>
+                        )}
+                      </div>
+                    ) : slot.type === "link" ? (
+                      <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://…, /kontakt, #bewerbung-form, mailto:…" />
                     ) : (
                       <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} />
                     )}

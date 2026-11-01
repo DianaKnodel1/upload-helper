@@ -97,7 +97,7 @@ BUILT_OK=false
 
 if [ -n "$FILES_BASE" ]; then
   BUILT_OK=true
-  for THEME_DIR in "$PROJECT_DIR"/src/landing-themes/theme-*; do
+  for THEME_DIR in "$PROJECT_DIR"/src/landing-themes/theme-* "$PROJECT_DIR"/src/landing-themes/site-*; do
     [ -d "$THEME_DIR" ] || continue
     TID="$(basename "$THEME_DIR")"
     mkdir -p "$STAGE/$TID"
@@ -121,7 +121,7 @@ if [ "$BUILT_OK" = true ]; then
     warn "Fertige Theme-Dateien ohne Bewerbungsformular — Theme-Sync übersprungen"
     BUILT_OK=false
   fi
-  for TDIR in "$STAGE"/theme-*; do
+  for TDIR in "$STAGE"/theme-* "$STAGE"/site-*; do
     [ -d "$TDIR" ] || continue
     if ! grep -qs "lov-apply-modal" "$TDIR/style.css"; then
       warn "Stildatei ohne Formular-Stile: $(basename "$TDIR")/style.css — Theme-Sync übersprungen"

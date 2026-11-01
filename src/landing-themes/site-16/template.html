@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{seo_title}}</title>
+  <meta name="description" content="{{seo_description}}"/>
+  <meta property="og:title" content="{{seo_title}}"/>
+  <meta property="og:description" content="{{seo_description}}"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="t16">
+
+  <header class="t16-header">
+    <div class="t16-wrap t16-header-in">
+      <a href="/" class="t16-brand">
+        <img src="{{logo_image}}" alt="" class="t16-logo" width="40" height="40"/>
+        <span>{{brand_name}}</span>
+      </a>
+      <nav class="t16-nav" id="t16-nav" aria-label="Hauptnavigation">
+        <!-- lv-nav:home --><a href="/">{{nav_home_label}}</a><!-- /lv-nav -->
+        <!-- lv-nav:faq --><a href="/faq">{{nav_faq_label}}</a><!-- /lv-nav -->
+        <a href="#bewerbung-form" class="t16-btn t16-btn-primary t16-nav-cta">{{cta_label}}</a>
+      </nav>
+      <button class="t16-burger" id="t16-burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="t16-nav"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+{{page_content}}
+  </main>
+
+  <footer class="t16-footer">
+    <div class="t16-wrap t16-footer-in">
+      <div>
+        <div class="t16-footer-brand">{{brand_name}}</div>
+        <p>{{footer_claim}}</p>
+      </div>
+      <div class="t16-footer-col">
+        <span>{{contact_address}}</span>
+        <span>{{contact_phone}}</span>
+        <span>{{contact_email}}</span>
+      </div>
+      <div class="t16-footer-col">
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+<!-- lv-page:home -->
+    <section class="t16-hero">
+      <div class="t16-wrap t16-hero-in">
+        <div class="t16-hero-copy">
+          <p class="t16-eyebrow">{{hero_eyebrow}}</p>
+          <h1>{{hero_title}}</h1>
+          <p class="t16-lead">{{hero_description}}</p>
+          <div class="t16-actions">
+            <a href="#bewerbung-form" class="t16-btn t16-btn-primary">{{cta_label}}</a>
+            <a href="{{hero_secondary_link}}" class="t16-btn t16-btn-ghost">{{hero_secondary_label}}</a>
+          </div>
+        </div>
+        <figure class="t16-hero-media">
+          <img src="{{hero_image}}" alt="{{hero_image_alt}}" width="1600" height="1066"/>
+        </figure>
+      </div>
+    </section>
+
+    <section class="t16-section">
+      <div class="t16-wrap">
+        <h2>{{benefits_title}}</h2>
+        <div class="t16-cards">
+          <article class="t16-card"><h3>{{benefit_1_title}}</h3><p>{{benefit_1_text}}</p></article>
+          <article class="t16-card"><h3>{{benefit_2_title}}</h3><p>{{benefit_2_text}}</p></article>
+          <article class="t16-card"><h3>{{benefit_3_title}}</h3><p>{{benefit_3_text}}</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="t16-section t16-section-alt">
+      <div class="t16-wrap t16-faq">
+        <h2>{{faq_title}}</h2>
+        <details><summary>{{faq_question_1}}</summary><p>{{faq_answer_1}}</p></details>
+        <details><summary>{{faq_question_2}}</summary><p>{{faq_answer_2}}</p></details>
+        <details><summary>{{faq_question_3}}</summary><p>{{faq_answer_3}}</p></details>
+      </div>
+    </section>
+
+    <section class="t16-cta">
+      <div class="t16-wrap t16-cta-in">
+        <h2>{{cta_title}}</h2>
+        <p>{{cta_text}}</p>
+        <a href="#bewerbung-form" class="t16-btn t16-btn-accent">{{cta_label}}</a>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:faq -->
+    <section class="t16-section">
+      <div class="t16-wrap t16-faq">
+        <h1>{{faq_title}}</h1>
+        <details open><summary>{{faq_question_1}}</summary><p>{{faq_answer_1}}</p></details>
+        <details><summary>{{faq_question_2}}</summary><p>{{faq_answer_2}}</p></details>
+        <details><summary>{{faq_question_3}}</summary><p>{{faq_answer_3}}</p></details>
+        <div class="t16-actions"><a href="#bewerbung-form" class="t16-btn t16-btn-primary">{{cta_label}}</a></div>
+      </div>
+    </section>
+<!-- /lv-page -->
+
+<!-- lv-page:404 -->
+    <section class="t16-section">
+      <div class="t16-wrap"><h1>Seite nicht gefunden</h1><p><a href="/">Zur Startseite</a></p></div>
+    </section>
+<!-- /lv-page -->
+
+  <script src="script.js"></script>
+</body>
+</html>

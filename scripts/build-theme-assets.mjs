@@ -15,16 +15,26 @@ import { join } from "node:path";
 const THEMES_DIR = "src/landing-themes";
 const OUT = "src/lib/theme-assets.generated.ts";
 
+// Rekursiv: Unterordner (fonts/, img/ …) bleiben als relative Pfade erhalten,
+// z. B. "fonts/inter.woff2". Nur sichere Segmente [A-Za-z0-9._-].
+const SAFE_SEG = /^[A-Za-z0-9._-]+$/;
 function listAssets(themeDir) {
   const assetsDir = join(THEMES_DIR, themeDir, "assets");
-  try {
-    return readdirSync(assetsDir).filter((f) => {
-      const full = join(assetsDir, f);
-      return statSync(full).isFile();
-    });
-  } catch {
-    return [];
-  }
+  const out = [];
+  const walk = (dir, prefix) => {
+    let entries = [];
+    try { entries = readdirSync(dir); } catch { return; }
+    for (const f of entries) {
+      if (f.startsWith(".") || !SAFE_SEG.test(f)) continue;
+      const full = join(dir, f);
+      const rel = prefix ? `${prefix}/${f}` : f;
+      const st = statSync(full);
+      if (st.isDirectory()) walk(full, rel);
+      else if (st.isFile()) out.push(rel);
+    }
+  };
+  walk(assetsDir, "");
+  return out.sort();
 }
 
 const themes = readdirSync(THEMES_DIR).filter((d) => {
