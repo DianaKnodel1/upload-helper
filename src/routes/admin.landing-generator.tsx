@@ -17,7 +17,7 @@ import {
 } from "@/lib/landing-pages.functions";
 import { listPartnerCompanies } from "@/lib/partner-companies.functions";
 import { adminListSchedules } from "@/lib/appointments.functions";
-import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, getTheme, type SitePageDef } from "@/lib/landing-themes";
+import { THEME_LIST, THEMES, ACTIVE_THEME_LIST, ARCHIVE_THEME_LIST, isActiveTheme, isSiteTheme, defaultSitePages, getTheme, stripUnresolvedPlaceholders, type SitePageDef } from "@/lib/landing-themes";
 import { renderSitePage } from "@/lib/landing-site";
 import { THEME_ASSETS } from "@/lib/theme-assets.generated";
 import { PORTAL_THEMES, type PortalThemeId } from "@/lib/portal-themes";
@@ -475,12 +475,13 @@ function LandingGeneratorPage() {
     // sonst zeigt der Blob-/srcdoc-Preview „kaputtes Bild" – im ZIP funktioniert es,
     // weil dort die assets/ neben der index.html landen.
     const bundle = THEME_ASSETS[themeId] ?? {};
-    for (const [fname, b64] of Object.entries(bundle)) {
+    // Längste Pfade zuerst (img/hero.jpg vor hero.jpg); führendes ./ oder / mitnehmen.
+    for (const [fname, b64] of Object.entries(bundle).sort((x, y) => y[0].length - x[0].length)) {
       if (/^logo\./i.test(fname)) continue;
       const dataUrl = assetToDataUrl(fname, b64);
       // sowohl in src="assets/x" als auch in url('assets/x') / url("assets/x") ersetzen
       const escaped = fname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      html = html.replace(new RegExp(`assets\\/${escaped}`, "gi"), dataUrl);
+      html = html.replace(new RegExp(`(?:\\.?\\/)?assets\\/${escaped}(?![A-Za-z0-9._/-])`, "gi"), dataUrl);
     }
     // script.js entfernen (Preview ohne Submit) + Mini-Smooth-Scroll injizieren,
     // damit Hash-Links (#angebot etc.) im srcdoc-iframe nicht das Doc neuladen
@@ -641,6 +642,7 @@ document.addEventListener('submit', function(e){
 }, true);
 <\/script>`;
 
+    html = stripUnresolvedPlaceholders(html);
     html = html.replace(/<\/body>/i, previewScript + "</body>");
 
     return html;
