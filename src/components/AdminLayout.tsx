@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { AdminCommandPalette } from "@/components/AdminCommandPalette";
 import { useAdminBadges } from "@/hooks/use-admin-badges";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 type BadgeKey = "unreadChat" | "pendingKyc" | "newApplications";
 type NavItem = {
@@ -101,7 +102,7 @@ export default function AdminLayout() {
   );
 
   return (
-    <div className="glass-shell min-h-screen flex flex-col admin-layout lg:pl-72">
+    <div className="glass-shell min-h-dvh flex flex-col admin-layout lg:pl-64 xl:pl-72">
       <GlassSidebar
         brand={brand}
         groups={groups}
@@ -112,30 +113,35 @@ export default function AdminLayout() {
           </a>
         }
       />
-      <header className="sticky top-0 z-30 px-3 sm:px-6 pt-3">
-        <div className="glass-panel rounded-full h-14 flex items-center gap-3 px-3 sm:px-4">
+      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 pt-3">
+        <div className="glass-panel rounded-2xl sm:rounded-full min-h-16 grid grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:flex items-center gap-1 sm:gap-3 px-2 sm:px-4">
           <GlassMobileMenuButton />
           <span className="hidden sm:inline text-sm font-medium truncate">Willkommen, Admin</span>
-          <button
+          <Button
+            variant="ghost"
             onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-            className="ml-auto sm:ml-4 flex items-center gap-2.5 h-9 w-40 sm:w-72 text-xs text-muted-foreground hover:text-foreground rounded-full bg-muted px-3 transition-colors"
+            className="min-w-0 sm:ml-auto flex items-center justify-start gap-2 h-11 w-full sm:w-48 lg:w-56 xl:w-72 text-xs text-muted-foreground rounded-full bg-muted px-3"
             title="Schnellsuche"
+            aria-label="Schnellsuche öffnen"
           >
             <Search className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">Suchen…</span>
             <kbd className="ml-auto hidden sm:inline text-[10px] border border-border rounded px-1.5 py-0.5 shrink-0">⌘K</kbd>
-          </button>
-          <ThemeToggle />
-          <button
+          </Button>
+          <ThemeToggle compact />
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={signOut}
             title="Abmelden"
-            className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground shrink-0"
+            aria-label="Abmelden"
+            className="h-11 w-11 rounded-full text-muted-foreground shrink-0"
           >
             <LogOut className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </header>
-      <main className="flex-1 min-w-0 pb-10">
+      <main className="portal-content flex-1 min-w-0 pb-10">
         <Outlet />
       </main>
       <AdminCommandPalette />

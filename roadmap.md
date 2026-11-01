@@ -1,5 +1,9 @@
 # Roadmap
 
+## Desktop- und Handy-Ansicht (2026-11-01)
+- [ ] Gemeinsame Portal-Navigation, Kopfzeilen und Tabellen für schmale und breite Ansichten optimieren.
+- [ ] Wichtigste Seiten und Hell/Dunkel-Ansicht prüfen; angemeldete Prüfung benötigt einen verfügbaren Portal-Zugang.
+
 ## Auftragsabgabe und Vertragsvorlagen (2026-10-19)
 - [x] DOM-Absturz eingegrenzt (Browser-Übersetzung wahrscheinlich, nicht live bestätigt): deutscher Portal-Dokumentkopf mit Übersetzungsschutz, stabiler Text-/Icon-Aufbau im Einreichen-Knopf; DOM-Manipulations-Regressionsprüfung bestanden.
 - [x] Angefügte Minijob-, Teilzeit- und Vollzeitverträge als gemeinsame Standardvorlagen übernommen; Firmen- und Mitarbeiterdaten dynamisch eingesetzt, Startdatum/Stundenplatzhalter korrigiert, Vollzeit-Betrag als 3.051,00 € normalisiert und fehlende Teilzeit-Unterschriftsnamen ergänzt.

@@ -288,6 +288,23 @@
 
 .glass-shell { position: relative; isolation: isolate; color: var(--foreground); }
 
+.portal-content { width: 100%; }
+.portal-content > * { min-width: 0; }
+.portal-content :where(.grid) > * { min-width: 0; }
+.portal-header { padding-top: max(0.75rem, env(safe-area-inset-top)); }
+.glass-mobile-nav { padding-bottom: env(safe-area-inset-bottom); }
+
+@media (min-width: 1920px) {
+  .portal-content { max-width: 1680px; margin-inline: auto; }
+}
+@media (max-width: 639px) {
+  .portal-content > :where(.p-6, .p-8) { padding: 1rem; }
+  .portal-content :where(input, textarea, select) { font-size: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-nav-link { transition: none; }
+}
+
 .glass-panel,
 .glass-shell :where(.bg-card),
 :root:has(.glass-shell) :where([role="dialog"], [data-radix-popper-content-wrapper] > *) {
@@ -303,6 +320,7 @@
 /* Sidebar-Navigation im Glas-Look */
 .glass-nav-link {
   display: flex; align-items: center; gap: 0.75rem;
+  min-height: 2.75rem; min-width: 0;
   border-radius: 0.75rem; padding: 0.5rem 0.75rem;
   font-size: 0.875rem; color: var(--muted-foreground);
   transition: background-color 0.15s ease, color 0.15s ease;

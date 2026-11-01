@@ -21,6 +21,7 @@ import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 import { MissingPayrollDataBanner } from "@/components/MissingPayrollDataBanner";
 import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { EmployeeStatus } from "@/lib/status";
@@ -233,24 +234,26 @@ export default function EmployeeLayout() {
   );
 
   return (
-    <div className="glass-shell min-h-screen flex flex-col lg:pl-72">
+    <div className="glass-shell min-h-dvh flex flex-col lg:pl-64 xl:pl-72">
       <GlassSidebar brand={brand} groups={groups} tour="sidebar" />
-      <header className="sticky top-0 z-30 px-3 sm:px-6 pt-3">
-        <div className="glass-panel rounded-full h-14 flex items-center gap-3 px-3 sm:px-4">
-          <GlassMobileMenuButton />
-          <span className="text-sm font-medium truncate min-w-0">Mitarbeiter-Portal</span>
-          <div className="ml-auto flex items-center gap-1 shrink-0">
+      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 pt-3">
+        <div className="glass-panel rounded-2xl sm:rounded-full min-h-16 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1 sm:gap-3 px-2 sm:px-4">
+          <div className="flex items-center min-w-0 gap-1 sm:gap-3">
+            <GlassMobileMenuButton />
+            <span className="text-xs sm:text-sm font-medium truncate min-w-0">Mitarbeiter-Portal</span>
+          </div>
+          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
             <HeaderHelpButton />
             <div data-tour="notifications"><NotificationBell /></div>
-            <ThemeToggle />
-            <button onClick={signOut} title="Abmelden" className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground">
+            <ThemeToggle compact />
+            <Button variant="ghost" size="icon" onClick={signOut} title="Abmelden" aria-label="Abmelden" className="h-11 w-11 rounded-full text-muted-foreground shrink-0">
               <LogOut className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </header>
       <MissingPayrollDataBanner />
-      <main className="flex-1 min-w-0 pb-10">
+      <main className="portal-content flex-1 min-w-0 pb-10">
         {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
         <Outlet />
       </main>
