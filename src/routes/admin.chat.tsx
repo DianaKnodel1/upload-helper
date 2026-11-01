@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/chat")({
+  head: () => ({ meta: [
+    { title: "Mitarbeiter-Chat – Admin-Portal" },
+    { name: "description", content: "Nachrichten und offene Mitarbeiter-Gespräche im Admin-Portal verwalten." },
+    { property: "og:title", content: "Mitarbeiter-Chat – Admin-Portal" },
+    { property: "og:description", content: "Mitarbeiter-Gespräche lesen und beantworten." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: AdminChatPage,
 });
 
@@ -15,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useChatNotifications } from "@/hooks/use-chat-notifications";
-import { Send, Bot, UserCheck, Search, MessageCircle, Building2, EyeOff, Archive, ChevronRight, MailOpen, StickyNote, AlertCircle, Lock, Pencil, Trash2, Check, X, Mail, Sparkles, Loader2, ListChecks } from "lucide-react";
+import { ArrowLeft, Send, Bot, UserCheck, Search, MessageCircle, Building2, EyeOff, Archive, ChevronRight, MailOpen, StickyNote, AlertCircle, Lock, Pencil, Trash2, Check, X, Mail, Sparkles, Loader2, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getLastSignIns } from "@/lib/last-sign-ins.functions";
 import { replaceMessages, useChatResync, type ChatConnectionState } from "@/lib/chat-sync";
@@ -1110,9 +1118,9 @@ function AdminChatPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-3rem)]">
+    <div className="flex min-w-0 h-[calc(100dvh-5.5rem)] mt-3">
       {/* Conversation list */}
-      <div className="w-80 border-r border-border bg-card flex flex-col shrink-0">
+      <div className={cn("w-full md:w-64 xl:w-80 min-w-0 border-r border-border bg-card flex-col shrink-0", selectedUserId ? "hidden md:flex" : "flex")}>
         <div className="p-3 border-b border-border space-y-2">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-sm font-semibold">Chat</h2>
@@ -1366,7 +1374,7 @@ function AdminChatPage() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col">
+      <div className={cn("flex-1 min-w-0 flex-col", selectedUserId ? "flex" : "hidden md:flex")}>
         {!selectedUserId ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
@@ -1377,23 +1385,24 @@ function AdminChatPage() {
         ) : (
           <>
             {/* Header */}
-            <div className="border-b border-border bg-card px-5 py-3 flex items-center gap-3 shrink-0">
+            <div className="border-b border-border bg-card px-3 sm:px-5 py-3 flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
+              <Button variant="ghost" size="icon" aria-label="Zurück zur Chatliste" title="Zurück zur Chatliste" className="md:hidden shrink-0 h-11 w-11" onClick={() => setSelectedUserId(null)}><ArrowLeft /></Button>
               <button
                 type="button"
                 onClick={() => navigate(`/admin/personen/${selectedUserId}`)}
                 title="Mitarbeiter-Profil öffnen"
-                className="h-9 w-9 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors flex items-center justify-center"
+                className="h-9 w-9 shrink-0 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors flex items-center justify-center"
               >
                 <span className="text-xs font-bold text-primary">{selectedInitials}</span>
               </button>
               <button
                 type="button"
                 onClick={() => navigate(`/admin/personen/${selectedUserId}`)}
-                className="flex-1 text-left group"
+                className="flex-1 min-w-0 text-left group"
                 title="Mitarbeiter-Profil öffnen"
               >
-                <div className="flex items-center gap-2">
-                  <p className={`text-sm font-semibold group-hover:text-primary transition-colors ${selectedConv?.blocked ? "line-through text-destructive" : "text-foreground"}`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className={`text-sm break-words font-semibold group-hover:text-primary transition-colors ${selectedConv?.blocked ? "line-through text-destructive" : "text-foreground"}`}>
                     {selectedName}
                     <span className="ml-2 inline-flex align-middle"><ContactMarkerDot marker={markers.forUser(selectedUserId)} /></span>
                     {selectedConv?.blocked && (
@@ -1421,11 +1430,11 @@ function AdminChatPage() {
                   </p>
                 )}
               </button>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-1 sm:gap-2">
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => toggleBlockedInChat(selectedUserId!, !selectedConv?.blocked)}
+                  onClick={() => { if (selectedUserId) toggleBlockedInChat(selectedUserId, !selectedConv?.blocked); }}
                   className={`text-xs ${selectedConv?.blocked ? "text-emerald-600" : "text-muted-foreground hover:text-destructive"}`}
                   title={selectedConv?.blocked ? "Zugang wieder freigeben" : "Zugang sperren"}
                 >
@@ -1434,7 +1443,7 @@ function AdminChatPage() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => markUnread(selectedUserId!)}
+                  onClick={() => { if (selectedUserId) markUnread(selectedUserId); }}
                   className="text-xs text-muted-foreground hover:text-primary"
                   title="Als ungelesen markieren – Chat erscheint wieder mit Badge"
                 >
@@ -1445,7 +1454,7 @@ function AdminChatPage() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => unhideConversation(selectedUserId!)}
+                    onClick={() => { if (selectedUserId) unhideConversation(selectedUserId); }}
                     className="text-xs text-muted-foreground hover:text-primary"
                     title="Chat wiederherstellen"
                   >
@@ -1455,7 +1464,7 @@ function AdminChatPage() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => hideConversation(selectedUserId!)}
+                    onClick={() => { if (selectedUserId) hideConversation(selectedUserId); }}
                     disabled={hiding}
                     className="text-xs text-muted-foreground hover:text-destructive"
                     title="Chat archivieren – im Tab 'Archiv' weiter sichtbar"
@@ -1546,13 +1555,13 @@ function AdminChatPage() {
                       </div>
                     )}
                     <div className={cn(
-                      "max-w-[70%] rounded-2xl px-4 py-2.5 text-sm relative group",
+                      "min-w-0 max-w-[85%] sm:max-w-[70%] break-words rounded-2xl px-4 py-2.5 text-sm relative group",
                       isMine
                         ? "bg-primary text-primary-foreground rounded-br-md"
                         : "bg-muted text-foreground rounded-bl-md"
                     )}>
                       {editingId === msg.id ? (
-                        <div className="space-y-2 min-w-[240px]">
+                        <div className="space-y-2 w-60 max-w-full">
                           <Textarea
                             value={editDraft}
                             onChange={(e) => setEditDraft(e.target.value)}
