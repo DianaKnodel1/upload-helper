@@ -507,13 +507,13 @@ function AdminBewerbungenPage() {
 
   return (
     <div className="p-6 lg:p-8 space-y-5">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 grid place-items-center">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] sm:flex items-center justify-between gap-2 sm:gap-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-2xl bg-primary/10 grid place-items-center">
             <Users className="h-6 w-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-2xl font-heading font-bold">Bewerbungen</h1>
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-heading font-bold">Bewerbungen</h1>
             <p className="text-sm text-muted-foreground">
               Alle Bewerber im Funnel — bis zur Registrierung als Mitarbeiter.
             </p>
@@ -521,8 +521,8 @@ function AdminBewerbungenPage() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Download className="h-4 w-4" /> CSV exportieren
+            <Button variant="outline" size="sm" className="gap-1.5 shrink-0 h-11" aria-label="CSV exportieren" title="CSV exportieren">
+              <Download className="h-4 w-4" /><span className="hidden sm:inline">CSV exportieren</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
@@ -559,7 +559,7 @@ function AdminBewerbungenPage() {
 
 
       {selected.size > 0 && (
-        <div className="sticky top-2 z-10 flex items-center justify-between gap-3 rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-2 shadow-sm">
+        <div className="sticky top-24 z-10 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-2 shadow-sm">
           <div className="text-sm">
             <b>{selected.size}</b> Bewerbung{selected.size === 1 ? "" : "en"} ausgewählt
           </div>
