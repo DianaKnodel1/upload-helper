@@ -6,7 +6,6 @@ import { useAdminData } from "@/contexts/AdminDataContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
 import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
