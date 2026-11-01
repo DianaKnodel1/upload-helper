@@ -72,6 +72,11 @@ const SettingsInput = z.object({
   homepage_url: z.string().trim().url().max(500).nullable(),
   calendly_url: z.string().trim().url().max(500).nullable(),
   daily_limit: z.number().int().min(1).max(2000),
+  sig_name: z.string().trim().max(120).nullable().optional(),
+  sig_position: z.string().trim().max(120).nullable().optional(),
+  sig_phone: z.string().trim().max(60).nullable().optional(),
+  sig_website: z.string().trim().max(300).nullable().optional(),
+  sig_color: z.string().trim().regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/).nullable().optional(),
 });
 
 export const saveLeadMailSettings = createServerFn({ method: "POST" })
@@ -134,67 +139,175 @@ export const importLeads = createServerFn({ method: "POST" })
     return { imported: fresh.length, skipped: data.rows.length - fresh.length };
   });
 
-export const listLeadThreads = createServerFn({ method: "POST" })
+// ───────────── Gemeinsames Postfach ─────────────
+
+const peerOf = (m: any) => String(m.peer_email || (m.direction === "in" ? m.from_email : m.to_email) || "").toLowerCase();
+
+export const listMailThreads = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ filter: z.enum(["open", "all"]).default("open"), applicationId: z.string().uuid().optional() }).parse(i ?? {}))
+  .inputValidator((i: unknown) => z.object({
+    filter: z.enum(["all", "lead", "employee", "unread"]).default("all"),
+    q: z.string().trim().max(120).default(""),
+  }).parse(i ?? {}))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const db = context.supabase as any;
-    if (data.applicationId) {
-      const { data: msgs, error } = await db.from("lead_messages").select("*").eq("application_id", data.applicationId).order("created_at");
-      if (error) throw new Error(error.message);
-      return { messages: msgs ?? [], threads: [] };
-    }
-    let q = db.from("lead_messages").select("id, application_id, tenant_id, from_email, subject, body_text, handled, created_at")
-      .eq("direction", "in").order("created_at", { ascending: false }).limit(300);
-    if (data.filter === "open") q = q.eq("handled", false);
-    const { data: inbound, error } = await q;
+    const { data: rows, error } = await db.from("lead_messages")
+      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at")
+      .order("created_at", { ascending: false }).limit(1500);
     if (error) throw new Error(error.message);
-    const ids = [...new Set((inbound ?? []).map((m: any) => m.application_id).filter(Boolean))];
-    const { data: apps } = ids.length
-      ? await db.from("applications").select("id, full_name, email, lead_mail_status").in("id", ids)
-      : { data: [] };
-    const byId = new Map((apps ?? []).map((a: any) => [a.id, a]));
-    return { threads: (inbound ?? []).map((m: any) => ({ ...m, application: byId.get(m.application_id) ?? null })), messages: [] };
+    const threads = new Map<string, any>();
+    for (const m of rows ?? []) {
+      const peer = peerOf(m);
+      if (!peer) continue;
+      let t = threads.get(peer);
+      if (!t) {
+        t = { peer, last: m, unread: 0, kind: m.kind ?? "lead", application_id: m.application_id, profile_id: m.profile_id, tenant_id: m.tenant_id };
+        threads.set(peer, t);
+      }
+      if (m.direction === "in" && !m.handled) t.unread++;
+      t.application_id ||= m.application_id; t.profile_id ||= m.profile_id; t.tenant_id ||= m.tenant_id;
+      if (m.kind === "employee") t.kind = "employee";
+    }
+    const list = [...threads.values()];
+    const appIds = [...new Set(list.map((t) => t.application_id).filter(Boolean))];
+    const profIds = [...new Set(list.map((t) => t.profile_id).filter(Boolean))];
+    const [{ data: apps }, { data: profs }] = await Promise.all([
+      appIds.length ? db.from("applications").select("id, full_name, lead_mail_status").in("id", appIds.slice(0, 300)) : { data: [] },
+      profIds.length ? db.from("profiles").select("id, full_name").in("id", profIds.slice(0, 300)) : { data: [] },
+    ]);
+    const appBy = new Map((apps ?? []).map((a: any) => [a.id, a]));
+    const profBy = new Map((profs ?? []).map((p: any) => [p.id, p]));
+    const q = data.q.toLowerCase();
+    const out = list.map((t) => ({
+      peer: t.peer, kind: t.kind, unread: t.unread, tenant_id: t.tenant_id,
+      application_id: t.application_id ?? null, profile_id: t.profile_id ?? null,
+      name: (profBy.get(t.profile_id) as any)?.full_name ?? (appBy.get(t.application_id) as any)?.full_name ?? t.peer,
+      status: (appBy.get(t.application_id) as any)?.lead_mail_status ?? null,
+      subject: t.last.subject, preview: String(t.last.body_text ?? "").slice(0, 140),
+      last_direction: t.last.direction, last_at: t.last.created_at,
+    })).filter((t) =>
+      (data.filter === "all" || (data.filter === "unread" ? t.unread > 0 : data.filter === "employee" ? t.kind === "employee" : t.kind === "lead"))
+      && (!q || t.name.toLowerCase().includes(q) || t.peer.includes(q)));
+    return { threads: out };
   });
 
-export const setLeadMessageHandled = createServerFn({ method: "POST" })
+export const getMailThread = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ applicationId: z.string().uuid(), handled: z.boolean() }).parse(i))
+  .inputValidator((i: unknown) => z.object({ peer: z.string().trim().toLowerCase().email() }).parse(i))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const db = context.supabase as any;
+    const { data: msgs, error } = await db.from("lead_messages").select("*")
+      .or(`peer_email.eq.${data.peer},from_email.ilike.${data.peer},to_email.ilike.${data.peer}`)
+      .order("created_at");
+    if (error) throw new Error(error.message);
+    return { messages: msgs ?? [] };
+  });
+
+export const setThreadHandled = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ peer: z.string().trim().toLowerCase().email(), handled: z.boolean() }).parse(i))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { error } = await (context.supabase as any).from("lead_messages")
-      .update({ handled: data.handled }).eq("application_id", data.applicationId).eq("direction", "in");
+      .update({ handled: data.handled }).eq("direction", "in").or(`peer_email.eq.${data.peer},from_email.ilike.${data.peer}`);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
-export const replyToLead = createServerFn({ method: "POST" })
+async function profileEmail(db: any, profile: { user_id?: string | null }) {
+  if (!profile?.user_id) return null;
+  const { data } = await db.auth.admin.getUserById(profile.user_id);
+  return data?.user?.email?.toLowerCase() ?? null;
+}
+
+export const searchMailRecipients = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ q: z.string().trim().min(2).max(80) }).parse(i))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const db = supabaseAdmin as any;
+    const like = `%${data.q.replace(/[%_,()]/g, " ")}%`;
+    const [{ data: profs }, { data: apps }] = await Promise.all([
+      db.from("profiles").select("id, full_name, user_id, tenant_id").ilike("full_name", like).limit(8),
+      db.from("applications").select("id, full_name, email, tenant_id").or(`full_name.ilike.${like},email.ilike.${like}`).limit(8),
+    ]);
+    const employees = await Promise.all((profs ?? []).map(async (p: any) => ({
+      type: "employee" as const, profile_id: p.id, application_id: null, name: p.full_name, tenant_id: p.tenant_id, email: await profileEmail(db, p),
+    })));
+    return {
+      results: [
+        ...employees.filter((e) => e.email),
+        ...(apps ?? []).filter((a: any) => a.email).map((a: any) => ({
+          type: "applicant" as const, profile_id: null, application_id: a.id, name: a.full_name, tenant_id: a.tenant_id, email: String(a.email).toLowerCase(),
+        })),
+      ],
+    };
+  });
+
+export const getMailComposeContext = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ profileId: z.string().uuid().optional() }).parse(i ?? {}))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const db = supabaseAdmin as any;
+    const [{ data: tenants }, { data: settings }] = await Promise.all([
+      db.from("tenants").select("id, name").order("name"),
+      db.from("lead_mail_settings").select("tenant_id, sender_email, sender_name"),
+    ]);
+    let recipient: any = null;
+    if (data.profileId) {
+      const { data: p } = await db.from("profiles").select("id, full_name, user_id, tenant_id").eq("id", data.profileId).maybeSingle();
+      if (p) recipient = { type: "employee", profile_id: p.id, application_id: null, name: p.full_name, tenant_id: p.tenant_id, email: await profileEmail(db, p) };
+    }
+    const senders = (tenants ?? []).map((t: any) => {
+      const s = (settings ?? []).find((x: any) => x.tenant_id === t.id);
+      return { tenant_id: t.id, name: t.name, sender_email: s?.sender_email ?? null, sender_name: s?.sender_name ?? null };
+    });
+    return { senders, recipient };
+  });
+
+export const sendPortalMail = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => z.object({
-    applicationId: z.string().uuid(), subject: z.string().trim().min(1).max(300), text: z.string().trim().min(1).max(8000),
+    to: z.string().trim().toLowerCase().email().max(254),
+    tenantId: z.string().uuid(),
+    subject: z.string().trim().min(1).max(300),
+    text: z.string().trim().min(1).max(8000),
+    profileId: z.string().uuid().nullable().optional(),
+    applicationId: z.string().uuid().nullable().optional(),
   }).parse(i))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const db = supabaseAdmin as any;
-    const { data: app } = await db.from("applications").select("id, email, tenant_id, lead_mail_status").eq("id", data.applicationId).maybeSingle();
-    if (!app) throw new Error("Bewerbung nicht gefunden");
-    if (app.lead_mail_status === "unsubscribed" || app.lead_mail_status === "bounced") throw new Error("Diese Adresse ist abgemeldet oder nicht zustellbar.");
-    const { data: s } = await db.from("lead_mail_settings").select("sender_email, sender_name").eq("tenant_id", app.tenant_id).maybeSingle();
-    if (!s?.sender_email) throw new Error("Für diese Firma ist keine Absender-Adresse hinterlegt.");
-    const { loadResendConfig, sendViaResend } = await import("@/lib/lead-mailing.server");
+    const { data: blocked } = await db.from("applications").select("id")
+      .ilike("email", data.to).in("lead_mail_status", ["unsubscribed", "bounced"]).limit(1);
+    if (blocked?.length && !data.profileId) throw new Error("Diese Adresse ist abgemeldet oder nicht zustellbar.");
+    const { data: s } = await db.from("lead_mail_settings").select("sender_email, sender_name").eq("tenant_id", data.tenantId).maybeSingle();
+    if (!s?.sender_email) throw new Error("Für diese Firma ist keine Absender-Adresse hinterlegt (Admin → Lead-Mailing).");
+    const { loadResendConfig, sendViaResend, loadSignature } = await import("@/lib/lead-mailing.server");
     const { apiKey } = await loadResendConfig();
     if (!apiKey) throw new Error("Resend-Schlüssel fehlt (Admin → Lead-Mailing).");
+    // Art des Verlaufs: Mitarbeiter, Lead (bekannter Lead-Verlauf) oder frei.
+    const { data: prev } = await db.from("lead_messages").select("kind, application_id")
+      .eq("peer_email", data.to).order("created_at", { ascending: false }).limit(1).maybeSingle();
+    const kind = data.profileId ? "employee" : prev?.kind ?? (data.applicationId ? "lead" : "other");
     const name = (s.sender_name ?? "").replace(/["<>]/g, "");
     const r = await sendViaResend({
-      apiKey, from: name ? `"${name}" <${s.sender_email}>` : s.sender_email, to: app.email,
+      apiKey, from: name ? `"${name}" <${s.sender_email}>` : s.sender_email, to: data.to,
       subject: data.subject, text: data.text, replyTo: s.sender_email,
+      kind: kind === "lead" ? "lead" : kind === "employee" ? "employee" : "other",
+      signature: await loadSignature(data.tenantId, s.sender_email),
     });
     await db.from("lead_messages").insert({
-      application_id: app.id, tenant_id: app.tenant_id, direction: "out", from_email: s.sender_email,
-      to_email: app.email, subject: data.subject, body_text: data.text, provider_id: r.id || null, handled: true,
+      application_id: data.applicationId ?? prev?.application_id ?? null, profile_id: data.profileId ?? null,
+      tenant_id: data.tenantId, direction: "out", from_email: s.sender_email, to_email: data.to,
+      peer_email: data.to, kind, subject: data.subject, body_text: data.text, provider_id: r.id || null, handled: true,
     });
-    await db.from("lead_messages").update({ handled: true }).eq("application_id", app.id).eq("direction", "in");
+    await db.from("lead_messages").update({ handled: true }).eq("direction", "in").eq("peer_email", data.to);
     return { ok: true };
   });
