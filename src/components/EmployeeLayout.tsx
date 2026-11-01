@@ -19,7 +19,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import FloatingChat from "@/components/FloatingChat";
 import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 import { MissingPayrollDataBanner } from "@/components/MissingPayrollDataBanner";
-import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
+import { GlassSidebar, GlassBackdrop, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
