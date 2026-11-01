@@ -28,6 +28,7 @@ import PortalThemePreview from "@/components/admin/PortalThemePreview";
 const ASSET_MIME: Record<string, string> = {
   png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp",
   gif: "image/gif", svg: "image/svg+xml", ico: "image/x-icon", avif: "image/avif",
+  woff: "font/woff", woff2: "font/woff2", ttf: "font/ttf", otf: "font/otf",
 };
 function assetToDataUrl(filename: string, b64: string): string {
   const ext = (filename.split(".").pop() || "").toLowerCase();
