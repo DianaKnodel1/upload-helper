@@ -6,6 +6,8 @@ import { useAdminData } from "@/contexts/AdminDataContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Mail } from "lucide-react";
+import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -70,6 +72,7 @@ function splitName(fullName: string) {
 
 function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [mailOpen, setMailOpen] = useState(false);
   const navigate = useNavigate();
   const { applications, profiles, kycList, allBookings, assignments, loading, loadData } = useAdminData();
   const [kycDocUrls, setKycDocUrls] = useState<Record<string, string>>({});
@@ -501,10 +504,16 @@ function PersonDetailPage() {
           <div className="flex flex-col gap-1 items-end">
             {prof && <Badge className="bg-indigo-100 text-indigo-700 border-0 text-[10px]">👤 Mitarbeiter</Badge>}
             {!prof && app && <Badge variant="outline" className="text-[10px]">Bewerbung</Badge>}
+            {prof?.id && (
+              <Button size="sm" variant="outline" className="h-8 gap-1.5 rounded-full mt-1" onClick={() => setMailOpen(true)}>
+                <Mail className="h-3.5 w-3.5" /> E-Mail senden
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
 
+      {prof?.id && <ComposeMailDialog open={mailOpen} onOpenChange={setMailOpen} profileId={prof.id} />}
       {app?.id && (
         <StageHistoryCard applicationId={app.id} canTakeover={onboardingDone} />
       )}

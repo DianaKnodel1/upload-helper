@@ -20,7 +20,7 @@ export const getLeadMailingOverview = createServerFn({ method: "POST" })
     const db = supabaseAdmin as any;
     const [{ data: ss }, { data: tenants }, { data: settings }, { data: imports }] = await Promise.all([
       db.from("system_settings").select("resend_api_key, resend_webhook_secret").eq("id", 1).maybeSingle(),
-      db.from("tenants").select("id, name").order("name"),
+      db.from("tenants").select("id, name, logo_url, primary_color, domain").order("name"),
       db.from("lead_mail_settings").select("*"),
       db.from("lead_imports").select("*").order("created_at", { ascending: false }).limit(20),
     ]);
