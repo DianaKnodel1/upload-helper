@@ -19,7 +19,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import FloatingChat from "@/components/FloatingChat";
 import WhatsAppSupportButton from "@/components/WhatsAppSupportButton";
 import { MissingPayrollDataBanner } from "@/components/MissingPayrollDataBanner";
-import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
+import { GlassSidebar, GlassBackdrop, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -233,29 +233,40 @@ export default function EmployeeLayout() {
     </>
   );
 
+  const firstName = (user.user_metadata?.first_name as string | undefined) || "";
+
   return (
-    <div className="glass-shell min-h-dvh flex flex-col lg:pl-64 xl:pl-72">
+    <div className="glass-shell min-h-dvh flex flex-col lg:pl-24 xl:pl-28">
+      <GlassBackdrop />
       <GlassSidebar brand={brand} groups={groups} tour="sidebar" />
-      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 pt-3">
-        <div className="glass-panel rounded-2xl sm:rounded-full min-h-16 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1 sm:gap-3 px-2 sm:px-4">
-          <div className="flex items-center min-w-0 gap-1 sm:gap-3">
+      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 lg:pl-0 pt-3">
+        <div className="glass-panel rounded-full min-h-14 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1 sm:gap-3 px-2 sm:px-3">
+          <div className="flex items-center min-w-0 gap-1 sm:gap-2.5">
             <GlassMobileMenuButton />
-            <span className="text-xs sm:text-sm font-medium truncate min-w-0">Mitarbeiter-Portal</span>
+            {tenant?.logo_url ? (
+              <img src={tenant.logo_url} alt="Logo" className="hidden sm:block h-9 w-9 rounded-full object-contain bg-[var(--glass-pill)] shrink-0" />
+            ) : (
+              <div className="hidden sm:grid h-9 w-9 rounded-full bg-primary text-primary-foreground place-items-center text-sm font-semibold shrink-0">{(firstName || "M").charAt(0).toUpperCase()}</div>
+            )}
+            <span className="text-xs sm:text-sm font-medium truncate min-w-0">{firstName ? `Willkommen, ${firstName}` : "Mitarbeiter-Portal"}</span>
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
             <HeaderHelpButton />
             <div data-tour="notifications"><NotificationBell /></div>
             <ThemeToggle compact />
-            <Button variant="ghost" size="icon" onClick={signOut} title="Abmelden" aria-label="Abmelden" className="h-11 w-11 rounded-full text-muted-foreground shrink-0">
+            <Button variant="ghost" size="icon" onClick={signOut} title="Abmelden" aria-label="Abmelden"
+              className="h-10 w-10 rounded-full bg-[var(--glass-pill)] text-[oklch(0.2_0.01_60)] hover:bg-[var(--glass-pill)] shrink-0">
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </header>
       <MissingPayrollDataBanner />
-      <main className="portal-content flex-1 min-w-0 pb-10">
-        {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
-        <Outlet />
+      <main className="portal-content flex-1 min-w-0 px-3 sm:px-6 lg:pl-0 pt-4 pb-10">
+        <div className="glass-stage rounded-[2rem] min-h-[calc(100dvh-8rem)] overflow-hidden">
+          {!contractPending && !kycOpen && onboardingDone && <GuidedOnboarding />}
+          <Outlet />
+        </div>
       </main>
       <FloatingChat />
       <WhatsAppSupportButton />

@@ -21,6 +21,8 @@ import { toast } from "sonner";
 import { purgeInactivePeople, deleteEmployeeAccount, bulkDeleteEmployees } from "@/lib/admin-delete.functions";
 import { createEmployeeAccount } from "@/lib/admin-employees.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { Mail } from "lucide-react";
+import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -46,6 +48,7 @@ function AdminMitarbeiterPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [mailUserId, setMailUserId] = useState<string | null>(null);
   const runBulkDelete = useServerFn(bulkDeleteEmployees);
   // Nur für den CSV-Export: Mandantenname zur tenant_id.
   const [tenants, setTenants] = useState<Array<{ id: string; name: string }>>([]);
@@ -392,6 +395,9 @@ function AdminMitarbeiterPage() {
                             >
                               {r.blocked ? <><LockOpen className="h-3 w-3" /> Freigeben</> : <><Lock className="h-3 w-3" /> Sperren</>}
                             </Button>
+                            <Button variant="ghost" size="sm" onClick={() => setMailUserId(r.id)} className="h-7 gap-1 text-xs" title="E-Mail senden">
+                              <Mail className="h-3 w-3" /> E-Mail
+                            </Button>
                             <DeleteEmployeeButton userId={r.id} name={r.name} onDeleted={loadData} />
                           </div>
                         </td>
@@ -407,6 +413,7 @@ function AdminMitarbeiterPage() {
           </>
         )}
       </Card>
+      <ComposeMailDialog open={!!mailUserId} onOpenChange={(v) => { if (!v) setMailUserId(null); }} userId={mailUserId ?? undefined} />
     </div>
   );
 }

@@ -27,11 +27,13 @@ import { Loader2, Upload } from "lucide-react";
 import {
   getLeadMailingOverview, saveResendAccess, saveLeadMailSettings, importLeads,
 } from "@/lib/lead-mailing.functions";
+import { renderMail } from "@/lib/mail-template";
 import { parseLeadCsv, renderLeadTemplate, DEFAULT_LEAD_BODY, DEFAULT_LEAD_SUBJECT, type LeadRow } from "@/lib/lead-mailing";
 
 type Settings = {
   tenant_id: string; active: boolean; sender_email: string | null; sender_name: string | null;
   subject: string | null; body: string | null; homepage_url: string | null; calendly_url: string | null; daily_limit: number;
+  sig_name?: string | null; sig_position?: string | null; sig_phone?: string | null; sig_website?: string | null; sig_color?: string | null;
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -79,6 +81,19 @@ function LeadMailingPage() {
     const v = { Vorname: "Anna", Nachname: "Muster", Firma: tenantName, Homepage: form.homepage_url ?? "", Calendly: form.calendly_url ?? "", Absender: form.sender_name ?? "" };
     return `Betreff: ${renderLeadTemplate(form.subject || DEFAULT_LEAD_SUBJECT, v)}\n\n${renderLeadTemplate(form.body || DEFAULT_LEAD_BODY, v)}`;
   }, [form, tenantName]);
+  const tenantInfo: any = data?.tenants.find((t: any) => t.id === tenantId) ?? null;
+  const htmlPreview = useMemo(() => {
+    if (!form) return "";
+    const v = { Vorname: "Anna", Nachname: "Muster", Firma: tenantName, Homepage: form.homepage_url ?? "", Calendly: form.calendly_url ?? "", Absender: form.sender_name ?? "" };
+    return renderMail({
+      kind: "lead", subject: form.subject ?? "",
+      text: renderLeadTemplate(form.body || DEFAULT_LEAD_BODY, v),
+      signature: {
+        company: tenantName, name: form.sig_name || form.sender_name, position: form.sig_position, phone: form.sig_phone,
+        email: form.sender_email, website: form.sig_website || tenantInfo?.domain, logoUrl: tenantInfo?.logo_url, color: form.sig_color || tenantInfo?.primary_color,
+      },
+    }).html;
+  }, [form, tenantName, tenantInfo]);
 
   const saveAccess = async () => {
     setBusy("access");
@@ -100,6 +115,8 @@ function LeadMailingPage() {
         ...form, sender_email: clean(form.sender_email), sender_name: clean(form.sender_name), subject: clean(form.subject),
         body: clean(form.body), homepage_url: clean(form.homepage_url), calendly_url: clean(form.calendly_url),
         daily_limit: Number(form.daily_limit) || 50,
+        sig_name: clean(form.sig_name ?? null), sig_position: clean(form.sig_position ?? null), sig_phone: clean(form.sig_phone ?? null),
+        sig_website: clean(form.sig_website ?? null), sig_color: clean(form.sig_color ?? null),
       } });
       toast({ title: "Einstellungen gespeichert" });
       await load();
@@ -138,7 +155,7 @@ function LeadMailingPage() {
     <div className="p-4 md:p-6 space-y-6 max-w-5xl">
       <div>
         <h1 className="text-xl font-heading font-bold">Lead-Mailing</h1>
-        <p className="text-sm text-muted-foreground">Indeed-Leads per CSV importieren und automatisch mit Tageslimit anschreiben. Antworten erscheinen im Lead-Postfach.</p>
+        <p className="text-sm text-muted-foreground">Indeed-Leads per CSV importieren und automatisch mit Tageslimit anschreiben. Antworten erscheinen im Postfach.</p>
       </div>
 
       <Card>
@@ -199,8 +216,24 @@ function LeadMailingPage() {
             <div className="space-y-1"><Label>Text</Label>
               <Textarea rows={12} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} />
               <p className="text-xs text-muted-foreground">Platzhalter: {"{Vorname} {Nachname} {Firma} {Homepage} {Calendly} {Absender}"}. Ein Abmeldehinweis wird automatisch angehängt.</p></div>
-            <div className="space-y-1"><Label>Vorschau</Label>
-              <pre className="whitespace-pre-wrap break-words text-sm bg-muted rounded-md p-3">{preview}</pre></div>
+            <div className="space-y-2 rounded-2xl border border-border p-3">
+              <p className="text-sm font-medium">E-Mail-Signatur</p>
+              <p className="text-xs text-muted-foreground">Gilt für Lead-Mails, Antworten im Postfach und Mails an Mitarbeiter. Leere Felder nutzen die Firmendaten (Domains/Tenants).</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1"><Label>Name</Label><Input placeholder={form.sender_name || "Max Mustermann"} value={form.sig_name ?? ""} onChange={(e) => setForm({ ...form, sig_name: e.target.value })} /></div>
+                <div className="space-y-1"><Label>Position</Label><Input placeholder="Recruiting" value={form.sig_position ?? ""} onChange={(e) => setForm({ ...form, sig_position: e.target.value })} /></div>
+                <div className="space-y-1"><Label>Telefon</Label><Input placeholder="+49 …" value={form.sig_phone ?? ""} onChange={(e) => setForm({ ...form, sig_phone: e.target.value })} /></div>
+                <div className="space-y-1"><Label>Website</Label><Input placeholder={tenantInfo?.domain || "firma.de"} value={form.sig_website ?? ""} onChange={(e) => setForm({ ...form, sig_website: e.target.value })} /></div>
+                <div className="space-y-1"><Label>Akzentfarbe</Label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" aria-label="Akzentfarbe wählen" className="h-10 w-12 rounded-md border border-input bg-transparent" value={/^#[0-9a-f]{6}$/i.test(form.sig_color ?? "") ? form.sig_color! : (/^#[0-9a-f]{6}$/i.test(tenantInfo?.primary_color ?? "") ? tenantInfo.primary_color : "#1f1b16")} onChange={(e) => setForm({ ...form, sig_color: e.target.value })} />
+                    <Input value={form.sig_color ?? ""} placeholder="#1f1b16" onChange={(e) => setForm({ ...form, sig_color: e.target.value })} />
+                  </div></div>
+              </div>
+            </div>
+            <div className="space-y-1"><Label>Vorschau (so sieht die E-Mail aus)</Label>
+              <p className="text-xs text-muted-foreground break-words">{preview.split("\n")[0]}</p>
+              <iframe title="E-Mail-Vorschau" sandbox="" srcDoc={htmlPreview} className="w-full h-[520px] rounded-2xl border border-border bg-[#f4f1ec]" /></div>
             <Button onClick={saveSettings} disabled={busy === "settings"}>Einstellungen speichern</Button>
           </CardContent>
         </Card>

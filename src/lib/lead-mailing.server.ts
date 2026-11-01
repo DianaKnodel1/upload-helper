@@ -23,19 +23,34 @@ export async function loadResendConfig() {
   };
 }
 
-const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
-const linkify = (s: string) => s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>');
+import { renderMail, type MailKind, type MailSignature } from "./mail-template";
 
-export function textToHtml(text: string): string {
-  const paras = esc(text).split(/\n{2,}/).map((p) => `<p style="margin:0 0 14px">${linkify(p).replace(/\n/g, "<br>")}</p>`);
-  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222;max-width:600px">${paras.join("")}</div>`;
+/** Signatur einer Firma: eigene Felder aus lead_mail_settings, sonst Firmendaten. */
+export async function loadSignature(tenantId: string | null | undefined, senderEmail?: string | null): Promise<MailSignature> {
+  if (!tenantId) return { email: senderEmail ?? null };
+  const db = await admin();
+  const [{ data: t }, { data: s }] = await Promise.all([
+    db.from("tenants").select("name, logo_url, primary_color, domain, company_signer_name, company_signer_title, company_ceo_name").eq("id", tenantId).maybeSingle(),
+    db.from("lead_mail_settings").select("sender_email, sender_name, sig_name, sig_position, sig_phone, sig_website, sig_color").eq("tenant_id", tenantId).maybeSingle(),
+  ]);
+  return {
+    company: t?.name ?? null,
+    name: s?.sig_name || s?.sender_name || t?.company_signer_name || t?.company_ceo_name || null,
+    position: s?.sig_position || t?.company_signer_title || null,
+    phone: s?.sig_phone || null,
+    email: senderEmail ?? s?.sender_email ?? null,
+    website: s?.sig_website || t?.domain || null,
+    logoUrl: t?.logo_url || null,
+    color: s?.sig_color || t?.primary_color || null,
+  };
 }
 
 export async function sendViaResend(opts: {
-  apiKey: string; from: string; to: string; subject: string; text: string; replyTo: string; idempotencyKey?: string;
+  apiKey: string; from: string; to: string; subject: string; text: string; replyTo: string;
+  idempotencyKey?: string; kind?: MailKind; signature?: MailSignature;
 }): Promise<{ id: string }> {
-  const footer = "\n\n—\nSie erhalten diese Nachricht wegen Ihrer Bewerbung. Wenn Sie keine weiteren Nachrichten wünschen, antworten Sie bitte mit „Abmelden“.";
-  const text = opts.text + footer;
+  const kind = opts.kind ?? "lead";
+  const { html, text } = renderMail({ text: opts.text, signature: opts.signature ?? { email: opts.replyTo }, kind, subject: opts.subject });
   const res = await fetch(`${RESEND_API}/emails`, {
     method: "POST",
     headers: {
@@ -49,8 +64,8 @@ export async function sendViaResend(opts: {
       reply_to: opts.replyTo,
       subject: opts.subject,
       text,
-      html: textToHtml(text),
-      headers: { "List-Unsubscribe": `<mailto:${opts.replyTo}?subject=Abmelden>` },
+      html,
+      ...(kind === "lead" ? { headers: { "List-Unsubscribe": `<mailto:${opts.replyTo}?subject=Abmelden>` } } : {}),
     }),
   });
   const bodyTxt = await res.text();
@@ -59,7 +74,7 @@ export async function sendViaResend(opts: {
   return { id: String(data.id ?? "") };
 }
 
-function fromHeader(name: string | null, email: string) {
+export function fromHeader(name: string | null, email: string) {
   const n = (name ?? "").replace(/["<>]/g, "").trim();
   return n ? `"${n}" <${email}>` : email;
 }
@@ -89,6 +104,7 @@ export async function runLeadMailingCycle(now = new Date()) {
       .eq("tenant_id", s.tenant_id).eq("lead_mail_status", "pending")
       .order("created_at", { ascending: true }).limit(allowed);
 
+    const signature = await loadSignature(s.tenant_id, s.sender_email);
     let sent = 0;
     for (const lead of leads ?? []) {
       const vars = {
@@ -101,12 +117,13 @@ export async function runLeadMailingCycle(now = new Date()) {
       try {
         const r = await sendViaResend({
           apiKey, from: fromHeader(s.sender_name, s.sender_email), to: lead.email, subject, text,
-          replyTo: s.sender_email, idempotencyKey: `lead-invite-${lead.id}`,
+          replyTo: s.sender_email, idempotencyKey: `lead-invite-${lead.id}`, kind: "lead", signature,
         });
         await db.from("applications").update({ lead_mail_status: "sent", lead_mail_sent_at: new Date().toISOString(), lead_mail_error: null }).eq("id", lead.id);
         await db.from("lead_messages").insert({
           application_id: lead.id, tenant_id: s.tenant_id, direction: "out", from_email: s.sender_email,
           to_email: lead.email, subject, body_text: text, provider_id: r.id || null, handled: true,
+          peer_email: String(lead.email).toLowerCase(), kind: "lead",
         });
         sent++;
       } catch (e: any) {
@@ -184,15 +201,22 @@ export async function handleResendEvent(evt: any) {
         }
       }
     }
-    const { data: app } = await db
-      .from("applications").select("id, tenant_id").ilike("email", from).not("lead_source", "is", null)
-      .order("created_at", { ascending: false }).limit(1).maybeSingle();
+    // Zuordnung: zuerst bestehender Verlauf mit dieser Adresse (Mitarbeiter, frei), sonst Lead.
+    const { data: prev } = await db
+      .from("lead_messages").select("application_id, profile_id, tenant_id, kind")
+      .eq("peer_email", from).eq("direction", "out").order("created_at", { ascending: false }).limit(1).maybeSingle();
+    const { data: app } = prev
+      ? { data: prev.application_id ? { id: prev.application_id, tenant_id: prev.tenant_id } : null }
+      : await db.from("applications").select("id, tenant_id").ilike("email", from).not("lead_source", "is", null)
+          .order("created_at", { ascending: false }).limit(1).maybeSingle();
     await db.from("lead_messages").upsert({
-      application_id: app?.id ?? null, tenant_id: app?.tenant_id ?? null, direction: "in",
+      application_id: app?.id ?? null, profile_id: prev?.profile_id ?? null,
+      tenant_id: prev?.tenant_id ?? app?.tenant_id ?? null, direction: "in",
       from_email: from, to_email: addrOf(data.to), subject, body_text: String(text).slice(0, 20000),
-      provider_id: providerId || null, handled: false,
+      provider_id: providerId || null, handled: false, peer_email: from,
+      kind: prev?.kind ?? (app ? "lead" : "other"),
     }, { onConflict: "provider_id,direction", ignoreDuplicates: true });
-    if (app?.id) {
+    if (app?.id && (prev?.kind ?? "lead") === "lead") {
       const status = isUnsubscribeReply(subject, text) ? "unsubscribed" : "replied";
       await db.from("applications").update({ lead_mail_status: status }).eq("id", app.id);
     }
