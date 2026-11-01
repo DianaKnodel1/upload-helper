@@ -304,11 +304,17 @@ import site15Meta from "../landing-themes/site-15/meta.json";
 
 
 
+export const SLOT_TYPES = ["text", "longtext", "textarea", "image", "color", "link"] as const;
+export type SlotType = (typeof SLOT_TYPES)[number];
+
 export type ThemeSlot = {
   key: string;
   label: string;
-  type: "text" | "longtext" | "textarea" | "image" | "color";
+  type: SlotType;
   default: string;
+  /** Optionale Gruppierung/Hinweis für den Editor (nur Anzeige). */
+  group?: string;
+  help?: string;
 };
 
 export type SitePageDef = {
@@ -338,6 +344,7 @@ export type ThemeFiles = {
 
 function pickSlots(meta: any): ThemeSlot[] {
   if (meta?.slots && typeof meta.slots === 'object' && !Array.isArray(meta.slots)) {
+    // Legacy-Format { key: default } — Typ wird aus dem Namen abgeleitet.
     return Object.entries(meta.slots).map(([key, value]) => ({
       key,
       label: key.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
@@ -345,8 +352,63 @@ function pickSlots(meta: any): ThemeSlot[] {
       default: String(value)
     }));
   }
-  return Array.isArray(meta?.slots) ? (meta.slots as ThemeSlot[]) : [];
+  if (!Array.isArray(meta?.slots)) return [];
+  // Array-Format: Typen kommen explizit aus meta.json; unbekannte Typen → text.
+  return (meta.slots as any[])
+    .filter((s) => s && typeof s.key === "string" && /^[a-z0-9_]+$/.test(s.key))
+    .map((s) => ({
+      ...s,
+      key: s.key,
+      label: String(s.label ?? s.key),
+      type: (SLOT_TYPES as readonly string[]).includes(s.type) ? s.type : "text",
+      default: String(s.default ?? ""),
+    }));
 }
+
+/**
+ * Entfernt nicht aufgelöste {{platzhalter}} aus fertig gerendertem HTML, damit
+ * sie nie sichtbar auf veröffentlichten Seiten landen. Live-Mirror in
+ * landing-server/server.js (stripUnresolvedPlaceholders).
+ */
+export function stripUnresolvedPlaceholders(html: string): string {
+  return html.replace(/\{\{\s*[a-z0-9_]+\s*\}\}/gi, "");
+}
+
+// ===== Externe Premium-Themes (site-16, site-17, …) =====
+// Werden automatisch registriert: Ordner src/landing-themes/site-N/ mit
+// meta.json + template.html + style.css (+ optional script.js, assets/).
+// site-1 … site-15 bleiben oben fest registriert und unverändert.
+const EXT_META = import.meta.glob("../landing-themes/site-*/meta.json", { eager: true, import: "default" }) as Record<string, any>;
+const EXT_HTML = import.meta.glob("../landing-themes/site-*/template.html", { eager: true, query: "?raw", import: "default" }) as Record<string, string>;
+const EXT_CSS = import.meta.glob("../landing-themes/site-*/style.css", { eager: true, query: "?raw", import: "default" }) as Record<string, string>;
+const EXT_JS = import.meta.glob("../landing-themes/site-*/script.js", { eager: true, query: "?raw", import: "default" }) as Record<string, string>;
+const LEGACY_SITE_MAX = 15;
+
+function externalSiteThemes(): ThemeFiles[] {
+  const out: ThemeFiles[] = [];
+  for (const [path, meta] of Object.entries(EXT_META)) {
+    const m = /site-(\d+)\/meta\.json$/.exec(path);
+    if (!m || Number(m[1]) <= LEGACY_SITE_MAX) continue;
+    const dir = path.replace(/meta\.json$/, "");
+    const html = EXT_HTML[`${dir}template.html`];
+    if (!html || !meta?.id) continue;
+    const kind = meta.kind === "single" ? "single" : "site";
+    out.push({
+      id: String(meta.id),
+      name: String(meta.name ?? meta.id),
+      description: String(meta.description ?? ""),
+      kind,
+      pages: kind === "site" ? meta.pages : undefined,
+      colors: meta.colors,
+      html,
+      css: EXT_CSS[`${dir}style.css`] ?? "",
+      js: EXT_JS[`${dir}script.js`] ?? "",
+      slots: pickSlots(meta),
+    });
+  }
+  return out.sort((a, b) => Number(a.id.replace(/\D/g, "")) - Number(b.id.replace(/\D/g, "")));
+}
+const EXTERNAL_SITE_THEMES = externalSiteThemes();
 
 // Jedes Theme bekommt eine eigene Bewerbungs-Sektion (inline, direkt auf der
 // Landing Page). CTAs zeigen auf #bewerbung-form. Das /bewerbung im Portal
