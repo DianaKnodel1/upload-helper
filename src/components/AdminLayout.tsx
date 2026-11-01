@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
 import { LayoutGrid, Users, ClipboardList, CheckSquare, CalendarDays, Wallet, LogOut, MessageCircle, Settings, Phone, Search, ShieldCheck, LayoutDashboard, Upload, BarChart3 } from "lucide-react";
-import { GlassSidebar, GlassMobileMenuButton, GlassBackdrop, GlassTabDock, type GlassNavGroup } from "@/components/GlassSidebar";
+import { GlassSidebar, GlassMobileMenuButton, type GlassNavGroup } from "@/components/GlassSidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AdminCommandPalette } from "@/components/AdminCommandPalette";
 import { useAdminBadges } from "@/hooks/use-admin-badges";
@@ -96,57 +96,54 @@ export default function AdminLayout() {
 
   const brand = (
     <>
-      <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">A</div>
+      <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-bold shrink-0">A</div>
       <span className="text-sm font-semibold truncate">Admin-Portal</span>
     </>
   );
-  const settingsActive = pathname.startsWith("/admin/settings");
-  const name = (user.user_metadata?.first_name as string | undefined) || "Admin";
 
   return (
-    <div className="glass-shell min-h-dvh flex flex-col admin-layout lg:pl-24 xl:pl-28">
-      <GlassBackdrop />
+    <div className="glass-shell min-h-dvh flex flex-col admin-layout lg:pl-64 xl:pl-72">
       <GlassSidebar
         brand={brand}
         groups={groups}
         footer={
-          <a href="/admin/settings" aria-label="Einstellungen" className={settingsActive ? "glass-rail-link glass-rail-link-active" : "glass-rail-link"}>
-            <Settings className="h-[18px] w-[18px]" />
-            <span className="glass-rail-tip">{settingsItem.title}</span>
+          <a href="/admin/settings" className="glass-nav-link">
+            <Settings className="h-4 w-4 shrink-0" />
+            <span className="truncate">{settingsItem.title}</span>
           </a>
         }
       />
-      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 lg:pl-0 pt-3">
-        <div className="glass-panel rounded-full min-h-14 grid grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:flex items-center gap-1 sm:gap-3 px-2 sm:px-3">
+      <header className="portal-header sticky top-0 z-30 px-3 sm:px-6 pt-3">
+        <div className="glass-panel rounded-2xl sm:rounded-full min-h-16 grid grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:flex items-center gap-1 sm:gap-3 px-2 sm:px-4">
           <GlassMobileMenuButton />
-          <div className="hidden sm:flex items-center gap-2.5 min-w-0">
-            <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-semibold shrink-0">{name.charAt(0).toUpperCase()}</div>
-            <span className="text-sm font-medium truncate">Willkommen, {name}</span>
-          </div>
+          <span className="hidden sm:inline text-sm font-medium truncate">Willkommen, Admin</span>
           <Button
             variant="ghost"
             onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-            className="min-w-0 sm:mx-auto flex items-center justify-start gap-2 h-10 w-full sm:w-64 lg:w-80 xl:w-96 text-xs text-muted-foreground rounded-full bg-muted px-2"
+            className="min-w-0 sm:ml-auto flex items-center justify-start gap-2 h-11 w-full sm:w-48 lg:w-56 xl:w-72 text-xs text-muted-foreground rounded-full bg-muted px-3"
             title="Schnellsuche"
             aria-label="Schnellsuche öffnen"
           >
-            <span className="h-6 w-6 rounded-full shrink-0 bg-[radial-gradient(circle_at_35%_30%,var(--glass-pill),var(--chart-4)_55%,var(--chart-1))]" aria-hidden />
-            <span className="truncate">Suchen oder springen…</span>
+            <Search className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">Suchen…</span>
             <kbd className="ml-auto hidden sm:inline text-[10px] border border-border rounded px-1.5 py-0.5 shrink-0">⌘K</kbd>
           </Button>
           <ThemeToggle compact />
-          <Button variant="ghost" size="icon" onClick={signOut} title="Abmelden" aria-label="Abmelden"
-            className="h-10 w-10 rounded-full bg-[var(--glass-pill)] text-[oklch(0.2_0.01_60)] hover:bg-[var(--glass-pill)] shrink-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={signOut}
+            title="Abmelden"
+            aria-label="Abmelden"
+            className="h-11 w-11 rounded-full text-muted-foreground shrink-0"
+          >
             <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </header>
-      <main className="portal-content flex-1 min-w-0 px-3 sm:px-6 lg:pl-0 pt-4 pb-28">
-        <div className="glass-stage rounded-[2rem] min-h-[calc(100dvh-9rem)] overflow-hidden">
-          <Outlet />
-        </div>
+      <main className="portal-content flex-1 min-w-0 pb-10">
+        <Outlet />
       </main>
-      <GlassTabDock groups={groups} />
       <AdminCommandPalette />
     </div>
   );
