@@ -15,10 +15,12 @@
 - Handy: Symbol-Kapsel wird zum Menü-Knopf, die Reiterleiste unten bleibt wischbar
 - Die Menüpunkte, Rechte und Seiten bleiben alle erhalten; nur das Aussehen ändert sich
 
-## Teil 2 – Direkte E-Mail an Mitarbeiter
-- Knopf „E-Mail senden“ im Mitarbeiterprofil (und in der Mitarbeiterliste), z. B. wenn jemand nicht online kommt
-- Betreff + Text, optional Vorlage („Bitte melden Sie sich“), Versand über Resend vom Firmen-Absender der jeweiligen Firma
-- Gesendete Mails erscheinen im Verlauf beim Mitarbeiter; Antworten landen wie bei Leads im Postfach
+## Teil 2 – Ein gemeinsames „Postfach“ (statt Lead-Postfach)
+- Das bisherige „Lead-Postfach“ wird zu **„Postfach“** unter Kommunikation, mit allen Mails: Leads, Bewerber und Mitarbeiter
+- Filter oben: Alle / Leads / Mitarbeiter / Ungelesen, außerdem Suche nach Name oder E-Mail
+- **„Neue Nachricht“** direkt im Postfach: Empfänger suchen (Mitarbeiter oder Bewerber) oder eine E-Mail-Adresse frei eingeben, Firma/Absender wählen, Betreff und Text schreiben, optional mit Vorlage („Bitte melden Sie sich“)
+- Zusätzlich gibt es den Knopf „E-Mail senden“ im Mitarbeiterprofil und in der Mitarbeiterliste; er öffnet dasselbe Fenster, mit dem Empfänger schon eingetragen
+- Versand über Resend vom Firmen-Absender; jede Antwort landet im selben Gesprächsverlauf im Postfach
 - Nur Einzelversand, kein Massenversand
 
 ## Teil 3 – Professionelle HTML-Signatur
