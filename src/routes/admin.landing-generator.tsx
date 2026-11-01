@@ -14,6 +14,7 @@ import {
   deleteLandingPage,
   checkLandingPageDeletable,
   toggleLandingPublished,
+  uploadLandingSlotImage,
 } from "@/lib/landing-pages.functions";
 import { listPartnerCompanies } from "@/lib/partner-companies.functions";
 import { adminListSchedules } from "@/lib/appointments.functions";
@@ -374,6 +375,32 @@ function LandingGeneratorPage() {
   };
   const setSlot = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setSlotValues((v) => ({ ...v, [key]: e.target.value }));
+  const uploadSlotImageFn = useServerFn(uploadLandingSlotImage);
+  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
+  const onSlotImageFile = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) {
+      toast({ title: "Bild zu groß", description: "Max. 5 MB.", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (typeof reader.result !== "string") return;
+      setUploadingSlot(key);
+      try {
+        const { url } = await uploadSlotImageFn({ data: { data_url: reader.result, slot_key: key } });
+        setSlotValues((v) => ({ ...v, [key]: url }));
+        toast({ title: "Bild hochgeladen", description: "Wird nach dem Speichern live übernommen." });
+      } catch (err) {
+        toast({ title: "Upload fehlgeschlagen", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
+      } finally {
+        setUploadingSlot(null);
+      }
+    };
+    reader.readAsDataURL(f);
+  };
 
   // Standard-Textwelt je Modus (Vermittlung vs. Fast-Track) in die Hero-Slots setzen.
   const applyModeCopy = (flow: string, onlyDefaults = true) => {
@@ -1719,7 +1746,24 @@ document.addEventListener('submit', function(e){
                         <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} />
                       </div>
                     ) : slot.type === "image" ? (
-                      <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://… oder /assets/foo.jpg" />
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://… oder assets/foo.jpg" />
+                          <Button type="button" variant="outline" size="sm" className="h-10 shrink-0" disabled={uploadingSlot === slot.key} asChild>
+                            <label className="cursor-pointer">
+                              {uploadingSlot === slot.key ? <Loader2 className="h-4 w-4 animate-spin" /> : "Bild hochladen"}
+                              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" className="sr-only" onChange={onSlotImageFile(slot.key)} />
+                            </label>
+                          </Button>
+                        </div>
+                        {(slotsForOutput[slot.key] ?? slot.default) !== slot.default && (
+                          <button type="button" className="text-xs text-muted-foreground underline" onClick={() => setSlotValues((v) => ({ ...v, [slot.key]: slot.default }))}>
+                            Standardbild wiederherstellen
+                          </button>
+                        )}
+                      </div>
+                    ) : slot.type === "link" ? (
+                      <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} placeholder="https://…, /kontakt, #bewerbung-form, mailto:…" />
                     ) : (
                       <Input value={slotsForOutput[slot.key] ?? slot.default} onChange={setSlot(slot.key)} />
                     )}
