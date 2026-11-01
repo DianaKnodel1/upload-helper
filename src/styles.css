@@ -213,81 +213,80 @@
 }
 
 /* ───────── Glas-Theme (Admin + Mitarbeiter-Portal) ─────────
-   Stil wie „Glassy Dashboard V2“: warmes, unscharfes Wohnraum-Foto
-   (.glass-bg), große milchige Glasfläche, Sand/Taupe, fast schwarze
-   Haupt-Knöpfe, aktive Stelle als weiße Kapsel.
-   Gilt global, sobald eine .glass-shell im DOM ist (auch Dialoge). */
+   Gilt global, sobald eine .glass-shell im DOM ist – so übernehmen
+   auch Dialoge/Popover (Portals) die Glas-Tokens.
+   Hell = milchiges, helles Glas; Dunkel = warmes, dunkles Glas.
+   Der Hintergrund ist ein reiner Farbverlauf (kein Foto). */
 :root:has(.glass-shell) {
-  --glass-surface: oklch(0.97 0.012 75 / 0.42);
-  --glass-surface-strong: oklch(0.96 0.012 75 / 0.9);
-  --glass-edge: oklch(1 0 0 / 0.45);
-  --glass-highlight: oklch(1 0 0 / 0.55);
-  --glass-shadow: 0 24px 60px -28px oklch(0.3 0.04 60 / 0.45);
-  --glass-overlay: oklch(0.25 0.03 60 / 0.35);
-  --glass-pill: oklch(1 0 0 / 0.92);
-  --glass-tint: oklch(0.86 0.025 70 / 0.35);
+  --glass-surface: oklch(1 0 0 / 0.55);
+  --glass-surface-strong: oklch(0.99 0.004 260 / 0.88);
+  --glass-edge: oklch(1 0 0 / 0.7);
+  --glass-highlight: oklch(1 0 0 / 0.6);
+  --glass-shadow: 0 20px 50px -24px oklch(0.4 0.05 265 / 0.28);
+  --glass-overlay: oklch(0.3 0.03 265 / 0.35);
   --background: transparent;
-  --foreground: oklch(0.22 0.015 60);
-  --card: oklch(0.98 0.01 75 / 0.5);
-  --card-foreground: oklch(0.22 0.015 60);
+  --foreground: oklch(0.27 0.03 265);
+  --card: var(--glass-surface);
+  --card-foreground: oklch(0.27 0.03 265);
   --popover: var(--glass-surface-strong);
-  --popover-foreground: oklch(0.22 0.015 60);
-  --primary: oklch(0.2 0.01 60);
-  --primary-foreground: oklch(0.98 0.005 80);
+  --popover-foreground: oklch(0.27 0.03 265);
+  --primary: oklch(0.45 0.09 265);
+  --primary-foreground: oklch(0.98 0.005 260);
   --secondary: oklch(1 0 0 / 0.5);
-  --secondary-foreground: oklch(0.25 0.015 60);
-  --muted: oklch(1 0 0 / 0.38);
-  --muted-foreground: oklch(0.38 0.02 60 / 0.9);
-  --accent: oklch(1 0 0 / 0.6);
-  --accent-foreground: oklch(0.22 0.015 60);
-  --border: oklch(1 0 0 / 0.5);
-  --input: oklch(0.35 0.02 60 / 0.22);
-  --ring: oklch(0.3 0.02 60 / 0.45);
-  --chart-1: oklch(0.66 0.19 30);
-  --chart-2: oklch(0.22 0.01 60);
-  --chart-3: oklch(0.83 0.16 85);
-  --chart-4: oklch(0.6 0.17 255);
-  --chart-5: oklch(0.7 0.04 70);
+  --secondary-foreground: oklch(0.32 0.03 265);
+  --muted: oklch(1 0 0 / 0.4);
+  --muted-foreground: oklch(0.45 0.03 265 / 0.85);
+  --accent: oklch(1 0 0 / 0.65);
+  --accent-foreground: oklch(0.27 0.03 265);
+  --border: oklch(1 0 0 / 0.55);
+  --input: oklch(0.4 0.03 265 / 0.25);
+  --ring: oklch(0.5 0.08 265 / 0.5);
   color-scheme: light;
 }
-:root:has(.glass-shell) body { background: oklch(0.86 0.02 70); }
+:root:has(.glass-shell) body {
+  background:
+    radial-gradient(60rem 40rem at 15% 0%, oklch(0.95 0.03 250 / 0.9), transparent 60%),
+    radial-gradient(50rem 36rem at 90% 20%, oklch(0.96 0.02 80 / 0.8), transparent 55%),
+    radial-gradient(70rem 50rem at 50% 100%, oklch(0.93 0.025 220 / 0.9), transparent 60%),
+    linear-gradient(160deg, oklch(0.96 0.012 250), oklch(0.93 0.015 265) 50%, oklch(0.95 0.012 90));
+  background-attachment: fixed;
+}
 
 :root.dark:has(.glass-shell) {
-  --glass-surface: oklch(0.28 0.015 60 / 0.5);
-  --glass-surface-strong: oklch(0.24 0.015 60 / 0.92);
-  --glass-edge: oklch(1 0 0 / 0.14);
+  --glass-surface: oklch(0.32 0.02 60 / 0.42);
+  --glass-surface-strong: oklch(0.26 0.02 60 / 0.86);
+  --glass-edge: oklch(1 0 0 / 0.18);
   --glass-highlight: oklch(1 0 0 / 0.08);
-  --glass-shadow: 0 24px 60px -24px oklch(0.05 0.01 60 / 0.7);
-  --glass-overlay: oklch(0.08 0.01 60 / 0.55);
-  --glass-pill: oklch(0.97 0.008 75);
-  --glass-tint: oklch(0.15 0.01 60 / 0.55);
-  --foreground: oklch(0.97 0.006 75);
-  --card: oklch(0.32 0.015 60 / 0.45);
-  --card-foreground: oklch(0.97 0.006 75);
-  --popover-foreground: oklch(0.97 0.006 75);
-  --primary: oklch(0.97 0.006 75);
-  --primary-foreground: oklch(0.2 0.01 60);
-  --secondary: oklch(1 0 0 / 0.1);
-  --secondary-foreground: oklch(0.97 0.006 75);
-  --muted: oklch(1 0 0 / 0.08);
-  --muted-foreground: oklch(0.86 0.01 75 / 0.75);
-  --accent: oklch(1 0 0 / 0.12);
-  --accent-foreground: oklch(0.97 0.006 75);
+  --glass-shadow: 0 20px 50px -20px oklch(0.1 0.02 60 / 0.55);
+  --glass-overlay: oklch(0.1 0.02 60 / 0.5);
+  --background: transparent;
+  --foreground: oklch(0.98 0.005 80);
+  --card: var(--glass-surface);
+  --card-foreground: oklch(0.98 0.005 80);
+  --popover: var(--glass-surface-strong);
+  --popover-foreground: oklch(0.98 0.005 80);
+  --primary: oklch(0.98 0.005 80);
+  --primary-foreground: oklch(0.22 0.02 60);
+  --secondary: oklch(1 0 0 / 0.12);
+  --secondary-foreground: oklch(0.98 0.005 80);
+  --muted: oklch(1 0 0 / 0.09);
+  --muted-foreground: oklch(0.88 0.01 80 / 0.75);
+  --accent: oklch(1 0 0 / 0.14);
+  --accent-foreground: oklch(0.98 0.005 80);
   --border: var(--glass-edge);
-  --input: oklch(1 0 0 / 0.18);
-  --ring: oklch(1 0 0 / 0.45);
-  --chart-2: oklch(0.92 0.01 75);
+  --input: oklch(1 0 0 / 0.2);
+  --ring: oklch(1 0 0 / 0.5);
   color-scheme: dark;
 }
-:root.dark:has(.glass-shell) body { background: oklch(0.2 0.01 60); }
+:root.dark:has(.glass-shell) body {
+  background:
+    radial-gradient(60rem 40rem at 20% 0%, oklch(0.35 0.04 70 / 0.6), transparent 60%),
+    radial-gradient(55rem 40rem at 85% 30%, oklch(0.3 0.03 250 / 0.5), transparent 55%),
+    linear-gradient(160deg, oklch(0.24 0.02 60), oklch(0.2 0.02 265) 60%, oklch(0.23 0.02 80));
+  background-attachment: fixed;
+}
 
 .glass-shell { position: relative; isolation: isolate; color: var(--foreground); }
-.glass-bg {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-size: cover; background-position: center;
-}
-.glass-bg::after { content: ""; position: absolute; inset: 0; background: var(--glass-tint); }
-:root.dark .glass-bg { filter: brightness(0.45) saturate(0.8); }
 
 .portal-content { width: 100%; }
 .portal-content > * { min-width: 0; }
@@ -296,13 +295,6 @@
 .glass-mobile-nav {
   background: var(--glass-surface-strong);
   padding-bottom: env(safe-area-inset-bottom);
-}
-/* Große milchige Glasfläche hinter dem Seiteninhalt */
-.glass-stage {
-  background: var(--glass-surface);
-  border: 1px solid var(--glass-edge);
-  backdrop-filter: blur(28px) saturate(130%);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
 }
 
 @media (min-width: 1920px) {
@@ -313,7 +305,7 @@
   .portal-content :where(input, textarea, select) { font-size: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .glass-nav-link, .glass-rail-link, .glass-tab { transition: none; }
+  .glass-nav-link { transition: none; }
 }
 
 .glass-panel,
@@ -328,65 +320,22 @@
 }
 .glass-overlay { background: var(--glass-overlay); }
 
-/* Mobile Menü-Liste */
+/* Sidebar-Navigation im Glas-Look */
 .glass-nav-link {
   display: flex; align-items: center; gap: 0.75rem;
   min-height: 2.75rem; min-width: 0;
-  border-radius: 999px; padding: 0.5rem 0.9rem;
+  border-radius: 0.75rem; padding: 0.5rem 0.75rem;
   font-size: 0.875rem; color: var(--muted-foreground);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 .glass-nav-link:hover { background: var(--accent); color: var(--foreground); }
 .glass-nav-link-active,
 .glass-nav-link-active:hover {
-  background: var(--glass-pill); color: oklch(0.2 0.01 60); font-weight: 600;
-  box-shadow: 0 6px 16px -8px oklch(0.2 0.02 60 / 0.4);
+  background: var(--primary); color: var(--primary-foreground); font-weight: 600;
 }
 .glass-nav-badge {
   margin-left: auto; font-size: 10px; line-height: 1;
   padding: 3px 7px; border-radius: 999px;
-  background: var(--primary); color: var(--primary-foreground);
+  background: var(--secondary); color: var(--secondary-foreground);
+  border: 1px solid var(--border);
 }
-
-/* Linke Symbol-Kapsel */
-.glass-rail-link {
-  position: relative; display: grid; place-items: center;
-  height: 2.75rem; width: 2.75rem; border-radius: 999px;
-  color: var(--muted-foreground);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-.glass-rail-link:hover { background: var(--accent); color: var(--foreground); }
-.glass-rail-link-active, .glass-rail-link-active:hover {
-  background: var(--glass-pill); color: oklch(0.2 0.01 60);
-  box-shadow: 0 6px 16px -8px oklch(0.2 0.02 60 / 0.45);
-}
-.glass-rail-tip {
-  position: absolute; left: calc(100% + 0.75rem); top: 50%; transform: translateY(-50%);
-  white-space: nowrap; pointer-events: none; opacity: 0;
-  font-size: 0.75rem; font-weight: 500; padding: 0.35rem 0.7rem; border-radius: 999px;
-  background: var(--glass-surface-strong); color: var(--foreground);
-  border: 1px solid var(--glass-edge); box-shadow: var(--glass-shadow);
-  transition: opacity 0.12s ease;
-}
-.glass-rail-link:hover .glass-rail-tip,
-.glass-rail-link:focus-visible .glass-rail-tip { opacity: 1; }
-.glass-rail-dot {
-  position: absolute; top: 0.4rem; right: 0.4rem; min-width: 0.5rem; height: 0.5rem;
-  border-radius: 999px; background: var(--destructive);
-}
-
-/* Untere Reiterleiste */
-.glass-tab {
-  display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;
-  min-height: 2.5rem; padding: 0 1rem; border-radius: 999px;
-  font-size: 0.8125rem; font-weight: 500; color: var(--muted-foreground);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-.glass-tab:hover { color: var(--foreground); background: var(--accent); }
-.glass-tab-active, .glass-tab-active:hover {
-  background: var(--glass-pill); color: oklch(0.2 0.01 60); font-weight: 600;
-  box-shadow: 0 6px 16px -8px oklch(0.2 0.02 60 / 0.45);
-}
-.glass-dock { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
-.glass-dock-scroll { scrollbar-width: none; }
-.glass-dock-scroll::-webkit-scrollbar { display: none; }
