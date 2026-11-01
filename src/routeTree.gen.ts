@@ -52,6 +52,7 @@ import { Route as AdminMitarbeiterRouteImport } from './routes/admin.mitarbeiter
 import { Route as AdminPartnerCompaniesRouteImport } from './routes/admin.partner-companies'
 import { Route as AdminPersonenRouteImport } from './routes/admin.personen'
 import { Route as AdminPostRouteImport } from './routes/admin.post'
+import { Route as AdminPostfachRouteImport } from './routes/admin.postfach'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
 import { Route as AdminRevisionsRouteImport } from './routes/admin.revisions'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -309,6 +310,11 @@ const AdminPersonenRoute = AdminPersonenRouteImport.update({
 const AdminPostRoute = AdminPostRouteImport.update({
   id: '/post',
   path: '/post',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPostfachRoute = AdminPostfachRouteImport.update({
+  id: '/postfach',
+  path: '/postfach',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminReviewsRoute = AdminReviewsRouteImport.update({
@@ -588,6 +594,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
   '/admin/post': typeof AdminPostRoute
+  '/admin/postfach': typeof AdminPostfachRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/revisions': typeof AdminRevisionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -675,6 +682,7 @@ export interface FileRoutesByTo {
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
   '/admin/post': typeof AdminPostRoute
+  '/admin/postfach': typeof AdminPostfachRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/revisions': typeof AdminRevisionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -765,6 +773,7 @@ export interface FileRoutesById {
   '/admin/partner-companies': typeof AdminPartnerCompaniesRoute
   '/admin/personen': typeof AdminPersonenRouteWithChildren
   '/admin/post': typeof AdminPostRoute
+  '/admin/postfach': typeof AdminPostfachRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/revisions': typeof AdminRevisionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -855,6 +864,7 @@ export interface FileRouteTypes {
     | '/admin/partner-companies'
     | '/admin/personen'
     | '/admin/post'
+    | '/admin/postfach'
     | '/admin/reviews'
     | '/admin/revisions'
     | '/admin/settings'
@@ -942,6 +952,7 @@ export interface FileRouteTypes {
     | '/admin/partner-companies'
     | '/admin/personen'
     | '/admin/post'
+    | '/admin/postfach'
     | '/admin/reviews'
     | '/admin/revisions'
     | '/admin/settings'
@@ -1031,6 +1042,7 @@ export interface FileRouteTypes {
     | '/admin/partner-companies'
     | '/admin/personen'
     | '/admin/post'
+    | '/admin/postfach'
     | '/admin/reviews'
     | '/admin/revisions'
     | '/admin/settings'
@@ -1421,6 +1433,13 @@ declare module '@tanstack/react-router' {
       path: '/post'
       fullPath: '/admin/post'
       preLoaderRoute: typeof AdminPostRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/postfach': {
+      id: '/admin/postfach'
+      path: '/postfach'
+      fullPath: '/admin/postfach'
+      preLoaderRoute: typeof AdminPostfachRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/reviews': {
@@ -1815,6 +1834,7 @@ interface AdminRouteChildren {
   AdminPartnerCompaniesRoute: typeof AdminPartnerCompaniesRoute
   AdminPersonenRoute: typeof AdminPersonenRouteWithChildren
   AdminPostRoute: typeof AdminPostRoute
+  AdminPostfachRoute: typeof AdminPostfachRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminRevisionsRoute: typeof AdminRevisionsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -1850,6 +1870,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPartnerCompaniesRoute: AdminPartnerCompaniesRoute,
   AdminPersonenRoute: AdminPersonenRouteWithChildren,
   AdminPostRoute: AdminPostRoute,
+  AdminPostfachRoute: AdminPostfachRoute,
   AdminReviewsRoute: AdminReviewsRoute,
   AdminRevisionsRoute: AdminRevisionsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
