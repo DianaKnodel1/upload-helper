@@ -608,6 +608,8 @@ export const THEMES: ThemeFiles[] = [
   { id: tsapphireMeta.id, name: tsapphireMeta.name, description: tsapphireMeta.description, html: tsapphireHtml, css: tsapphireCss, js: tsapphireJs, slots: pickSlots(tsapphireMeta) },
   { id: trubyMeta.id, name: trubyMeta.name, description: trubyMeta.description, html: trubyHtml, css: trubyCss, js: trubyJs, slots: pickSlots(trubyMeta) },
   { id: tslateMeta.id, name: tslateMeta.name, description: tslateMeta.description, html: tslateHtml, css: tslateCss, js: tslateJs, slots: pickSlots(tslateMeta) },
+  // Externe Premium-Themes (automatisch registriert, s. docs/PREMIUM-THEMES.md)
+  ...EXTERNAL_SITE_THEMES,
 ].map(withSharedForm);
 
 
@@ -762,6 +764,8 @@ export const ACTIVE_THEME_IDS = new Set<string>([
   "site-13",
   "site-14",
   "site-15", // Website-Themes 1–15: komplett
+
+  ...EXTERNAL_SITE_THEMES.map((t) => t.id),
 ]);
 
 /** Theme-IDs mit mehrseitigen Komplett-Websites. */
