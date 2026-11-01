@@ -19,10 +19,11 @@ export type MailRecipient = {
   tenant_id: string | null;
 };
 
-export function ComposeMailDialog({ open, onOpenChange, profileId, initialRecipient, initialSubject, onSent }: {
+export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initialRecipient, initialSubject, onSent }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   profileId?: string;
+  userId?: string;
   initialRecipient?: MailRecipient | null;
   initialSubject?: string;
   onSent?: () => void;
@@ -45,14 +46,14 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, initialRecipi
     setSubject(initialSubject ?? "");
     setText("");
     setQuery("");
-    ctxFn({ data: { profileId } }).then((r) => {
+    ctxFn({ data: { profileId, userId } }).then((r) => {
       setSenders(r.senders);
       const rec = (r.recipient as MailRecipient | null) ?? initialRecipient ?? null;
       if (rec) setRecipient(rec);
       const t = rec?.tenant_id && r.senders.find((s: any) => s.tenant_id === rec.tenant_id);
       setTenantId((t || r.senders.find((s: any) => s.sender_email))?.tenant_id ?? "");
     }).catch((e) => toast.error(e?.message ?? "Laden fehlgeschlagen"));
-  }, [open, profileId, initialRecipient, initialSubject, ctxFn]);
+  }, [open, profileId, userId, initialRecipient, initialSubject, ctxFn]);
 
   useEffect(() => {
     if (recipient || query.trim().length < 2) { setResults([]); return; }

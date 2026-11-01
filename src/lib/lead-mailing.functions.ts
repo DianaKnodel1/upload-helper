@@ -249,7 +249,7 @@ export const searchMailRecipients = createServerFn({ method: "POST" })
 
 export const getMailComposeContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ profileId: z.string().uuid().optional() }).parse(i ?? {}))
+  .inputValidator((i: unknown) => z.object({ profileId: z.string().uuid().optional(), userId: z.string().uuid().optional() }).parse(i ?? {}))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -259,8 +259,9 @@ export const getMailComposeContext = createServerFn({ method: "POST" })
       db.from("lead_mail_settings").select("tenant_id, sender_email, sender_name"),
     ]);
     let recipient: any = null;
-    if (data.profileId) {
-      const { data: p } = await db.from("profiles").select("id, full_name, user_id, tenant_id").eq("id", data.profileId).maybeSingle();
+    if (data.profileId || data.userId) {
+      const { data: p } = await db.from("profiles").select("id, full_name, user_id, tenant_id")
+        .eq(data.profileId ? "id" : "user_id", (data.profileId ?? data.userId)!).maybeSingle();
       if (p) recipient = { type: "employee", profile_id: p.id, application_id: null, name: p.full_name, tenant_id: p.tenant_id, email: await profileEmail(db, p) };
     }
     const senders = (tenants ?? []).map((t: any) => {
