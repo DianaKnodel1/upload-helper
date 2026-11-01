@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/lead-mailing")({
-  head: () => ({ meta: [{ title: "Lead-Mailing – Admin" }] }),
+  head: () => ({ meta: [
+    { title: "Lead-Mailing – Mitarbeiter-Portal" },
+    { name: "description", content: "Indeed-Bewerbungen importieren und den E-Mail-Versand je Firma verwalten." },
+    { property: "og:title", content: "Lead-Mailing – Mitarbeiter-Portal" },
+    { property: "og:description", content: "E-Mail-Versand und Bewerbungsvorlagen je Firma verwalten." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: LeadMailingPage,
 });
 
@@ -147,15 +154,15 @@ function LeadMailingPage() {
               <Input type="password" placeholder="whsec_…" value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">Webhook-URL in Resend eintragen (Ereignisse: email.bounced, email.complained, email.received): <code className="font-mono">{webhookUrl}</code></p>
+          <p className="text-xs text-muted-foreground">Webhook-URL in Resend eintragen (Ereignisse: email.bounced, email.complained, email.received): <code className="font-mono break-all">{webhookUrl}</code></p>
           <Button onClick={saveAccess} disabled={busy === "access" || (!resendKey && !webhookSecret)}>Speichern</Button>
         </CardContent>
       </Card>
 
-      <div className="flex items-center gap-3">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] sm:flex items-center gap-3">
         <Label>Firma</Label>
         <Select value={tenantId} onValueChange={setTenantId}>
-          <SelectTrigger className="w-72"><SelectValue placeholder="Firma wählen" /></SelectTrigger>
+          <SelectTrigger className="w-full min-w-0 sm:w-72"><SelectValue placeholder="Firma wählen" /></SelectTrigger>
           <SelectContent>{data.tenants.map((t: any) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}</SelectContent>
         </Select>
       </div>
@@ -193,7 +200,7 @@ function LeadMailingPage() {
               <Textarea rows={12} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} />
               <p className="text-xs text-muted-foreground">Platzhalter: {"{Vorname} {Nachname} {Firma} {Homepage} {Calendly} {Absender}"}. Ein Abmeldehinweis wird automatisch angehängt.</p></div>
             <div className="space-y-1"><Label>Vorschau</Label>
-              <pre className="whitespace-pre-wrap text-sm bg-muted rounded-md p-3">{preview}</pre></div>
+              <pre className="whitespace-pre-wrap break-words text-sm bg-muted rounded-md p-3">{preview}</pre></div>
             <Button onClick={saveSettings} disabled={busy === "settings"}>Einstellungen speichern</Button>
           </CardContent>
         </Card>
@@ -207,13 +214,13 @@ function LeadMailingPage() {
             <div className="text-sm space-y-2">
               <p><strong>{csv.rows.length}</strong> gültige Leads · {csv.duplicates} doppelt · {csv.invalid} ohne gültige E-Mail</p>
               <p className="text-muted-foreground">Bereits vorhandene Bewerbungen dieser Firma werden beim Import übersprungen. Neue Leads erscheinen in „Bewerbungen“ mit Quelle Indeed.</p>
-              <Button onClick={doImport} disabled={busy === "import" || csv.rows.length === 0}>
+              <Button className="h-auto min-h-11 max-w-full whitespace-normal text-left" onClick={doImport} disabled={busy === "import" || csv.rows.length === 0}>
                 <span className="inline-flex items-center gap-2"><Upload className="h-4 w-4" /><span>{csv.rows.length} Leads für {tenantName} importieren</span></span>
               </Button>
             </div>
           )}
           {data.imports.length > 0 && (
-            <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
+            <div className="text-xs text-muted-foreground break-words space-y-1 pt-2 border-t">
               {data.imports.slice(0, 8).map((i: any) => (
                 <div key={i.id}>{new Date(i.created_at).toLocaleString("de-DE")} · {i.file_name} · {i.imported} importiert, {i.skipped} übersprungen</div>
               ))}

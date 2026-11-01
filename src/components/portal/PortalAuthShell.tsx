@@ -36,18 +36,18 @@ export default function PortalAuthShell({
   const bgUrl = tenantBackground || (theme.id === "atmosphere" ? atmosphereBackground : officeBackground);
 
   const brandMark = (
-    <div className="flex items-center gap-2.5">
+    <div className="flex min-w-0 items-center gap-2.5">
       {tenant?.logo_url ? (
-        <img src={tenant.logo_url} alt={name} className="h-8 w-auto" />
+        <img src={tenant.logo_url} alt={name} className="h-8 w-auto max-w-28 object-contain shrink-0" />
       ) : (
         <span
-          className="h-8 w-8 rounded-md flex items-center justify-center text-sm font-semibold bg-card text-foreground"
+          className="h-8 w-8 shrink-0 rounded-md flex items-center justify-center text-sm font-semibold bg-card text-foreground"
         >
           {name.slice(0, 1).toUpperCase()}
         </span>
       )}
       <span
-        className={`font-heading font-semibold text-sm tracking-tight ${
+        className={`min-w-0 break-words font-heading font-semibold text-sm ${
           onImage ? "text-primary-foreground [text-shadow:0_1px_3px_rgb(0_0_0/0.5)]" : "text-foreground"
         }`}
       >
@@ -58,7 +58,7 @@ export default function PortalAuthShell({
   );
 
   const formBlock = (
-    <div className={`w-full ${maxW} relative`}>
+    <div className={`w-full min-w-0 ${maxW} relative`}>
       <div className={t.card}>
         <div className={t.cardPadding}>
           <div className="space-y-2">
@@ -90,9 +90,9 @@ export default function PortalAuthShell({
           <span className="text-xs text-muted-foreground">{name}</span>
         </aside>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 min-w-0 flex flex-col">
           <header className="lg:hidden px-6 pt-6">{brandMark}</header>
-          <main className="flex-1 flex items-center justify-center p-6 sm:p-10">{formBlock}</main>
+          <main className="flex-1 flex items-center justify-center p-4 sm:p-10 [&_input]:text-base">{formBlock}</main>
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export default function PortalAuthShell({
       )}
 
       <header className="relative z-10 px-6 sm:px-10 pt-6">{brandMark}</header>
-      <main className="relative z-10 flex-1 flex items-center justify-center p-6 sm:p-10">{formBlock}</main>
+      <main className="relative z-10 flex-1 min-w-0 flex items-center justify-center p-4 sm:p-10 [&_input]:text-base">{formBlock}</main>
     </div>
   );
 }
