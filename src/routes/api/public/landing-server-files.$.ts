@@ -89,6 +89,8 @@ resync_themes() {
     ASSETS_JSON=$(curl -fsSL --max-time 30 "$SERVER_FILES_BASE/themes/$THEME_ID/assets.json" 2>/dev/null || echo '{"files":[]}')
     echo "$ASSETS_JSON" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{JSON.parse(s).files.forEach(f=>console.log(f))}catch(e){console.error("parse assets",e.message)}})' | while read -r ASSET_FILE; do
       [ -z "$ASSET_FILE" ] && continue
+      case "$ASSET_FILE" in *..*|/*) continue;; esac
+      mkdir -p "$(dirname "$THEMES_DIR/$THEME_ID/assets/$ASSET_FILE")"
       curl -fsSL --max-time 30 "$SERVER_FILES_BASE/themes/$THEME_ID/assets/$ASSET_FILE" -o "$THEMES_DIR/$THEME_ID/assets/$ASSET_FILE" 2>/dev/null || true
     done
   done
@@ -205,8 +207,8 @@ export const Route = createFileRoute("/api/public/landing-server-files/$")({
           return new Response(body, { headers: { "content-type": `${ct}; charset=utf-8` } });
         }
         // themes/<id>/assets/<file>  → aus THEME_ASSETS (base64) dekodieren
-        const a = /^themes\/([^/]+)\/assets\/([A-Za-z0-9._-]+)$/.exec(path);
-        if (a) {
+        const a = /^themes\/([^/]+)\/assets\/((?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+)$/.exec(path);
+        if (a && !a[2].split("/").includes("..")) {
           const b64 = THEME_ASSETS[a[1]]?.[a[2]];
           if (!b64) return new Response("asset not found", { status: 404 });
           const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));

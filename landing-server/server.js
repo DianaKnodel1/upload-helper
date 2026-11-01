@@ -113,8 +113,9 @@ function guessMime(name) {
 
 async function loadAsset(themeId, file) {
   const safeTheme = String(themeId || "").replace(/[^a-z0-9_-]/gi, "");
-  const safeFile = String(file || "").replace(/[^A-Za-z0-9._-]/g, "");
-  if (!safeTheme || !safeFile) return null;
+  // Unterordner erlaubt (fonts/x.woff2), aber nur sichere Segmente, kein "..".
+  const safeFile = String(file || "").split("/").map((seg) => seg.replace(/[^A-Za-z0-9._-]/g, "")).filter(Boolean).join("/");
+  if (!safeTheme || !safeFile || safeFile.split("/").some((seg) => seg === ".." || seg === ".")) return null;
   const key = `${safeTheme}/${safeFile}`;
   const cached = assetCache.get(key);
   if (cached && cached.expiresAt > Date.now()) return cached;
@@ -657,6 +658,12 @@ function cleanEmptyMeta(html, branding, domain) {
 // Rechtstexte zentral aus ./legal-content.js (Mirror von src/lib/legal-content.ts).
 // Neu erzeugen mit: bun scripts/build-legal-content-js.mjs
 
+// Nicht aufgelöste {{platzhalter}} nie sichtbar ausliefern (Mirror von
+// stripUnresolvedPlaceholders in src/lib/landing-themes.ts).
+function stripUnresolvedPlaceholders(html) {
+  return String(html).replace(/\{\{\s*[a-z0-9_]+\s*\}\}/gi, "");
+}
+
 function versionThemeAssets(html) {
   const v = encodeURIComponent(ASSET_VERSION);
   return html
@@ -718,6 +725,7 @@ async function renderHtml(row, host, mode) {
   html = rewriteApplyLinks(html);
   html = injectLandingConfig(html, row, mode);
   html = versionThemeAssets(html);
+  html = stripUnresolvedPlaceholders(html);
 
   // Alte gespeicherte Bildpfade aus der Entwicklungsumgebung auf die
   // Theme-Assets umbiegen (sonst 404 nach einem Theme-Wechsel).
@@ -802,6 +810,7 @@ async function renderSiteHtml(row, host, mode, slug) {
   // Bewerbungs-CTAs öffnen das Modal direkt auf der aktuellen Unterseite.
   html = injectLandingConfig(html, row, mode);
   html = versionThemeAssets(html);
+  html = stripUnresolvedPlaceholders(html);
   if (row.logo_url) html = html.replace(/assets\/logo\.[a-z]+/gi, `/assets/logo${ver}`);
   if (row.favicon_url) html = html.replace(/assets\/favicon\.[a-z]+/gi, `/assets/favicon${ver}`);
   return { body: html, status };
@@ -1083,7 +1092,7 @@ const server = createServer(async (req, res) => {
     }
     if (path.startsWith("/assets/")) {
       const rel = path.slice("/assets/".length);
-      if (!rel || rel.includes("..") || rel.includes("/")) return send(res, 404, "not found");
+      if (!rel || rel.includes("..") || !/^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(rel)) return send(res, 404, "not found");
       const asset = await loadAsset(row.site_theme || row.theme_id, rel);
       if (!asset) return send(res, 404, "asset not found");
       return send(res, 200, asset.buf, { "content-type": asset.ct, "cache-control": "public,max-age=86400,immutable" });
