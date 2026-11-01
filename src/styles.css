@@ -292,7 +292,10 @@
 .portal-content > * { min-width: 0; }
 .portal-content :where(.grid) > * { min-width: 0; }
 .portal-header { padding-top: max(0.75rem, env(safe-area-inset-top)); }
-.glass-mobile-nav { padding-bottom: env(safe-area-inset-bottom); }
+.glass-mobile-nav {
+  background: var(--glass-surface-strong);
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
 @media (min-width: 1920px) {
   .portal-content { max-width: 1680px; margin-inline: auto; }

@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Desktop- und Handy-Ansicht (2026-11-01)
-- [ ] Gemeinsame Portal-Navigation, Kopfzeilen und Tabellen für schmale und breite Ansichten optimieren.
-- [ ] Wichtigste Seiten und Hell/Dunkel-Ansicht prüfen; angemeldete Prüfung benötigt einen verfügbaren Portal-Zugang.
+- [x] Gemeinsame Portal-Navigation, Kopfzeilen und Tabellen optimiert; Bewerbungs-Kopfzeile, Chat und Lead-Postfach auf Handy, lange Mailing-Texte und Auswahlfelder angepasst.
+- [x] Anmeldung bei 320/390/768/1323 px ohne Überlauf oder Laufzeitfehler; echte Sidebar separat bei diesen Breiten geprüft (inkl. Schließen, Einstellungen und Dunkelmodus); Navigationstest bestanden, Build OK.
+- [ ] Angemeldete Chat-, Bewerbungs- und Lead-Postfach-Ansichten mit echten Daten prüfen; kein Portal-Zugang für diesen Test verfügbar.
 
 ## Auftragsabgabe und Vertragsvorlagen (2026-10-19)
 - [x] DOM-Absturz eingegrenzt (Browser-Übersetzung wahrscheinlich, nicht live bestätigt): deutscher Portal-Dokumentkopf mit Übersetzungsschutz, stabiler Text-/Icon-Aufbau im Einreichen-Knopf; DOM-Manipulations-Regressionsprüfung bestanden.
