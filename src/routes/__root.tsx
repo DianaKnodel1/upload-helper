@@ -17,6 +17,7 @@ import { TenantProvider } from "@/contexts/TenantContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
 import { usePresenceBroadcast } from "@/hooks/use-presence";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function NotFoundComponent() {
   return (
@@ -138,7 +139,7 @@ function RootComponent() {
           <AuthProvider>
             <PresenceMount />
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
+            <TooltipProvider delayDuration={200}><Outlet /></TooltipProvider>
             <Toaster />
           </AuthProvider>
         </TenantProvider>

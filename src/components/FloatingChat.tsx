@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { useTeamLeader } from "@/hooks/use-team-leader";
 import { useChatNotifications } from "@/hooks/use-chat-notifications";
@@ -54,7 +54,7 @@ function formatTime(dateStr: string) {
 
 function ChatButton({ onClick, unread, hasNewMessage }: { onClick: () => void; unread: number; hasNewMessage: boolean }) {
   return (
-    <Tooltip>
+    <TooltipProvider><Tooltip>
       <TooltipTrigger asChild>
         <button
           onClick={onClick}
@@ -76,7 +76,7 @@ function ChatButton({ onClick, unread, hasNewMessage }: { onClick: () => void; u
       <TooltipContent side="left" className="text-xs font-medium">
         Chat öffnen
       </TooltipContent>
-    </Tooltip>
+    </Tooltip></TooltipProvider>
   );
 }
 
