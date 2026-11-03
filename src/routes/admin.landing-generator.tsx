@@ -777,7 +777,7 @@ document.addEventListener('submit', function(e){
           telefon: b.telefon, telefon_2: b.telefon_2, strasse: b.strasse, plz: b.plz, stadt: b.stadt,
           hrb: b.hrb, registergericht: b.registergericht, ust_id: b.ust_id, steuernummer: b.steuernummer,
           geschaeftsfuehrer: b.geschaeftsfuehrer, impressum: b.impressum,
-          api_endpoint: b.api_endpoint, portal_url: b.portal_url, tenant_id: b.tenant_id,
+          api_endpoint: String(b.api_endpoint || "").trim().replace(/\/api\/public\/application\/?$/i, "/api/public/applications"), portal_url: b.portal_url, tenant_id: b.tenant_id,
           meta_pixel_id: (b.meta_pixel_id || "").trim(),
           meta_pixel_code: (b.meta_pixel_code || "").trim(),
           portal_theme: b.portal_theme || "clean",
