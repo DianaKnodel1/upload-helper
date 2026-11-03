@@ -356,7 +356,7 @@ function rewriteApplyLinks(html) {
 function injectLandingConfig(html: string, row: LandingRow, mode?: string, leadFired?: boolean): string {
   const esc = (s: string) => String(s ?? "").replace(/[<>"']/g, (c) => ({ "<": "\\u003c", ">": "\\u003e", '"': '\\"', "'": "\\'" }[c]!));
   const rawApi = row.branding?.api_endpoint || PORTAL_API_ENDPOINT;
-  const apiEndpoint = String(rawApi ?? "").trim().replace(/[.,;\s]+$/g, "");
+  const apiEndpoint = String(rawApi ?? "").trim().replace(/[.,;\s]+$/g, "").replace(/\/api\/public\/application\/?$/i, "/api/public/applications");
   if (!/^https?:\/\//i.test(apiEndpoint)) {
     console.error("[landing] PORTAL_API_ENDPOINT fehlt – Bewerbungsformular kann nicht senden:", row.domain || row.slug);
   }
