@@ -1,7 +1,7 @@
 # Postfach: Firmenliste, Resend-Zugang und Mail an Bewerber
 
 ## Was passiert
-1. **„Firma wählen" ist leer:** Die Liste zeigt nur Firmen, bei denen unter Lead-Mailing eine Absender-Adresse gespeichert ist. Offenbar ist bei keiner Firma eine gespeichert.
+1. **„Firma wählen" ist leer:** Das ist richtig so, weil unter Lead-Mailing noch keine Firma mit Absender-Adresse gespeichert ist. Sobald ihr pro Firma die Absender-Adresse speichert, erscheint sie in der Liste.
 2. **Resend-Zugang leer:** Der Schlüssel wird als gespeichert gemeldet, liegt danach aber nicht in der Datenbank.
 3. **Bewerbungen:** In der Liste gibt es noch keinen „E-Mail senden"-Knopf, nur bei Mitarbeitern.
 
