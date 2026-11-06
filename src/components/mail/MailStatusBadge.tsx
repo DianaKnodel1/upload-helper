@@ -4,8 +4,8 @@ import { mailStatus, type MailTrack } from "@/lib/mail-status";
 const LABEL = { sent: "Gesendet", delivered: "Zugestellt – ungelesen", opened: "Geöffnet", bounced: "Unzustellbar" } as const;
 const CLS = {
   sent: "bg-muted text-muted-foreground",
-  delivered: "bg-primary/15 text-primary",
-  opened: "bg-success/15 text-success",
+  delivered: "bg-secondary text-secondary-foreground",
+  opened: "bg-primary text-primary-foreground",
   bounced: "bg-destructive/15 text-destructive",
 } as const;
 
