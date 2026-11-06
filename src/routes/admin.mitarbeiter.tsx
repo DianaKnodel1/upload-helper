@@ -23,6 +23,8 @@ import { createEmployeeAccount } from "@/lib/admin-employees.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { Mail } from "lucide-react";
 import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
+import { MailStatusBadge } from "@/components/mail/MailStatusBadge";
+import { getMailStatuses } from "@/lib/lead-mailing.functions";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -71,6 +73,8 @@ function AdminMitarbeiterPage() {
         const kyc = p.user_id ? kycByUser.get(p.user_id) : null;
         return {
           id: p.user_id,
+          profileId: p.id as string,
+          appId: (app?.id ?? null) as string | null,
           name: p.full_name || app?.full_name || `${app?.first_name ?? ""} ${app?.last_name ?? ""}`.trim() || app?.email || "—",
           // Die echte Adresse steht im Login-Konto; Bewerbung nur als Rückfall.
           email: (p.user_id && userEmails.get(p.user_id)) || app?.email || "—",
@@ -126,6 +130,19 @@ function AdminMitarbeiterPage() {
     aktiv: rows.filter(r => r.status === "angenommen").length,
     abgelehnt: rows.filter(r => r.status === "abgelehnt").length,
   }), [rows]);
+
+  const loadMailStatuses = useServerFn(getMailStatuses);
+  const [mailById, setMailById] = useState<Record<string, any>>({});
+  const mailKey = useMemo(() => {
+    const p = rows.map((r) => r.profileId).filter(Boolean).slice(0, 500);
+    const a = rows.map((r) => r.appId).filter(Boolean).slice(0, 500) as string[];
+    return JSON.stringify([p, a]);
+  }, [rows]);
+  useEffect(() => {
+    const [profileIds, applicationIds] = JSON.parse(mailKey) as [string[], string[]];
+    if (!profileIds.length && !applicationIds.length) return;
+    loadMailStatuses({ data: { profileIds, applicationIds } }).then((r) => setMailById(r.latest)).catch(() => {});
+  }, [mailKey]);
 
   const filtered = useMemo(() => {
     const ql = q.trim().toLowerCase();
@@ -343,7 +360,7 @@ function AdminMitarbeiterPage() {
                           <Checkbox checked={selected.has(r.id)} onCheckedChange={() => toggleOne(r.id)} aria-label="Auswählen" />
                         </td>
                         <td className="px-4 py-3 font-medium">
-                          <div className="flex items-center gap-2"><span className={r.blocked ? "line-through text-destructive" : ""}>{r.name}</span><ContactMarkerPicker userId={r.id} /></div>
+                          <div className="flex items-center gap-2"><span className={r.blocked ? "line-through text-destructive" : ""}>{r.name}</span><ContactMarkerPicker userId={r.id} /><MailStatusBadge msg={mailById[r.profileId] ?? (r.appId ? mailById[r.appId] : null)} /></div>
                           <div className="text-[10px] text-muted-foreground font-normal mt-0.5 flex items-center gap-1">
                             <span className={`inline-block px-1.5 py-0.5 rounded ${st?.color}`}>{st?.label}</span>
                             {r.blocked && (
