@@ -32,6 +32,7 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
   const searchFn = useServerFn(searchMailRecipients);
   const sendFn = useServerFn(sendPortalMail);
   const [senders, setSenders] = useState<any[]>([]);
+  const [showAll, setShowAll] = useState(false);
   const [recipient, setRecipient] = useState<MailRecipient | null>(null);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MailRecipient[]>([]);
@@ -48,6 +49,8 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
     setQuery("");
     ctxFn({ data: { profileId, userId } }).then((r) => {
       setSenders(r.senders);
+      const ready = r.senders.filter((x: any) => x.sender_email);
+      if (ready.length === 1) setTenantId((cur) => cur || ready[0].tenant_id);
       const rec = (r.recipient as MailRecipient | null) ?? initialRecipient ?? null;
       if (rec) setRecipient(rec);
       const t = rec?.tenant_id && r.senders.find((s: any) => s.tenant_id === rec.tenant_id);

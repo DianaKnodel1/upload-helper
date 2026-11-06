@@ -114,7 +114,7 @@ function PostfachPage() {
                   {t.unread > 0 ? <Badge>{t.unread} neu</Badge> : <span className="text-[11px] text-muted-foreground">{KIND_LABEL[t.kind] ?? ""}</span>}
                 </div>
                 <div className="text-xs truncate">{t.subject}</div>
-                <div className="text-xs text-muted-foreground truncate">{t.last_direction === "out" ? "Sie: " : ""}{t.preview}</div>
+                <div className="text-xs text-muted-foreground truncate">{t.last_direction === "out" ? (t.last_opened ? "Sie (geöffnet): " : "Sie: ") : ""}{t.preview}</div>
                 <div className="text-[11px] text-muted-foreground mt-0.5">{new Date(t.last_at).toLocaleString("de-DE")}</div>
               </button>
             ))}
