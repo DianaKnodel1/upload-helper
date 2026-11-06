@@ -1,17 +1,33 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, chmodSync, chownSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 // Uses a disposable PostgreSQL instance, never the portal database.
 const sql = readFileSync('scripts/cleanup-before-date.sh', 'utf8')
   .split('cat <<SQL\n')[1]?.split('\nSQL')[0]
   ?.replaceAll('$CUTOFF', '2026-08-01').replaceAll('$FINISH', 'COMMIT')
   .replaceAll('\\$', '$');
+const dir = mkdtempSync(`${tmpdir()}/cleanup-pg-`);
+const root = process.getuid?.() === 0;
+function pg(command: string, args: string[]) {
+  return root ? execFileSync('runuser', ['-u', 'nobody', '--', command, ...args], { encoding: 'utf8' })
+    : execFileSync(command, args, { encoding: 'utf8' });
+}
 function query(value: string) {
-  return execFileSync('psql', ['-h', '/tmp/cleanup-pg', '-p', '55439', '-U', 'nobody', '-d', 'postgres', '-At', '-v', 'ON_ERROR_STOP=1', '-c', value], { encoding: 'utf8' }).trim();
+  return execFileSync('psql', ['-h', dir, '-p', '55439', '-U', 'cleanup_test', '-d', 'postgres', '-At', '-v', 'ON_ERROR_STOP=1', '-c', value], { encoding: 'utf8' }).trim();
 }
 describe('cleanup cutoff 2026-08-01 (isolated PostgreSQL)', () => {
+  beforeAll(() => {
+    if (root) { chownSync(dir, 65534, 65534); chmodSync(dir, 0o700); }
+    pg('initdb', ['-D', `${dir}/data`, '-A', 'trust', '-U', 'cleanup_test']);
+    pg('pg_ctl', ['-D', `${dir}/data`, '-l', `${dir}/server.log`, '-o', `-k ${dir} -p 55439 -h ''`, '-w', 'start']);
+  });
+  afterAll(() => {
+    try { pg('pg_ctl', ['-D', `${dir}/data`, '-m', 'immediate', '-w', 'stop']); }
+    finally { rmSync(dir, { recursive: true, force: true }); }
+  });
   it('deletes old accounts and old chats, preserves August chats, linked identities and admins, and rolls back previews', () => {
     if (!sql) throw new Error('Cleanup SQL block missing');
     query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;
