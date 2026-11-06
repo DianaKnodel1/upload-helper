@@ -12,9 +12,10 @@ const sql = readFileSync('scripts/cleanup-before-date.sh', 'utf8')
 const dir = mkdtempSync(`${tmpdir()}/cleanup-pg-`);
 const root = process.getuid?.() === 0;
 const testUser = process.env.CLEANUP_TEST_OS_USER ?? 'lovable';
+const uid = root ? Number(execFileSync('id', ['-u', testUser], { encoding: 'utf8' }).trim()) : process.getuid?.();
+const gid = root ? Number(execFileSync('id', ['-g', testUser], { encoding: 'utf8' }).trim()) : process.getgid?.();
 function pg(command: string, args: string[]) {
-  return root ? execFileSync('runuser', ['-u', testUser, '--', command, ...args], { encoding: 'utf8' })
-    : execFileSync(command, args, { encoding: 'utf8' });
+  return execFileSync(command, args, { encoding: 'utf8', uid, gid });
 }
 function query(value: string) {
   return execFileSync('psql', ['-h', dir, '-p', '55439', '-U', 'cleanup_test', '-d', 'postgres', '-At', '-v', 'ON_ERROR_STOP=1', '-c', value], { encoding: 'utf8' }).trim();
@@ -22,8 +23,7 @@ function query(value: string) {
 describe('cleanup cutoff 2026-08-01 (isolated PostgreSQL)', () => {
   beforeAll(() => {
     if (root) {
-      const uid = Number(execFileSync('id', ['-u', testUser], { encoding: 'utf8' }).trim());
-      const gid = Number(execFileSync('id', ['-g', testUser], { encoding: 'utf8' }).trim());
+      if (uid === undefined || gid === undefined) throw new Error('Missing test identity');
       chownSync(dir, uid, gid); chmodSync(dir, 0o700);
     }
     pg('initdb', ['-D', `${dir}/data`, '-A', 'trust', '-U', 'cleanup_test']);
