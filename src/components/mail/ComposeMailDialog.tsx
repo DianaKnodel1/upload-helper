@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Search, X } from "lucide-react";
 import { toast } from "sonner";
-import { getMailComposeContext, searchMailRecipients, sendPortalMail } from "@/lib/lead-mailing.functions";
+import { getMailComposeContext, searchMailRecipients, sendPortalMail, resolveRecipientByEmail } from "@/lib/lead-mailing.functions";
 import { MAIL_TEMPLATES } from "@/lib/mail-template";
 
 export type MailRecipient = {
@@ -31,6 +31,7 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
   const ctxFn = useServerFn(getMailComposeContext);
   const searchFn = useServerFn(searchMailRecipients);
   const sendFn = useServerFn(sendPortalMail);
+  const resolveFn = useServerFn(resolveRecipientByEmail);
   const [senders, setSenders] = useState<any[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [recipient, setRecipient] = useState<MailRecipient | null>(null);
@@ -119,7 +120,14 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
                   <div className="absolute z-10 mt-1 w-full rounded-2xl border border-border bg-popover p-1 max-h-60 overflow-auto">
                     {freeEmail && (
                       <button type="button" className="w-full text-left rounded-xl px-3 py-2 text-sm hover:bg-accent"
-                        onClick={() => setRecipient({ type: "free", name: freeEmail, email: freeEmail, profile_id: null, application_id: null, tenant_id: null })}>
+                        onClick={() => {
+                          const email = freeEmail;
+                          setRecipient({ type: "free", name: email, email, profile_id: null, application_id: null, tenant_id: null });
+                          resolveFn({ data: { email, tenantId: tenantId || null } }).then((r) => {
+                            if (r.match) { setRecipient(r.match as MailRecipient); toast.success(`Erkannt: ${r.match.name} (${r.match.type === "employee" ? "Mitarbeiter" : "Bewerber"})`); }
+                            else toast.info("Keine Person gefunden – wird nur im Postfach gespeichert");
+                          }).catch(() => {});
+                        }}>
                         An <b>{freeEmail}</b> schreiben
                       </button>
                     )}
