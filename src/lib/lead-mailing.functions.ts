@@ -312,3 +312,33 @@ export const sendPortalMail = createServerFn({ method: "POST" })
     await db.from("lead_messages").update({ handled: true }).eq("direction", "in").eq("peer_email", data.to);
     return { ok: true };
   });
+
+export const getMailStatuses = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({
+    applicationIds: z.array(z.string().uuid()).max(500).default([]),
+    profileIds: z.array(z.string().uuid()).max(500).default([]),
+    full: z.boolean().default(false),
+  }).parse(i ?? {}))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const db = supabaseAdmin as any;
+    const cols = "id, application_id, profile_id, peer_email, subject, created_at, delivered_at, opened_at, open_count, bounced_at";
+    const rows: any[] = [];
+    for (const [col, ids] of [["application_id", data.applicationIds], ["profile_id", data.profileIds]] as const) {
+      for (let i = 0; i < ids.length; i += 100) {
+        const { data: r, error } = await db.from("lead_messages").select(cols)
+          .eq("direction", "out").in(col, ids.slice(i, i + 100)).order("created_at", { ascending: false }).limit(2000);
+        if (error) throw new Error(error.message);
+        rows.push(...(r ?? []));
+      }
+    }
+    const latest: Record<string, any> = {};
+    for (const m of rows) {
+      for (const k of [m.application_id, m.profile_id]) if (k && !latest[k]) latest[k] = m;
+    }
+    const seen = new Set<string>();
+    const all = data.full ? rows.filter((m) => !seen.has(m.id) && seen.add(m.id)).sort((a, b) => b.created_at.localeCompare(a.created_at)) : [];
+    return { latest, all };
+  });
