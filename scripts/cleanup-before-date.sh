@@ -101,7 +101,7 @@ BEGIN
   RAISE NOTICE 'Bewerbungen:        %', (SELECT count(*) FROM del_apps);
   RAISE NOTICE 'Alte Konten mit neueren Chats bleiben: %', (
     SELECT count(*) FROM public.profiles p WHERE p.created_at < '$CUTOFF'
-    AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
+    AND NOT EXISTS (SELECT 1 FROM public.user_roles roles WHERE roles.user_id = p.user_id AND roles.role::text <> 'user')
     AND EXISTS (SELECT 1 FROM public.chat_messages m WHERE m.created_at >= '$CUTOFF'
       AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id)));
   DELETE FROM public.chat_messages WHERE created_at < '$CUTOFF';
