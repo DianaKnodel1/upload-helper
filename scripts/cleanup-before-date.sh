@@ -51,7 +51,7 @@ PSQL=(docker exec -i "$DB_CT" psql -U supabase_admin -d postgres -v ON_ERROR_STO
     FROM public.applications a LEFT JOIN public.tenants t ON t.id = a.tenant_id
    WHERE a.created_at < '$CUTOFF'
   UNION ALL
-  SELECT 'mitarbeiter', p.user_id::text, coalesce(p.first_name,'')||' '||coalesce(p.last_name,''), u.email, p.created_at::date, t.name
+  SELECT 'mitarbeiter', p.user_id::text, p.full_name, u.email, p.created_at::date, t.name
     FROM public.profiles p JOIN auth.users u ON u.id = p.user_id
     LEFT JOIN public.tenants t ON t.id = p.tenant_id
    WHERE p.created_at < '$CUTOFF'
@@ -72,12 +72,11 @@ CREATE TEMP TABLE del_users ON COMMIT DROP AS
 CREATE TEMP TABLE del_apps ON COMMIT DROP AS
   SELECT a.id FROM public.applications a
    WHERE a.created_at < '$CUTOFF'
-      OR a.user_id IN (SELECT id FROM del_users);
--- Bewerbungen, deren Konto (ab Stichtag) bleibt, nicht anfassen
-DELETE FROM del_apps d USING public.applications a
- WHERE a.id = d.id AND a.user_id IS NOT NULL
-   AND a.user_id NOT IN (SELECT id FROM del_users)
-   AND EXISTS (SELECT 1 FROM public.profiles p WHERE p.user_id = a.user_id);
+      OR a.id IN (SELECT p.application_id FROM public.profiles p
+                   WHERE p.user_id IN (SELECT id FROM del_users) AND p.application_id IS NOT NULL);
+-- Bewerbungen, deren Mitarbeiter-Konto bleibt, nicht anfassen
+DELETE FROM del_apps d USING public.profiles p
+ WHERE p.application_id = d.id AND p.user_id NOT IN (SELECT id FROM del_users);
 
 DO \$\$
 DECLARE r record; n bigint; total bigint := 0;
