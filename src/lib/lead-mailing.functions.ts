@@ -286,16 +286,22 @@ export const searchMailRecipients = createServerFn({ method: "POST" })
 
 export const getMailComposeContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ profileId: z.string().uuid().optional(), userId: z.string().uuid().optional() }).parse(i ?? {}))
+  .inputValidator((i: unknown) => z.object({ profileId: z.string().uuid().optional(), userId: z.string().uuid().optional(), applicationId: z.string().uuid().optional() }).parse(i ?? {}))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const db = supabaseAdmin as any;
-    const [{ data: tenants }, { data: settings }] = await Promise.all([
+    const [{ data: tenants }, { data: settings }, { data: ss }] = await Promise.all([
       db.from("tenants").select("id, name").order("name"),
       db.from("lead_mail_settings").select("tenant_id, sender_email, sender_name"),
+      db.from("system_settings").select("resend_api_key").eq("id", 1).maybeSingle(),
     ]);
+    const hasResendKey = !!((ss?.resend_api_key as string | null)?.trim() || process.env.RESEND_API_KEY);
     let recipient: any = null;
+    if (data.applicationId) {
+      const { data: a } = await db.from("applications").select("id, full_name, email, tenant_id").eq("id", data.applicationId).maybeSingle();
+      if (a) recipient = { type: "applicant", profile_id: null, application_id: a.id, name: a.full_name, tenant_id: a.tenant_id, email: a.email ? String(a.email).toLowerCase() : null };
+    }
     if (data.profileId || data.userId) {
       const { data: p } = await db.from("profiles").select("id, full_name, user_id, tenant_id")
         .eq(data.profileId ? "id" : "user_id", (data.profileId ?? data.userId)!).maybeSingle();
@@ -305,7 +311,7 @@ export const getMailComposeContext = createServerFn({ method: "POST" })
       const s = (settings ?? []).find((x: any) => x.tenant_id === t.id);
       return { tenant_id: t.id, name: t.name, sender_email: s?.sender_email ?? null, sender_name: s?.sender_name ?? null };
     });
-    return { senders, recipient };
+    return { senders, recipient, hasResendKey };
   });
 
 export const sendPortalMail = createServerFn({ method: "POST" })
