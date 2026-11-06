@@ -11,4 +11,10 @@ Pro Firma (oben „Firma“ wählen, z. B. June Fund GmbH) eintragen:
 - Weiter unten: **Signatur** ausfüllen, dann **Speichern**.
 - **„Versand pausiert“** erst ausschalten, wenn eine Testmail an eure eigene Gmail-Adresse über das Postfach gut ankam.
 
+Zuordnung laut euren Resend-Inboxes:
+
+- **B-H-V-Agentur** → `luisawelken@bewerbung.b-h-v-agentur.com`, Name „Luisa Welken“
+- **IT-Agentur** → `info@bewerbung.it-agentur.solutions`
+- **June Fund GmbH** (im Screenshot gewählt): hat noch keine Inbox. In Resend unter Inboxes → „Create inbox“ z. B. `karriere@bewerbung.june-fund.com` anlegen und diese Adresse eintragen. Gleiches gilt für MM Agentur und BCU Beratung.
+
 Danach für jede weitere Firma mit verifizierter Domain wiederholen. Firmen ohne Eintrag erscheinen im Postfach nicht als Absender.
