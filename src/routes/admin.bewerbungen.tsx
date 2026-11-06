@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/EmptyState";
-import { Users, Search, ExternalLink, Trash2, Archive, MessageCircle, Download } from "lucide-react";
+import { Users, Search, ExternalLink, Trash2, Archive, MessageCircle, Download, Mail } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -25,6 +25,7 @@ import { archiveOldApplications, resetApplicants } from "@/lib/admin-maintenance
 import { useServerFn } from "@tanstack/react-start";
 import { MailStatusBadge } from "@/components/mail/MailStatusBadge";
 import { getMailStatuses } from "@/lib/lead-mailing.functions";
+import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
 import { toast } from "sonner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -197,6 +198,7 @@ function AdminBewerbungenPage() {
   const navigate = useNavigate();
   const tab = (search as any).tab ?? "alle";
   const [q, setQ] = useState("");
+  const [mailAppId, setMailAppId] = useState<string | null>(null);
   const [cleanupDays, setCleanupDays] = useState(30);
   const [tenantFilter, setTenantFilter] = useState("");
   const [tenants, setTenants] = useState<Array<{ id: string; name: string }>>([]);
@@ -686,6 +688,11 @@ function AdminBewerbungenPage() {
                                 Per WhatsApp nachfassen
                               </Button>
                             )}
+                            {r.email && (
+                              <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="E-Mail senden" title="E-Mail senden" onClick={() => setMailAppId(r.id)}>
+                                <Mail className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
                             <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/personen/${r.id}`)} className="h-7 gap-1.5 text-xs">
                               Öffnen <ExternalLink className="h-3 w-3" />
                             </Button>
@@ -697,6 +704,7 @@ function AdminBewerbungenPage() {
                   })}
                 </tbody>
               </table>
+              <ComposeMailDialog open={!!mailAppId} onOpenChange={(v) => { if (!v) setMailAppId(null); }} applicationId={mailAppId ?? undefined} />
             </div>
             <div className="border-t px-3 py-2">
               <PaginationBar {...pagination} />

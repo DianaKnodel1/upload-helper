@@ -159,7 +159,7 @@ function LeadMailingPage() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Resend-Zugang</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base flex items-center gap-2">Resend-Zugang <span className={`text-xs font-normal ${data.resendKeyMasked ? "text-primary" : "text-destructive"}`}>{data.resendKeyMasked ? "● Resend verbunden" : "● Kein Schlüssel gespeichert"}</span></CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <div className="grid md:grid-cols-2 gap-3">
             <div className="space-y-1">

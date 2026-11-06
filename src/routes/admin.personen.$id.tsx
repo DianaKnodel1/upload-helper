@@ -506,7 +506,7 @@ function PersonDetailPage() {
           <div className="flex flex-col gap-1 items-end">
             {prof && <Badge className="bg-indigo-100 text-indigo-700 border-0 text-[10px]">👤 Mitarbeiter</Badge>}
             {!prof && app && <Badge variant="outline" className="text-[10px]">Bewerbung</Badge>}
-            {prof?.id && (
+            {(prof?.id || app?.id) && (
               <Button size="sm" variant="outline" className="h-8 gap-1.5 rounded-full mt-1" onClick={() => setMailOpen(true)}>
                 <Mail className="h-3.5 w-3.5" /> E-Mail senden
               </Button>
@@ -515,7 +515,7 @@ function PersonDetailPage() {
         </CardContent>
       </Card>
 
-      {prof?.id && <ComposeMailDialog open={mailOpen} onOpenChange={setMailOpen} profileId={prof.id} onSent={() => setMailReload((n) => n + 1)} />}
+      {(prof?.id || app?.id) && <ComposeMailDialog open={mailOpen} onOpenChange={setMailOpen} profileId={prof?.id} applicationId={prof?.id ? undefined : app?.id} onSent={() => setMailReload((n) => n + 1)} />}
       <PersonMailsCard applicationId={app?.id} profileId={prof?.id} reload={mailReload} />
       {app?.id && (
         <StageHistoryCard applicationId={app.id} canTakeover={onboardingDone} />
