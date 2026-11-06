@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useParams, useNavigate } from "@/lib/router-compat";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
+import { MailStatusBadge } from "@/components/mail/MailStatusBadge";
+import { getMailStatuses } from "@/lib/lead-mailing.functions";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -72,6 +74,7 @@ function splitName(fullName: string) {
 function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [mailOpen, setMailOpen] = useState(false);
+  const [mailReload, setMailReload] = useState(0);
   const navigate = useNavigate();
   const { applications, profiles, kycList, allBookings, assignments, loading, loadData } = useAdminData();
   const [kycDocUrls, setKycDocUrls] = useState<Record<string, string>>({});
@@ -512,7 +515,8 @@ function PersonDetailPage() {
         </CardContent>
       </Card>
 
-      {prof?.id && <ComposeMailDialog open={mailOpen} onOpenChange={setMailOpen} profileId={prof.id} />}
+      {prof?.id && <ComposeMailDialog open={mailOpen} onOpenChange={setMailOpen} profileId={prof.id} onSent={() => setMailReload((n) => n + 1)} />}
+      <PersonMailsCard applicationId={app?.id} profileId={prof?.id} reload={mailReload} />
       {app?.id && (
         <StageHistoryCard applicationId={app.id} canTakeover={onboardingDone} />
       )}
@@ -741,5 +745,30 @@ function TimelineStep({ step }: { step: StepDef }) {
         </CardContent>
       </Card>
     </li>
+  );
+}
+
+function PersonMailsCard({ applicationId, profileId, reload }: { applicationId?: string; profileId?: string; reload: number }) {
+  const load = useServerFn(getMailStatuses);
+  const [mails, setMails] = useState<any[] | null>(null);
+  useEffect(() => {
+    if (!applicationId && !profileId) return;
+    load({ data: { applicationIds: applicationId ? [applicationId] : [], profileIds: profileId ? [profileId] : [], full: true } })
+      .then((r) => setMails(r.all)).catch(() => setMails([]));
+  }, [applicationId, profileId, reload]);
+  if (!mails?.length) return null;
+  return (
+    <Card>
+      <CardContent className="p-4 space-y-2">
+        <div className="text-sm font-semibold">E-Mails</div>
+        {mails.map((m) => (
+          <Link key={m.id} to="/admin/postfach" className="flex items-center justify-between gap-2 rounded-xl px-2 py-1.5 hover:bg-accent text-sm">
+            <span className="truncate">{m.subject || "(ohne Betreff)"} · <span className="text-muted-foreground">{new Date(m.created_at).toLocaleString("de-DE")}</span></span>
+            <MailStatusBadge msg={m} />
+          </Link>
+        ))}
+        <p className="text-[11px] text-muted-foreground">„Geöffnet“ ist ein Anhaltspunkt, kein sicherer Lesebeweis.</p>
+      </CardContent>
+    </Card>
   );
 }

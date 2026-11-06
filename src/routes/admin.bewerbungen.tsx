@@ -23,6 +23,8 @@ import { StageTimeline, type Stage } from "@/components/StageTimeline";
 import { deleteOrphanApplications, deleteApplication, bulkDeleteApplications } from "@/lib/admin-delete.functions";
 import { archiveOldApplications, resetApplicants } from "@/lib/admin-maintenance.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { MailStatusBadge } from "@/components/mail/MailStatusBadge";
+import { getMailStatuses } from "@/lib/lead-mailing.functions";
 import { toast } from "sonner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -262,6 +264,15 @@ function AdminBewerbungenPage() {
     return m;
   }, [allBookings, interviewAppointments]);
 
+
+  const loadMailStatuses = useServerFn(getMailStatuses);
+  const [mailById, setMailById] = useState<Record<string, any>>({});
+  const appIdsKey = useMemo(() => (applications as any[]).map((a) => a.id).slice(0, 500).join(","), [applications]);
+  useEffect(() => {
+    if (!appIdsKey) return;
+    loadMailStatuses({ data: { applicationIds: appIdsKey.split(","), profileIds: [] } })
+      .then((r) => setMailById(r.latest)).catch(() => {});
+  }, [appIdsKey]);
 
   const [landingById, setLandingById] = useState<Map<string, { slug: string; firmenname: string | null }>>(new Map());
   useEffect(() => {
@@ -626,7 +637,7 @@ function AdminBewerbungenPage() {
                           <Checkbox checked={selected.has(r.id)} onCheckedChange={() => toggleOne(r.id)} aria-label="Auswählen" />
                         </td>
                         <td className="px-4 py-3 font-medium">
-                          <div className="flex items-center gap-2">{r.name}<ContactMarkerPicker appId={r.id} /></div>
+                          <div className="flex items-center gap-2">{r.name}<ContactMarkerPicker appId={r.id} />{mailById[r.id] && <MailStatusBadge msg={mailById[r.id]} />}</div>
                           <div className="text-[10px] text-muted-foreground font-normal mt-0.5 flex flex-wrap items-center gap-1">
                             <span className={`inline-block px-1.5 py-0.5 rounded ${PHASE_COLOR[r.phase]}`}>
                               {meta?.emoji} {meta?.label}
