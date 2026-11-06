@@ -11,6 +11,9 @@
 #   - Bewerbungen (applications.created_at < Stichtag)
 #   - Mitarbeiter-Konten (profiles.created_at < Stichtag) inkl. Login,
 #     Chats, Verträge, Dokumente, Aufgaben, Termine, KYC, Dateien
+#  Chatnachrichten werden ausschließlich nach ihrem Datum gelöscht (vor Stichtag).
+#  Alte Konten mit Chatnachrichten ab Stichtag bleiben samt Verknüpfungen erhalten,
+#  damit neuere Chats weiterhin im Portal sichtbar und zuordenbar sind.
 #  Bleibt immer: Konten mit Admin-Rolle (alles außer 'user'), Firmen,
 #  Vorlagen, Landingpages, Einstellungen, Indeed-Leads (lead_*), alles ab Stichtag.
 #  Alles läuft in EINER Transaktion: bei einem Fehler wird nichts gelöscht.
@@ -50,12 +53,20 @@ PSQL=(docker exec -i "$DB_CT" psql -U supabase_admin -d postgres -v ON_ERROR_STO
   SELECT 'bewerbung' AS art, a.id::text, a.full_name, a.email, a.created_at::date, t.name AS firma
     FROM public.applications a LEFT JOIN public.tenants t ON t.id = a.tenant_id
    WHERE a.created_at < '$CUTOFF'
+     AND NOT EXISTS (SELECT 1 FROM public.profiles p WHERE p.application_id = a.id
+       AND (p.created_at >= '$CUTOFF'
+         OR EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
+         OR EXISTS (SELECT 1 FROM public.chat_messages m WHERE m.created_at >= '$CUTOFF'
+           AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id))))
   UNION ALL
   SELECT 'mitarbeiter', p.user_id::text, p.full_name, u.email, p.created_at::date, t.name
     FROM public.profiles p JOIN auth.users u ON u.id = p.user_id
     LEFT JOIN public.tenants t ON t.id = p.tenant_id
    WHERE p.created_at < '$CUTOFF'
      AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
+     AND NOT EXISTS (SELECT 1 FROM public.chat_messages m
+       WHERE m.created_at >= '$CUTOFF' AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id))
+     AND NOT EXISTS (SELECT 1 FROM public.applications a WHERE a.id = p.application_id AND a.created_at >= '$CUTOFF')
   ORDER BY 1, 5
 ) TO STDOUT WITH CSV HEADER" > "$CSV" 2>>"$LOG" || echo "(CSV-Liste konnte nicht vollständig erstellt werden, siehe $LOG)"
 
@@ -63,17 +74,22 @@ PSQL=(docker exec -i "$DB_CT" psql -U supabase_admin -d postgres -v ON_ERROR_STO
 {
 cat <<SQL
 BEGIN;
+-- Einheitlicher Stand für Auswahl und Löschung; keine parallelen neuen Chats.
+LOCK TABLE public.chat_messages IN SHARE ROW EXCLUSIVE MODE;
 SET LOCAL session_replication_role = replica;  -- Reihenfolge der Verknüpfungen egal
 
 CREATE TEMP TABLE del_users ON COMMIT DROP AS
   SELECT p.user_id AS id FROM public.profiles p
    WHERE p.created_at < '$CUTOFF'
-     AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user');
+     AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
+     AND NOT EXISTS (SELECT 1 FROM public.chat_messages m
+       WHERE m.created_at >= '$CUTOFF' AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id));
 CREATE TEMP TABLE del_apps ON COMMIT DROP AS
   SELECT a.id FROM public.applications a
-   WHERE a.created_at < '$CUTOFF'
-      OR a.id IN (SELECT p.application_id FROM public.profiles p
-                   WHERE p.user_id IN (SELECT id FROM del_users) AND p.application_id IS NOT NULL);
+   WHERE a.created_at < '$CUTOFF';
+-- Auch ein älteres Konto bleibt, wenn es zu einer neueren Bewerbung gehört.
+DELETE FROM del_users d USING public.profiles p, public.applications a
+ WHERE p.user_id = d.id AND p.application_id = a.id AND a.created_at >= '$CUTOFF';
 -- Bewerbungen, deren Mitarbeiter-Konto bleibt, nicht anfassen
 DELETE FROM del_apps d USING public.profiles p
  WHERE p.application_id = d.id AND p.user_id NOT IN (SELECT id FROM del_users);
@@ -83,13 +99,20 @@ DECLARE r record; n bigint; total bigint := 0;
 BEGIN
   RAISE NOTICE 'Mitarbeiter-Konten: %', (SELECT count(*) FROM del_users);
   RAISE NOTICE 'Bewerbungen:        %', (SELECT count(*) FROM del_apps);
+  RAISE NOTICE 'Alte Konten mit neueren Chats bleiben: %', (
+    SELECT count(*) FROM public.profiles p WHERE p.created_at < '$CUTOFF'
+    AND NOT EXISTS (SELECT 1 FROM public.user_roles roles WHERE roles.user_id = p.user_id AND roles.role::text <> 'user')
+    AND EXISTS (SELECT 1 FROM public.chat_messages m WHERE m.created_at >= '$CUTOFF'
+      AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id)));
+  DELETE FROM public.chat_messages WHERE created_at < '$CUTOFF';
+  GET DIAGNOSTICS n = ROW_COUNT; RAISE NOTICE 'Chatnachrichten vor Stichtag: %', n;
   FOR r IN
     SELECT c.table_name, c.column_name
       FROM information_schema.columns c
       JOIN information_schema.tables t ON t.table_schema = c.table_schema AND t.table_name = c.table_name
      WHERE c.table_schema = 'public' AND t.table_type = 'BASE TABLE'
        AND c.table_name NOT LIKE 'lead\_%'
-       AND c.table_name NOT IN ('tenants','system_settings','applications','profiles','user_roles')
+       AND c.table_name NOT IN ('tenants','system_settings','applications','profiles','user_roles','chat_messages')
        AND c.column_name IN ('user_id','sender_id','receiver_id','employee_id','recipient_id','application_id')
      ORDER BY c.table_name, c.column_name
   LOOP
@@ -110,7 +133,7 @@ BEGIN
   DELETE FROM public.profiles     WHERE user_id IN (SELECT id FROM del_users);
   DELETE FROM public.applications WHERE id      IN (SELECT id FROM del_apps);
   DELETE FROM auth.users          WHERE id      IN (SELECT id FROM del_users);
-  GET DIAGNOSTICS n = ROW_COUNT; RAISE NOTICE 'Logins gelöscht:    %', n;
+  GET DIAGNOSTICS n = ROW_COUNT; RAISE NOTICE 'Logins zur Löschung ausgewählt: %', n;
 END \$\$;
 $FINISH;
 SQL

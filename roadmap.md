@@ -1,5 +1,9 @@
 # Roadmap
 
+## Aufräumen vor August (2026-11-06)
+- [x] Skript: Chats ausschließlich vor dem 01.08.2026 löschen; neuere Chats und zugehörige Konten schützen, alte Bewerbungen/Konten ansonsten aufräumen; isolierte PostgreSQL-Prüfung von Löschung und Rollback bestanden.
+- [ ] Aktualisiertes Skript auf Backend übertragen und neuen Probelauf mit echten Daten prüfen (User).
+
 ## Desktop- und Handy-Ansicht (2026-11-01)
 - [x] Gemeinsame Portal-Navigation, Kopfzeilen und Tabellen optimiert; Bewerbungs-Kopfzeile, Chat und Lead-Postfach auf Handy, lange Mailing-Texte und Auswahlfelder angepasst.
 - [x] Anmeldung bei 320/390/768/1323 px ohne Überlauf oder Laufzeitfehler; echte Sidebar separat bei diesen Breiten geprüft (inkl. Schließen, Einstellungen und Dunkelmodus); Navigationstest bestanden, Build OK.
