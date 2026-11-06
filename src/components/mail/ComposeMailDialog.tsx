@@ -32,6 +32,7 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
   const searchFn = useServerFn(searchMailRecipients);
   const sendFn = useServerFn(sendPortalMail);
   const [senders, setSenders] = useState<any[]>([]);
+  const [showAll, setShowAll] = useState(false);
   const [recipient, setRecipient] = useState<MailRecipient | null>(null);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MailRecipient[]>([]);
@@ -48,6 +49,8 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
     setQuery("");
     ctxFn({ data: { profileId, userId } }).then((r) => {
       setSenders(r.senders);
+      const ready = r.senders.filter((x: any) => x.sender_email);
+      if (ready.length === 1) setTenantId((cur) => cur || ready[0].tenant_id);
       const rec = (r.recipient as MailRecipient | null) ?? initialRecipient ?? null;
       if (rec) setRecipient(rec);
       const t = rec?.tenant_id && r.senders.find((s: any) => s.tenant_id === rec.tenant_id);
@@ -137,12 +140,15 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
               <Label htmlFor="mail-sender">Absender (Firma)</Label>
               <select id="mail-sender" className="h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" value={tenantId} onChange={(e) => setTenantId(e.target.value)}>
                 <option value="">Firma wählen …</option>
-                {senders.map((s) => (
+                {senders.filter((s) => showAll || s.sender_email).map((s) => (
                   <option key={s.tenant_id} value={s.tenant_id} disabled={!s.sender_email}>
                     {s.name}{s.sender_email ? ` – ${s.sender_email}` : " (kein Absender)"}
                   </option>
                 ))}
               </select>
+              <button type="button" className="text-xs text-muted-foreground underline" onClick={() => setShowAll((v) => !v)}>
+                {showAll ? "Nur eingerichtete Firmen" : "Alle Firmen anzeigen"}
+              </button>
             </div>
             <div className="space-y-1.5 min-w-0">
               <Label htmlFor="mail-template">Vorlage</Label>

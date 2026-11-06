@@ -114,7 +114,7 @@ function PostfachPage() {
                   {t.unread > 0 ? <Badge>{t.unread} neu</Badge> : <span className="text-[11px] text-muted-foreground">{KIND_LABEL[t.kind] ?? ""}</span>}
                 </div>
                 <div className="text-xs truncate">{t.subject}</div>
-                <div className="text-xs text-muted-foreground truncate">{t.last_direction === "out" ? "Sie: " : ""}{t.preview}</div>
+                <div className="text-xs text-muted-foreground truncate">{t.last_direction === "out" ? (t.last_opened ? "Sie (geöffnet): " : "Sie: ") : ""}{t.preview}</div>
                 <div className="text-[11px] text-muted-foreground mt-0.5">{new Date(t.last_at).toLocaleString("de-DE")}</div>
               </button>
             ))}
@@ -143,6 +143,11 @@ function PostfachPage() {
                       {m.direction === "in" ? "Eingang" : "Gesendet"} · {new Date(m.created_at).toLocaleString("de-DE")} · {m.subject}
                     </div>
                     <div className="whitespace-pre-wrap break-words">{m.body_text}</div>
+                    {m.direction === "out" && (
+                      <div className="mt-1 text-xs opacity-80" title="Geöffnet ist ein Anhaltspunkt, kein sicherer Lesebeweis.">
+                        {m.bounced_at ? "Unzustellbar" : m.opened_at ? `Geöffnet ${new Date(m.opened_at).toLocaleString("de-DE")}${m.open_count > 1 ? ` (${m.open_count}×)` : ""}` : m.delivered_at ? "Zugestellt" : "Gesendet"}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

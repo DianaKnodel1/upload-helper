@@ -153,7 +153,7 @@ export const listMailThreads = createServerFn({ method: "POST" })
     await requireAdmin(context);
     const db = context.supabase as any;
     const { data: rows, error } = await db.from("lead_messages")
-      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at")
+      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at, opened_at")
       .order("created_at", { ascending: false }).limit(1500);
     if (error) throw new Error(error.message);
     const threads = new Map<string, any>();
@@ -185,7 +185,7 @@ export const listMailThreads = createServerFn({ method: "POST" })
       name: (profBy.get(t.profile_id) as any)?.full_name ?? (appBy.get(t.application_id) as any)?.full_name ?? t.peer,
       status: (appBy.get(t.application_id) as any)?.lead_mail_status ?? null,
       subject: t.last.subject, preview: String(t.last.body_text ?? "").slice(0, 140),
-      last_direction: t.last.direction, last_at: t.last.created_at,
+      last_direction: t.last.direction, last_opened: !!t.last.opened_at, last_at: t.last.created_at,
     })).filter((t) =>
       (data.filter === "all" || (data.filter === "unread" ? t.unread > 0 : data.filter === "employee" ? t.kind === "employee" : t.kind === "lead"))
       && (!q || t.name.toLowerCase().includes(q) || t.peer.includes(q)));
