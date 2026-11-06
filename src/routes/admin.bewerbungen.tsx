@@ -639,7 +639,7 @@ function AdminBewerbungenPage() {
                           <Checkbox checked={selected.has(r.id)} onCheckedChange={() => toggleOne(r.id)} aria-label="Auswählen" />
                         </td>
                         <td className="px-4 py-3 font-medium">
-                          <div className="flex items-center gap-2">{r.name}<ContactMarkerPicker appId={r.id} />{mailById[r.id] && <MailStatusBadge msg={mailById[r.id]} />}</div>
+                          <div className="flex items-center gap-2">{r.name}<ContactMarkerPicker appId={r.id} /><MailStatusBadge msg={mailById[r.id]} /></div>
                           <div className="text-[10px] text-muted-foreground font-normal mt-0.5 flex flex-wrap items-center gap-1">
                             <span className={`inline-block px-1.5 py-0.5 rounded ${PHASE_COLOR[r.phase]}`}>
                               {meta?.emoji} {meta?.label}
