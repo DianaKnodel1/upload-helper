@@ -222,6 +222,31 @@ async function profileEmail(db: any, profile: { user_id?: string | null }) {
   return data?.user?.email?.toLowerCase() ?? null;
 }
 
+async function resolveByEmail(db: any, email: string, tenantId?: string | null) {
+  const { pickRecipientMatch } = await import("@/lib/mail-recipient-match");
+  const { data: apps } = await db.from("applications")
+    .select("id, full_name, tenant_id, user_id, created_at").ilike("email", email).limit(20);
+  const appIds = (apps ?? []).map((a: any) => a.id);
+  const userIds = (apps ?? []).map((a: any) => a.user_id).filter(Boolean);
+  let profiles: any[] = [];
+  if (appIds.length || userIds.length) {
+    const ors = [appIds.length && `application_id.in.(${appIds.join(",")})`, userIds.length && `user_id.in.(${userIds.join(",")})`].filter(Boolean).join(",");
+    const { data } = await db.from("profiles").select("id, full_name, tenant_id, user_id, application_id").or(ors).limit(20);
+    profiles = data ?? [];
+  }
+  const m = pickRecipientMatch(apps ?? [], profiles, tenantId);
+  return m ? { ...m, email } : null;
+}
+
+export const resolveRecipientByEmail = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ email: z.string().trim().toLowerCase().email().max(254), tenantId: z.string().uuid().nullable().optional() }).parse(i))
+  .handler(async ({ data, context }) => {
+    await requireAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    return { match: await resolveByEmail(supabaseAdmin as any, data.email, data.tenantId) };
+  });
+
 export const searchMailRecipients = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => z.object({ q: z.string().trim().min(2).max(80) }).parse(i))
@@ -285,6 +310,10 @@ export const sendPortalMail = createServerFn({ method: "POST" })
     await requireAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const db = supabaseAdmin as any;
+    if (!data.profileId && !data.applicationId) {
+      const m = await resolveByEmail(db, data.to, data.tenantId);
+      if (m) { data.profileId = m.profile_id; data.applicationId = m.application_id; }
+    }
     const { data: blocked } = await db.from("applications").select("id")
       .ilike("email", data.to).in("lead_mail_status", ["unsubscribed", "bounced"]).limit(1);
     if (blocked?.length && !data.profileId) throw new Error("Diese Adresse ist abgemeldet oder nicht zustellbar.");
