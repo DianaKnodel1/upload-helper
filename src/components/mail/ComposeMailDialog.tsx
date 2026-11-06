@@ -137,12 +137,15 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
               <Label htmlFor="mail-sender">Absender (Firma)</Label>
               <select id="mail-sender" className="h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" value={tenantId} onChange={(e) => setTenantId(e.target.value)}>
                 <option value="">Firma wählen …</option>
-                {senders.map((s) => (
+                {senders.filter((s) => showAll || s.sender_email).map((s) => (
                   <option key={s.tenant_id} value={s.tenant_id} disabled={!s.sender_email}>
                     {s.name}{s.sender_email ? ` – ${s.sender_email}` : " (kein Absender)"}
                   </option>
                 ))}
               </select>
+              <button type="button" className="text-xs text-muted-foreground underline" onClick={() => setShowAll((v) => !v)}>
+                {showAll ? "Nur eingerichtete Firmen" : "Alle Firmen anzeigen"}
+              </button>
             </div>
             <div className="space-y-1.5 min-w-0">
               <Label htmlFor="mail-template">Vorlage</Label>

@@ -153,7 +153,7 @@ export const listMailThreads = createServerFn({ method: "POST" })
     await requireAdmin(context);
     const db = context.supabase as any;
     const { data: rows, error } = await db.from("lead_messages")
-      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at")
+      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at, opened_at")
       .order("created_at", { ascending: false }).limit(1500);
     if (error) throw new Error(error.message);
     const threads = new Map<string, any>();

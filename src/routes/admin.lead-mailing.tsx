@@ -171,7 +171,7 @@ function LeadMailingPage() {
               <Input type="password" placeholder="whsec_…" value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">Webhook-URL in Resend eintragen (Ereignisse: email.bounced, email.complained, email.received): <code className="font-mono break-all">{webhookUrl}</code></p>
+          <p className="text-xs text-muted-foreground">Webhook-URL in Resend eintragen (Ereignisse: email.received, email.bounced, email.complained, email.delivered, email.opened; Open Tracking pro Domain einschalten): <code className="font-mono break-all">{webhookUrl}</code></p>
           <Button onClick={saveAccess} disabled={busy === "access" || (!resendKey && !webhookSecret)}>Speichern</Button>
         </CardContent>
       </Card>

@@ -178,6 +178,17 @@ export async function handleResendEvent(evt: any) {
   const type: string = evt?.type ?? "";
   const data = evt?.data ?? {};
 
+  const trackId = String(data.email_id ?? data.id ?? "");
+  if (trackId && (type === "email.delivered" || type === "email.opened" || type === "email.bounced")) {
+    const { data: msg } = await db.from("lead_messages").select("id, delivered_at, opened_at, open_count, bounced_at")
+      .eq("provider_id", trackId).eq("direction", "out").maybeSingle();
+    if (msg) {
+      const patch = trackingPatch(msg, type, String(evt?.created_at ?? data.created_at ?? new Date().toISOString()));
+      if (patch) await db.from("lead_messages").update(patch).eq("id", msg.id);
+    }
+    if (type !== "email.bounced") return { tracked: type };
+  }
+
   if (type === "email.bounced" || type === "email.complained") {
     const to = addrOf(data.to);
     if (!to) return { ignored: true };
@@ -223,4 +234,14 @@ export async function handleResendEvent(evt: any) {
     return { stored: true };
   }
   return { ignored: type };
+}
+
+export function trackingPatch(
+  msg: { delivered_at: string | null; opened_at: string | null; open_count: number | null; bounced_at: string | null },
+  type: string, at: string,
+): Record<string, unknown> | null {
+  if (type === "email.delivered") return msg.delivered_at ? null : { delivered_at: at };
+  if (type === "email.opened") return { opened_at: msg.opened_at ?? at, open_count: (msg.open_count ?? 0) + 1, delivered_at: msg.delivered_at ?? at };
+  if (type === "email.bounced") return msg.bounced_at ? null : { bounced_at: at };
+  return null;
 }
