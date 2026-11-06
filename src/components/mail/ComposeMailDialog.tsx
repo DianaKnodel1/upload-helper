@@ -19,11 +19,12 @@ export type MailRecipient = {
   tenant_id: string | null;
 };
 
-export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initialRecipient, initialSubject, onSent }: {
+export function ComposeMailDialog({ open, onOpenChange, profileId, userId, applicationId, initialRecipient, initialSubject, onSent }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   profileId?: string;
   userId?: string;
+  applicationId?: string;
   initialRecipient?: MailRecipient | null;
   initialSubject?: string;
   onSent?: () => void;
@@ -34,6 +35,7 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
   const resolveFn = useServerFn(resolveRecipientByEmail);
   const [senders, setSenders] = useState<any[]>([]);
   const [showAll, setShowAll] = useState(false);
+  const [hasKey, setHasKey] = useState(true);
   const [recipient, setRecipient] = useState<MailRecipient | null>(null);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MailRecipient[]>([]);
@@ -48,8 +50,9 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
     setSubject(initialSubject ?? "");
     setText("");
     setQuery("");
-    ctxFn({ data: { profileId, userId } }).then((r) => {
+    ctxFn({ data: { profileId, userId, applicationId } }).then((r) => {
       setSenders(r.senders);
+      setHasKey(r.hasResendKey !== false);
       const ready = r.senders.filter((x: any) => x.sender_email);
       if (ready.length === 1) setTenantId((cur) => cur || ready[0].tenant_id);
       const rec = (r.recipient as MailRecipient | null) ?? initialRecipient ?? null;
@@ -57,7 +60,7 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
       const t = rec?.tenant_id && r.senders.find((s: any) => s.tenant_id === rec.tenant_id);
       setTenantId((t || r.senders.find((s: any) => s.sender_email))?.tenant_id ?? "");
     }).catch((e) => toast.error(e?.message ?? "Laden fehlgeschlagen"));
-  }, [open, profileId, userId, initialRecipient, initialSubject, ctxFn]);
+  }, [open, profileId, userId, applicationId, initialRecipient, initialSubject, ctxFn]);
 
   useEffect(() => {
     if (recipient || query.trim().length < 2) { setResults([]); return; }
@@ -154,6 +157,9 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
                   </option>
                 ))}
               </select>
+              {senders.length > 0 && !senders.some((s) => s.sender_email) && (
+                <p className="text-xs text-destructive">Noch keine Absender-Adresse hinterlegt. <a href="/admin/lead-mailing" className="underline">Zu Lead-Mailing</a></p>
+              )}
               <button type="button" className="text-xs text-muted-foreground underline" onClick={() => setShowAll((v) => !v)}>
                 {showAll ? "Nur eingerichtete Firmen" : "Alle Firmen anzeigen"}
               </button>
@@ -174,11 +180,12 @@ export function ComposeMailDialog({ open, onOpenChange, profileId, userId, initi
             <Label htmlFor="mail-text">Nachricht</Label>
             <Textarea id="mail-text" rows={8} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ihre Nachricht … (Signatur wird automatisch angehängt)" />
           </div>
+          {!hasKey && <p className="text-xs text-destructive">Kein Resend-Schlüssel gespeichert – unter Lead-Mailing hinterlegen.</p>}
           {sender && !sender.sender_email && <p className="text-xs text-destructive">Für diese Firma ist noch kein Absender unter Lead-Mailing hinterlegt.</p>}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Abbrechen</Button>
-          <Button onClick={send} disabled={sending || !recipient?.email || !tenantId || !subject.trim() || !text.trim()}>
+          <Button onClick={send} disabled={sending || !hasKey || !recipient?.email || !tenantId || !subject.trim() || !text.trim()}>
             {sending && <Loader2 className="h-4 w-4 animate-spin" />}<span>{sending ? "Wird gesendet …" : "Senden"}</span>
           </Button>
         </DialogFooter>
