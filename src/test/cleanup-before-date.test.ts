@@ -11,8 +11,9 @@ const sql = readFileSync('scripts/cleanup-before-date.sh', 'utf8')
   .replaceAll('\\$', '$');
 const dir = mkdtempSync(`${tmpdir()}/cleanup-pg-`);
 const root = process.getuid?.() === 0;
+const testUser = process.env.CLEANUP_TEST_OS_USER ?? 'lovable';
 function pg(command: string, args: string[]) {
-  return root ? execFileSync('runuser', ['-u', 'nobody', '--', command, ...args], { encoding: 'utf8' })
+  return root ? execFileSync('runuser', ['-u', testUser, '--', command, ...args], { encoding: 'utf8' })
     : execFileSync(command, args, { encoding: 'utf8' });
 }
 function query(value: string) {
@@ -20,7 +21,11 @@ function query(value: string) {
 }
 describe('cleanup cutoff 2026-08-01 (isolated PostgreSQL)', () => {
   beforeAll(() => {
-    if (root) { chownSync(dir, 65534, 65534); chmodSync(dir, 0o700); }
+    if (root) {
+      const uid = Number(execFileSync('id', ['-u', testUser], { encoding: 'utf8' }).trim());
+      const gid = Number(execFileSync('id', ['-g', testUser], { encoding: 'utf8' }).trim());
+      chownSync(dir, uid, gid); chmodSync(dir, 0o700);
+    }
     pg('initdb', ['-D', `${dir}/data`, '-A', 'trust', '-U', 'cleanup_test']);
     pg('pg_ctl', ['-D', `${dir}/data`, '-l', `${dir}/server.log`, '-o', `-k ${dir} -p 55439 -h ''`, '-w', 'start']);
   });
