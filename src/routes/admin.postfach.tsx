@@ -144,7 +144,7 @@ function PostfachPage() {
                     </div>
                     <div className="whitespace-pre-wrap break-words">{m.body_text}</div>
                     {m.direction === "out" && (
-                      <div className="mt-1 text-xs opacity-80" title="„Geöffnet" ist ein Anhaltspunkt, kein sicherer Lesebeweis.">
+                      <div className="mt-1 text-xs opacity-80" title="Geöffnet ist ein Anhaltspunkt, kein sicherer Lesebeweis.">
                         {m.bounced_at ? "Unzustellbar" : m.opened_at ? `Geöffnet ${new Date(m.opened_at).toLocaleString("de-DE")}${m.open_count > 1 ? ` (${m.open_count}×)` : ""}` : m.delivered_at ? "Zugestellt" : "Gesendet"}
                       </div>
                     )}
