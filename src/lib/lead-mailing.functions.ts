@@ -57,8 +57,16 @@ export const saveResendAccess = createServerFn({ method: "POST" })
     if (data.resend_webhook_secret) patch.resend_webhook_secret = data.resend_webhook_secret;
     if (!Object.keys(patch).length) return { ok: true };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await (supabaseAdmin as any).from("system_settings").update(patch).eq("id", 1);
-    if (error) throw new Error(error.message);
+    const { data: rows, error } = await (supabaseAdmin as any).from("system_settings")
+      .upsert({ id: 1, ...patch }, { onConflict: "id" }).select("resend_api_key, resend_webhook_secret");
+    if (error) {
+      if (/column .* does not exist/i.test(error.message)) throw new Error("Datenbank-Update fehlt (Lead-Mailing). Bitte migrate.sh auf dem Backend ausführen.");
+      throw new Error(error.message);
+    }
+    const row = rows?.[0];
+    if (!row || (patch.resend_api_key && row.resend_api_key !== patch.resend_api_key)) {
+      throw new Error("Schlüssel wurde nicht gespeichert – bitte erneut versuchen.");
+    }
     return { ok: true };
   });
 
@@ -84,9 +92,13 @@ export const saveLeadMailSettings = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => SettingsInput.parse(i))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    const { error } = await (context.supabase as any)
-      .from("lead_mail_settings").upsert({ ...data, updated_at: new Date().toISOString() }, { onConflict: "tenant_id" });
-    if (error) throw new Error(error.message);
+    const { data: rows, error } = await (context.supabase as any)
+      .from("lead_mail_settings").upsert({ ...data, updated_at: new Date().toISOString() }, { onConflict: "tenant_id" }).select("tenant_id");
+    if (error) {
+      if (/column .* does not exist|schema cache/i.test(error.message)) throw new Error("Datenbank-Update fehlt (Postfach/Signatur). Bitte migrate.sh auf dem Backend ausführen.");
+      throw new Error(error.message);
+    }
+    if (!rows?.length) throw new Error("Einstellungen wurden nicht gespeichert – fehlende Berechtigung.");
     return { ok: true };
   });
 
