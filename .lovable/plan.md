@@ -13,11 +13,11 @@ Ein einmaliges Skript für den Backend-Server löscht alle Bewerbungen und Mitar
    Fragt nochmals nach Bestätigung (Eingabe „LÖSCHEN"), läuft komplett in einem Durchgang – bricht etwas ab, wird nichts gelöscht.
 
 ## Ausnahmen
-Optional eine Datei mit E-Mail-Adressen, die behalten werden sollen (`--keep keep.txt`). Ohne diese Datei wird jeder vor dem 1.8. gelöscht. Bitte Bescheid geben, falls z. B. grün/blau markierte oder aktive Mitarbeiter bleiben sollen.
+Keine Ausnahmen bei Bewerbern und Mitarbeitern: Alle vor dem 1.8. werden gelöscht, alle ab dem 1.8. bleiben. Nur eure Admin-Konten bleiben immer bestehen.
 
 ## Technische Details
 - Neues Skript `scripts/cleanup-before-date.sh`, nutzt die gleiche DB-Verbindung wie `migrate.sh`.
-- Auswahl: `applications.created_at < Datum` sowie `profiles` mit `created_at < Datum`, ausgenommen Nutzer mit Rolle admin/teamleader in `user_roles` und Keep-Liste.
+- Auswahl: `applications.created_at < Datum` sowie `profiles` mit `created_at < Datum`, ausgenommen Nutzer mit Rolle admin/teamleader in `user_roles`.
 - Löschreihenfolge in einer Transaktion: chat_messages, chat_conversations, task_submissions/submission_answers/task_progress/task_assignments, step_feedback, contracts, documents, kyc_verifications, bookings, notifications, admin_notes, activity_log, user_transactions, sms_assignments, invitation_tokens, profiles, user_roles, applications, zuletzt `auth.users`.
 - Dateien: zugehörige Objekte in `storage.objects` (Dokumente, Unterschriften) werden mitgelöscht.
 - Vorschau-Modus nutzt `ROLLBACK`, Ausführmodus `COMMIT`; Protokoll nach `/var/log/portal-cleanup-<datum>.log`.
