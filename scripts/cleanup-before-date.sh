@@ -53,6 +53,11 @@ PSQL=(docker exec -i "$DB_CT" psql -U supabase_admin -d postgres -v ON_ERROR_STO
   SELECT 'bewerbung' AS art, a.id::text, a.full_name, a.email, a.created_at::date, t.name AS firma
     FROM public.applications a LEFT JOIN public.tenants t ON t.id = a.tenant_id
    WHERE a.created_at < '$CUTOFF'
+     AND NOT EXISTS (SELECT 1 FROM public.profiles p WHERE p.application_id = a.id
+       AND (p.created_at >= '$CUTOFF'
+         OR EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
+         OR EXISTS (SELECT 1 FROM public.chat_messages m WHERE m.created_at >= '$CUTOFF'
+           AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id))))
   UNION ALL
   SELECT 'mitarbeiter', p.user_id::text, p.full_name, u.email, p.created_at::date, t.name
     FROM public.profiles p JOIN auth.users u ON u.id = p.user_id
@@ -61,6 +66,7 @@ PSQL=(docker exec -i "$DB_CT" psql -U supabase_admin -d postgres -v ON_ERROR_STO
      AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = p.user_id AND r.role::text <> 'user')
      AND NOT EXISTS (SELECT 1 FROM public.chat_messages m
        WHERE m.created_at >= '$CUTOFF' AND (m.sender_id = p.user_id OR m.receiver_id = p.user_id))
+     AND NOT EXISTS (SELECT 1 FROM public.applications a WHERE a.id = p.application_id AND a.created_at >= '$CUTOFF')
   ORDER BY 1, 5
 ) TO STDOUT WITH CSV HEADER" > "$CSV" 2>>"$LOG" || echo "(CSV-Liste konnte nicht vollständig erstellt werden, siehe $LOG)"
 
