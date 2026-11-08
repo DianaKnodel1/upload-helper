@@ -1,5 +1,9 @@
 # Roadmap
 
+## Postfach-Abruf (2026-11-08)
+- [ ] Verdeckte Abruf-/Speicherfehler beheben und Nachrichtenliste nach Abruf aktualisieren; Regressionstests ausführen.
+- [ ] Echten Resend-Eingang im angemeldeten Live-Postfach prüfen (kein angemeldeter Portalzugang verfügbar).
+
 ## Aufräumen vor August (2026-11-06)
 - [x] Skript: Chats ausschließlich vor dem 01.08.2026 löschen; neuere Chats und zugehörige Konten schützen, alte Bewerbungen/Konten ansonsten aufräumen; isolierte PostgreSQL-Prüfung von Löschung und Rollback bestanden.
 - [ ] Aktualisiertes Skript auf Backend übertragen und neuen Probelauf mit echten Daten prüfen (User).
