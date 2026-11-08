@@ -225,6 +225,7 @@ export async function handleResendEvent(evt: any) {
       tenant_id: prev?.tenant_id ?? app?.tenant_id ?? null, direction: "in",
       from_email: from, to_email: addrOf(data.to), subject, body_text: String(text).slice(0, 20000),
       provider_id: providerId || null, handled: false, peer_email: from,
+      ...(data.created_at ? { created_at: String(data.created_at) } : {}),
       kind: prev?.kind ?? (app ? "lead" : "other"),
     }, { onConflict: "provider_id,direction", ignoreDuplicates: true });
     if (app?.id && (prev?.kind ?? "lead") === "lead") {
@@ -244,4 +245,55 @@ export function trackingPatch(
   if (type === "email.opened") return { opened_at: msg.opened_at ?? at, open_count: (msg.open_count ?? 0) + 1, delivered_at: msg.delivered_at ?? at };
   if (type === "email.bounced") return msg.bounced_at ? null : { bounced_at: at };
   return null;
+}
+
+/** Neue, noch nicht gespeicherte Eingänge aus einer Resend-Liste auswählen. */
+export function pickNewReceived(items: any[], existingIds: Set<string>, sinceMs: number): any[] {
+  const seen = new Set<string>();
+  return items.filter((it) => {
+    const id = String(it?.id ?? "");
+    if (!id || existingIds.has(id) || seen.has(id)) return false;
+    const t = Date.parse(it?.created_at ?? "");
+    if (Number.isFinite(t) && t < sinceMs) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
+/** Holt eingegangene Mails direkt aus Resend (Fallback, falls der Webhook nichts liefert). */
+export async function syncReceivedEmails(days = 15): Promise<{ fetched: number; stored: number; error?: string }> {
+  const { apiKey } = await loadResendConfig();
+  if (!apiKey) return { fetched: 0, stored: 0, error: "Kein Resend-Zugang hinterlegt." };
+  const sinceMs = Date.now() - days * 86400000;
+  const items: any[] = [];
+  let after: string | null = null;
+  for (let page = 0; page < 10; page++) {
+    const url = `${RESEND_API}/emails/receiving?limit=100${after ? `&after=${encodeURIComponent(after)}` : ""}`;
+    const r = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } });
+    if (!r.ok) {
+      const body = await r.text();
+      console.error(`[resend-sync] ${r.status}: ${body}`);
+      return { fetched: items.length, stored: 0, error: `Resend antwortete mit ${r.status}: ${body.slice(0, 200)}` };
+    }
+    const j = await r.json();
+    const list: any[] = j?.data ?? [];
+    items.push(...list);
+    const last = list[list.length - 1];
+    if (!j?.has_more || !last || Date.parse(last.created_at ?? "") < sinceMs) break;
+    after = String(last.id);
+  }
+  const db = await admin();
+  const ids = items.map((i) => String(i?.id ?? "")).filter(Boolean);
+  const existing = new Set<string>();
+  for (let i = 0; i < ids.length; i += 100) {
+    const { data } = await db.from("lead_messages").select("provider_id").eq("direction", "in").in("provider_id", ids.slice(i, i + 100));
+    for (const row of data ?? []) existing.add(String(row.provider_id));
+  }
+  const fresh = pickNewReceived(items, existing, sinceMs);
+  let stored = 0;
+  for (const it of fresh) {
+    try { await handleResendEvent({ type: "email.received", data: { ...it, email_id: it.id } }); stored++; }
+    catch (e: any) { console.error("[resend-sync] store", it?.id, e?.message ?? e); }
+  }
+  return { fetched: items.length, stored };
 }

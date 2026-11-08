@@ -201,7 +201,9 @@ export const listMailThreads = createServerFn({ method: "POST" })
     })).filter((t) =>
       (data.filter === "all" || (data.filter === "unread" ? t.unread > 0 : data.filter === "employee" ? t.kind === "employee" : t.kind === "lead"))
       && (!q || t.name.toLowerCase().includes(q) || t.peer.includes(q)));
-    return { threads: out };
+    out.sort((a, b) => (Number(b.unread > 0) - Number(a.unread > 0)) || String(b.last_at).localeCompare(String(a.last_at)));
+    const unreadTotal = out.filter((t) => t.unread > 0).length;
+    return { threads: out, unreadTotal };
   });
 
 export const getMailThread = createServerFn({ method: "POST" })
@@ -388,4 +390,12 @@ export const getMailStatuses = createServerFn({ method: "POST" })
     const seen = new Set<string>();
     const all = data.full ? rows.filter((m) => !seen.has(m.id) && seen.add(m.id)).sort((a, b) => b.created_at.localeCompare(a.created_at)) : [];
     return { latest, all };
+  });
+
+export const syncInbox = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await requireAdmin(context);
+    const { syncReceivedEmails } = await import("./lead-mailing.server");
+    return syncReceivedEmails(15);
   });
