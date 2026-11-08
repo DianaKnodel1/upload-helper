@@ -158,7 +158,7 @@ const peerOf = (m: any) => String(m.peer_email || (m.direction === "in" ? m.from
 export const listMailThreads = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => z.object({
-    filter: z.enum(["all", "lead", "applicant", "employee", "unread"]).default("all"),
+    filter: z.enum(["all", "lead", "employee", "unread"]).default("all"),
     q: z.string().trim().max(120).default(""),
   }).parse(i ?? {}))
   .handler(async ({ data, context }) => {
@@ -201,7 +201,9 @@ export const listMailThreads = createServerFn({ method: "POST" })
     })).filter((t) =>
       (data.filter === "all" || (data.filter === "unread" ? t.unread > 0 : data.filter === "employee" ? t.kind === "employee" : t.kind === "lead"))
       && (!q || t.name.toLowerCase().includes(q) || t.peer.includes(q)));
-    return { threads: out };
+    out.sort((a, b) => (Number(b.unread > 0) - Number(a.unread > 0)) || String(b.last_at).localeCompare(String(a.last_at)));
+    const unreadTotal = out.filter((t) => t.unread > 0).length;
+    return { threads: out, unreadTotal };
   });
 
 export const getMailThread = createServerFn({ method: "POST" })
