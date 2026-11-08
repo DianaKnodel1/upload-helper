@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2, PenSquare, Search } from "lucide-react";
-import { listMailThreads, getMailThread, setThreadHandled, sendPortalMail } from "@/lib/lead-mailing.functions";
+import { ArrowLeft, Loader2, PenSquare, Search, RefreshCw, Reply, Send, CheckCheck } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { syncInbox, listMailThreads, getMailThread, setThreadHandled, sendPortalMail } from "@/lib/lead-mailing.functions";
 import { ComposeMailDialog } from "@/components/mail/ComposeMailDialog";
 
 export const Route = createFileRoute("/admin/postfach")({
@@ -26,6 +27,14 @@ type Filter = "all" | "lead" | "employee" | "unread";
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Alle" }, { id: "lead", label: "Leads" }, { id: "employee", label: "Mitarbeiter" }, { id: "unread", label: "Ungelesen" },
 ];
+function ago(iso: string) {
+  const d = (Date.now() - new Date(iso).getTime()) / 60000;
+  if (d < 1) return "gerade eben";
+  if (d < 60) return `vor ${Math.round(d)} Min.`;
+  if (d < 1440) return `vor ${Math.round(d / 60)} Std.`;
+  if (d < 10080) return `vor ${Math.round(d / 1440)} Tg.`;
+  return new Date(iso).toLocaleDateString("de-DE");
+}
 const KIND_LABEL: Record<string, string> = { lead: "Lead", employee: "Mitarbeiter", other: "Extern" };
 
 function PostfachPage() {
@@ -42,14 +51,35 @@ function PostfachPage() {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [unreadTotal, setUnreadTotal] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const syncFn = useServerFn(syncInbox);
 
   const load = useCallback(async () => {
     try {
       const r = await listFn({ data: { filter, q } });
       setThreads(r.threads);
+      setUnreadTotal(r.unreadTotal ?? 0);
     } catch (e: any) { toast.error(e?.message ?? "Laden fehlgeschlagen"); }
   }, [listFn, filter, q]);
   useEffect(() => { const h = setTimeout(load, 200); return () => clearTimeout(h); }, [load]);
+
+  const sync = useCallback(async (manual: boolean) => {
+    setSyncing(true);
+    try {
+      const r = await syncFn();
+      if (r.error) { if (manual) toast.error(r.error); }
+      else if (r.stored > 0) { toast.success(`${r.stored} neue Mail${r.stored === 1 ? "" : "s"} abgerufen`); await load(); }
+      else if (manual) toast.success("Keine neuen Mails");
+    } catch (e: any) { if (manual) toast.error(e?.message ?? "Abruf fehlgeschlagen"); }
+    finally { setSyncing(false); }
+  }, [syncFn, load]);
+  useEffect(() => {
+    sync(false);
+    const h = setInterval(() => sync(false), 3 * 60 * 1000);
+    return () => clearInterval(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const open = async (t: any) => {
     setSelected(t);
@@ -86,13 +116,20 @@ function PostfachPage() {
           <h1 className="text-3xl font-heading font-semibold tracking-tight">Postfach</h1>
           <p className="text-sm text-muted-foreground">E-Mails mit Leads, Bewerbern und Mitarbeitern an einem Ort.</p>
         </div>
-        <Button onClick={() => setComposeOpen(true)} className="rounded-full gap-2"><PenSquare className="h-4 w-4" />Neue Nachricht</Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => sync(true)} disabled={syncing} className="rounded-full gap-2">
+            <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} /><span>Neue Mails abrufen</span>
+          </Button>
+          <Button onClick={() => setComposeOpen(true)} className="rounded-full gap-2"><PenSquare className="h-4 w-4" />Neue Nachricht</Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex flex-wrap gap-1 rounded-full bg-muted p-1">
           {FILTERS.map((f) => (
-            <button key={f.id} type="button" onClick={() => setFilter(f.id)} className={filter === f.id ? "glass-tab glass-tab-active min-h-8" : "glass-tab min-h-8"}>{f.label}</button>
+            <button key={f.id} type="button" onClick={() => setFilter(f.id)} className={`${filter === f.id ? "glass-tab glass-tab-active" : "glass-tab"} min-h-8 px-3 gap-1.5 inline-flex items-center`}>
+              <span>{f.label}</span>{f.id === "unread" && unreadTotal > 0 && <Badge className="h-5 px-1.5">{unreadTotal}</Badge>}
+            </button>
           ))}
         </div>
         <div className="relative ml-auto w-full sm:w-72">
@@ -101,21 +138,31 @@ function PostfachPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[minmax(240px,320px)_minmax(0,1fr)] gap-4">
+      <div className="grid md:grid-cols-[minmax(280px,400px)_minmax(0,1fr)] gap-4">
         <div className={`${selected ? "hidden md:block" : ""} min-w-0 rounded-3xl border border-border bg-card overflow-hidden`}>
-          <div className="divide-y divide-border max-h-[68vh] overflow-auto">
+          <div className="divide-y divide-border h-[70vh] overflow-auto">
             {threads === null && <div className="p-4"><Loader2 className="h-4 w-4 animate-spin" /></div>}
             {threads?.length === 0 && <div className="p-4 text-sm text-muted-foreground">Keine Nachrichten.</div>}
             {threads?.map((t) => (
               <button type="button" key={t.peer} onClick={() => open(t)}
                 className={`block w-full min-w-0 text-left p-3.5 hover:bg-accent ${selected?.peer === t.peer ? "bg-accent" : ""}`}>
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-                  <span className={`text-sm min-w-0 truncate ${t.unread ? "font-semibold" : "font-medium"}`}>{t.name}</span>
-                  {t.unread > 0 ? <Badge>{t.unread} neu</Badge> : <span className="text-[11px] text-muted-foreground">{KIND_LABEL[t.kind] ?? ""}</span>}
+                <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
+                  <span className={`h-2 w-2 rounded-full ${t.unread ? "bg-primary" : "bg-transparent"}`} />
+                  <span className={`text-sm min-w-0 truncate ${t.unread ? "font-bold" : "font-medium"}`}>{t.name}</span>
+                  <span className="text-[11px] text-muted-foreground whitespace-nowrap">{ago(t.last_at)}</span>
                 </div>
-                <div className="text-xs truncate">{t.subject}</div>
-                <div className="text-xs text-muted-foreground truncate">{t.last_direction === "out" ? (t.last_opened ? "Sie (geöffnet): " : "Sie: ") : ""}{t.preview}</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">{new Date(t.last_at).toLocaleString("de-DE")}</div>
+                <div className="pl-4 space-y-0.5">
+                  <div className={`text-xs truncate ${t.unread ? "font-semibold" : ""}`}>{t.subject}</div>
+                  <div className="text-xs text-muted-foreground truncate flex items-center gap-1">
+                    {t.last_direction === "in" ? <Reply className="h-3 w-3 shrink-0 text-primary" /> : <Send className="h-3 w-3 shrink-0" />}
+                    <span className="truncate">{t.last_direction === "out" ? "Sie: " : ""}{t.preview}</span>
+                  </div>
+                  <div className="flex gap-1.5 pt-0.5">
+                    <Badge variant="outline" className="h-5 text-[10px] px-1.5">{KIND_LABEL[t.kind] ?? ""}</Badge>
+                    {t.unread > 0 && <Badge className="h-5 text-[10px] px-1.5">{t.unread} neu</Badge>}
+                    {t.last_direction === "out" && t.last_opened && <Badge variant="secondary" className="h-5 text-[10px] px-1.5 gap-1"><CheckCheck className="h-3 w-3" />geöffnet</Badge>}
+                  </div>
+                </div>
               </button>
             ))}
           </div>
@@ -130,15 +177,18 @@ function PostfachPage() {
                 <div className="min-w-0 break-words">
                   <div className="font-semibold">{selected.name}</div>
                   <div className="text-xs text-muted-foreground break-all">{selected.peer} · {KIND_LABEL[selected.kind] ?? ""}</div>
+                  {(selected.profile_id || selected.application_id) && (
+                    <Link to="/admin/personen/$id" params={{ id: selected.profile_id ?? selected.application_id }} className="text-xs text-primary underline">Profil öffnen</Link>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" variant="outline" className="rounded-full" onClick={() => markHandled(true)}>Als erledigt markieren</Button>
                   <Button size="sm" variant="ghost" className="rounded-full" onClick={() => markHandled(false)}>Wieder offen</Button>
                 </div>
               </div>
-              <div className="space-y-3 max-h-[42vh] overflow-auto">
+              <div className="space-y-3 max-h-[46vh] overflow-auto pr-1">
                 {messages.map((m) => (
-                  <div key={m.id} className={`rounded-2xl p-3 text-sm ${m.direction === "in" ? "bg-muted mr-8" : "bg-primary text-primary-foreground ml-8"}`}>
+                  <div key={m.id} className={`rounded-2xl p-3 text-sm ${m.direction === "in" ? "bg-muted mr-10 rounded-tl-sm" : "bg-primary text-primary-foreground ml-10 rounded-tr-sm"}`}>
                     <div className="text-xs opacity-70 mb-1">
                       {m.direction === "in" ? "Eingang" : "Gesendet"} · {new Date(m.created_at).toLocaleString("de-DE")} · {m.subject}
                     </div>
