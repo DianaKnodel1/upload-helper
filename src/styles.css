@@ -339,3 +339,8 @@
   background: var(--secondary); color: var(--secondary-foreground);
   border: 1px solid var(--border);
 }
+
+/* Dialogs/menus in the glass portal need an opaque surface; --background is transparent there. */
+:root:has(.glass-shell) { --glass-dialog: oklch(0.99 0.004 260 / 0.97); }
+:root.dark:has(.glass-shell) { --glass-dialog: oklch(0.24 0.02 60 / 0.97); }
+:root:has(.glass-shell) [role="dialog"], :root:has(.glass-shell) [role="alertdialog"] { background-color: var(--glass-dialog); }
