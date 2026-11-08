@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,27 +53,47 @@ function PostfachPage() {
   const [composeOpen, setComposeOpen] = useState(false);
   const [unreadTotal, setUnreadTotal] = useState(0);
   const [syncing, setSyncing] = useState(false);
+  const [syncNotice, setSyncNotice] = useState<{ error: boolean; text: string } | null>(null);
+  const syncInFlight = useRef(false);
+  const loadVersion = useRef(0);
   const syncFn = useServerFn(syncInbox);
 
   const load = useCallback(async () => {
+    const version = ++loadVersion.current;
     try {
       const r = await listFn({ data: { filter, q } });
+      if (version !== loadVersion.current) return;
       setThreads(r.threads);
       setUnreadTotal(r.unreadTotal ?? 0);
     } catch (e: any) { toast.error(e?.message ?? "Laden fehlgeschlagen"); }
   }, [listFn, filter, q]);
+  const latestLoad = useRef(load);
+  latestLoad.current = load;
+  const refreshSelected = useRef(async () => {});
+  refreshSelected.current = async () => {
+    if (!selected) return;
+    const r = await threadFn({ data: { peer: selected.peer } });
+    setMessages(r.messages);
+  };
   useEffect(() => { const h = setTimeout(load, 200); return () => clearTimeout(h); }, [load]);
 
   const sync = useCallback(async (manual: boolean) => {
+    if (syncInFlight.current) return;
+    syncInFlight.current = true;
     setSyncing(true);
     try {
       const r = await syncFn();
-      if (r.error) { if (manual) toast.error(r.error); }
-      else if (r.stored > 0) { toast.success(`${r.stored} neue Mail${r.stored === 1 ? "" : "s"} abgerufen`); await load(); }
-      else if (manual) toast.success("Keine neuen Mails");
-    } catch (e: any) { if (manual) toast.error(e?.message ?? "Abruf fehlgeschlagen"); }
-    finally { setSyncing(false); }
-  }, [syncFn, load]);
+      const notice = r.error ?? (r.stored > 0 ? `${r.stored} neue Mail${r.stored === 1 ? "" : "s"} abgerufen` : "Abruf abgeschlossen – keine neuen eingegangenen Mails.");
+      setSyncNotice({ error: !!r.error, text: notice });
+      if (r.error && manual) toast.error(notice);
+      await latestLoad.current();
+      await refreshSelected.current();
+    } catch (e: any) {
+      const notice = e?.message ?? "Abruf fehlgeschlagen";
+      setSyncNotice({ error: true, text: notice });
+      if (manual) toast.error(notice);
+    } finally { syncInFlight.current = false; setSyncing(false); }
+  }, [syncFn]);
   useEffect(() => {
     sync(false);
     const h = setInterval(() => sync(false), 3 * 60 * 1000);
@@ -123,6 +143,8 @@ function PostfachPage() {
           <Button onClick={() => setComposeOpen(true)} className="rounded-full gap-2"><PenSquare className="h-4 w-4" />Neue Nachricht</Button>
         </div>
       </div>
+
+      {syncNotice && <p role={syncNotice.error ? "alert" : "status"} className={`text-sm break-words ${syncNotice.error ? "text-destructive" : "text-muted-foreground"}`}>{syncNotice.text}</p>}
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex flex-wrap gap-1 rounded-full bg-muted p-1">

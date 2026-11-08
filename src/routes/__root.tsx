@@ -16,6 +16,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { TenantProvider } from "@/contexts/TenantContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { usePresenceBroadcast } from "@/hooks/use-presence";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -141,6 +142,7 @@ function RootComponent() {
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <TooltipProvider delayDuration={200}><Outlet /></TooltipProvider>
             <Toaster />
+            <SonnerToaster />
           </AuthProvider>
         </TenantProvider>
       </ThemeProvider>

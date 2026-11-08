@@ -164,10 +164,15 @@ export const listMailThreads = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const db = context.supabase as any;
-    const { data: rows, error } = await db.from("lead_messages")
-      .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at, opened_at")
-      .order("created_at", { ascending: false }).limit(1500);
-    if (error) throw new Error(error.message);
+    const rows: any[] = [];
+    for (let offset = 0; ; offset += 500) {
+      const { data: page, error } = await db.from("lead_messages")
+        .select("id, application_id, profile_id, tenant_id, direction, from_email, to_email, peer_email, kind, subject, body_text, handled, created_at, opened_at")
+        .order("created_at", { ascending: false }).order("id", { ascending: false }).range(offset, offset + 499);
+      if (error) throw new Error(error.message);
+      rows.push(...(page ?? []));
+      if (!page || page.length < 500) break;
+    }
     const threads = new Map<string, any>();
     for (const m of rows ?? []) {
       const peer = peerOf(m);
@@ -191,18 +196,19 @@ export const listMailThreads = createServerFn({ method: "POST" })
     const appBy = new Map((apps ?? []).map((a: any) => [a.id, a]));
     const profBy = new Map((profs ?? []).map((p: any) => [p.id, p]));
     const q = data.q.toLowerCase();
-    const out = list.map((t) => ({
+    const allThreads = list.map((t) => ({
       peer: t.peer, kind: t.kind, unread: t.unread, tenant_id: t.tenant_id,
       application_id: t.application_id ?? null, profile_id: t.profile_id ?? null,
       name: (profBy.get(t.profile_id) as any)?.full_name ?? (appBy.get(t.application_id) as any)?.full_name ?? t.peer,
       status: (appBy.get(t.application_id) as any)?.lead_mail_status ?? null,
       subject: t.last.subject, preview: String(t.last.body_text ?? "").slice(0, 140),
       last_direction: t.last.direction, last_opened: !!t.last.opened_at, last_at: t.last.created_at,
-    })).filter((t) =>
+    }));
+    const unreadTotal = allThreads.filter((t) => t.unread > 0).length;
+    const out = allThreads.filter((t) =>
       (data.filter === "all" || (data.filter === "unread" ? t.unread > 0 : data.filter === "employee" ? t.kind === "employee" : t.kind === "lead"))
       && (!q || t.name.toLowerCase().includes(q) || t.peer.includes(q)));
     out.sort((a, b) => (Number(b.unread > 0) - Number(a.unread > 0)) || String(b.last_at).localeCompare(String(a.last_at)));
-    const unreadTotal = out.filter((t) => t.unread > 0).length;
     return { threads: out, unreadTotal };
   });
 
