@@ -16,7 +16,8 @@ async function admin() {
 
 export async function loadResendConfig() {
   const db = await admin();
-  const { data } = await db.from("system_settings").select("resend_api_key, resend_webhook_secret").eq("id", 1).maybeSingle();
+  const { data, error } = await db.from("system_settings").select("resend_api_key, resend_webhook_secret").eq("id", 1).maybeSingle();
+  if (error) throw new Error(`Resend-Zugang konnte nicht geladen werden: ${error.message}`);
   return {
     apiKey: (data?.resend_api_key as string | null)?.trim() || process.env.RESEND_API_KEY || null,
     webhookSecret: (data?.resend_webhook_secret as string | null)?.trim() || process.env.RESEND_WEBHOOK_SECRET || null,
@@ -206,10 +207,14 @@ export async function handleResendEvent(evt: any) {
       const { apiKey } = await loadResendConfig();
       if (apiKey) {
         const r = await fetch(`${RESEND_API}/emails/receiving/${encodeURIComponent(providerId)}`, { headers: { Authorization: `Bearer ${apiKey}` } });
-        if (r.ok) {
-          const full = await r.json();
-          text = full?.text || (full?.html ? String(full.html).replace(/<[^>]+>/g, " ") : "");
+        if (!r.ok) {
+          const reason = await r.text();
+          console.error(`[resend-receiving] ${r.status}: ${reason}`);
+          throw new Error(`Mailinhalt konnte nicht abgerufen werden (Resend ${r.status}). Bitte den Resend-Zugang und seine Empfangsrechte prüfen.`);
         }
+        const response = await r.json();
+        const full = response?.data ?? response;
+        text = full?.text || (full?.html ? String(full.html).replace(/<[^>]+>/g, " ") : "");
       }
     }
     // Zuordnung: zuerst bestehender Verlauf mit dieser Adresse (Mitarbeiter, frei), sonst Lead.
@@ -220,14 +225,22 @@ export async function handleResendEvent(evt: any) {
       ? { data: prev.application_id ? { id: prev.application_id, tenant_id: prev.tenant_id } : null }
       : await db.from("applications").select("id, tenant_id").ilike("email", from).not("lead_source", "is", null)
           .order("created_at", { ascending: false }).limit(1).maybeSingle();
-    await db.from("lead_messages").upsert({
+    // The provider index is partial (WHERE provider_id IS NOT NULL).
+    // PostgREST ON CONFLICT without that predicate cannot infer it (42P10).
+    const { error: insertError } = await db.from("lead_messages").insert({
       application_id: app?.id ?? null, profile_id: prev?.profile_id ?? null,
       tenant_id: prev?.tenant_id ?? app?.tenant_id ?? null, direction: "in",
       from_email: from, to_email: addrOf(data.to), subject, body_text: String(text).slice(0, 20000),
       provider_id: providerId || null, handled: false, peer_email: from,
       ...(data.created_at ? { created_at: String(data.created_at) } : {}),
       kind: prev?.kind ?? (app ? "lead" : "other"),
-    }, { onConflict: "provider_id,direction", ignoreDuplicates: true });
+    });
+    if (insertError?.code === "23505" && providerId) {
+      const { data: duplicate, error: duplicateError } = await db.from("lead_messages")
+        .select("id").eq("provider_id", providerId).eq("direction", "in").maybeSingle();
+      if (!duplicateError && duplicate) return { stored: false };
+    }
+    if (insertError) throw new Error(`Eingegangene Mail konnte nicht gespeichert werden: ${insertError.message}`);
     if (app?.id && (prev?.kind ?? "lead") === "lead") {
       const status = isUnsubscribeReply(subject, text) ? "unsubscribed" : "replied";
       await db.from("applications").update({ lead_mail_status: status }).eq("id", app.id);
@@ -286,14 +299,22 @@ export async function syncReceivedEmails(days = 15): Promise<{ fetched: number; 
   const ids = items.map((i) => String(i?.id ?? "")).filter(Boolean);
   const existing = new Set<string>();
   for (let i = 0; i < ids.length; i += 100) {
-    const { data } = await db.from("lead_messages").select("provider_id").eq("direction", "in").in("provider_id", ids.slice(i, i + 100));
+    const { data, error } = await db.from("lead_messages").select("provider_id").eq("direction", "in").in("provider_id", ids.slice(i, i + 100));
+    if (error) return { fetched: items.length, stored: 0, error: `Vorhandene Mails konnten nicht geprüft werden: ${error.message}` };
     for (const row of data ?? []) existing.add(String(row.provider_id));
   }
   const fresh = pickNewReceived(items, existing, sinceMs);
   let stored = 0;
   for (const it of fresh) {
-    try { await handleResendEvent({ type: "email.received", data: { ...it, email_id: it.id } }); stored++; }
-    catch (e: any) { console.error("[resend-sync] store", it?.id, e?.message ?? e); }
+    // Receiving details also count against Resend's request limit.
+    await new Promise((resolve) => setTimeout(resolve, 550));
+    try {
+      const result = await handleResendEvent({ type: "email.received", data: { ...it, email_id: it.id } });
+      if (result.stored) stored++;
+    } catch (e: any) {
+      console.error("[resend-sync] store", it?.id, e?.message ?? e);
+      return { fetched: items.length, stored, error: `${stored} neue Mails gespeichert. ${e?.message ?? "Abruf fehlgeschlagen"} Bitte erneut abrufen.` };
+    }
   }
   return { fetched: items.length, stored };
 }
