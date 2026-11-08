@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Postfach-Abruf (2026-11-08)
-- [ ] Verdeckte Abruf-/Speicherfehler beheben und Nachrichtenliste nach Abruf aktualisieren; Regressionstests ausführen.
+- [x] Verdeckte Abruf-/Speicherfehler behoben, INSERT statt fehlerhaftem Partial-Index-Upsert, sichtbare Abrufmeldungen und Aktualisierung von Liste/Verlauf; 18 Regressionstests bestanden, Build OK.
 - [ ] Echten Resend-Eingang im angemeldeten Live-Postfach prüfen (kein angemeldeter Portalzugang verfügbar).
 
 ## Aufräumen vor August (2026-11-06)
